@@ -1,0 +1,249 @@
+@import "tailwindcss";
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup-content {
+  background-color: #1a1a1a;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-color);
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 10px;
+}
+
+.popup-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size:15px;
+  cursor: pointer;
+  color: var(--foreground);
+  padding: 0;
+  width: 30px;
+
+  transition: color 0.2s;
+  background-color: rgba(113, 97, 97, 0.2);
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.close-button:hover {
+  color: #4a4646;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 4px;
+  background-color: #333;
+  border: 1px solid var(--border-color);
+  color: var(--foreground);
+  font-size: 16px;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--hover-border);
+  box-shadow: 0 0 0 2px rgba(100, 100, 255, 0.2);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.submit-button {
+  padding: 10px 20px;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.2s;
+  background-color: rgba(113, 97, 97, 0.2);
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+  background-color: #363738;
+}
+
+.submit-button:disabled {
+  background-color: #666;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: #ff4d4d;
+  margin-bottom: 15px;
+  padding: 10px;
+  background-color: rgba(255, 77, 77, 0.1);
+  border-radius: 4px;
+  border-left: 3px solid #ff4d4d;
+}
+
+.success-message {
+  color: #4dff88;
+  margin-bottom: 15px;
+  padding: 10px;
+  background-color: rgba(77, 255, 136, 0.1);
+  border-radius: 4px;
+  border-left: 3px solid #4dff88;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+    --background: #0a0a0a;
+    --foreground: #ededed;
+    --text-primary: #f0f0f0;
+    --border-color: #444444;
+    --hover-border: #666666;
+    --hover-background: #333333;
+    --box-shadow-light: rgba(255, 255, 255, 0.1);
+    --box-shadow-soft: rgba(255, 255, 255, 0.05);
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.row-board,
+.row-dashboard {
+  display: grid;
+  width: 100%;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  grid-template-columns: repeat(3, 1fr);
+
+}
+
+.row-dashboard {
+  width: 95%;
+  margin: 0 auto;
+  padding-bottom: 10px;
+  flex-grow: 1;
+  background-color: #1a1a1a;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+.row-board div,
+.row-dashboard div {
+  border-radius: 0.25rem;
+  background-color: var(--background);
+  border: 1px solid var(--border-color);
+  transition: all 0.2s ease-in-out;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+.row-board{
+  width: 98%;
+  margin: 0 auto; 
+}
+.row-board div:hover {
+  background-color: var(--hover-background);
+  border: 1px solid var(--hover-border);
+  box-shadow:
+    0 4px 10px var(--box-shadow-light),
+    0 0 5px var(--box-shadow-soft);
+}
+
+h1 {
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .row-board,
+  .row-dashboard {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    margin: 0 auto;
+  }
+
+  .row {
+    display: grid;
+    grid-template-areas:
+      "name name"
+      "id salary";
+    grid-template-columns: 1fr 1fr;
+    gap: 0.25rem;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background-color: var(--background);
+    border: 1px solid var(--border-color);
+  }
+
+  .row .name {
+    grid-area: name;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .row .id {
+    grid-area: id;
+    text-align: left;
+    font-size: 0.9rem;
+  }
+
+  .row .salary {
+    grid-area: salary;
+    text-align: right;
+    font-size: 0.9rem;
+  }
+
+  /* Desactivar hover en pantallas táctiles */
+  @media (hover: hover) {
+    .row-board div:hover,
+    .row-dashboard div:hover {
+      transform: scale(1.05);
+    }
+  }
+}
