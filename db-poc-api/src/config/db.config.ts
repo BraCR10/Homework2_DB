@@ -1,6 +1,6 @@
 import { config, ConnectionPool, IResult, TYPES } from "mssql";
 import { config as SQLAuth } from "dotenv";
-import { inSqlParameters } from "../types/queryParams.type";
+import { inSqlParameters,outSqlParameters } from "../types/queryParams.type";
 import { console } from "inspector";
 
 SQLAuth();
@@ -31,7 +31,7 @@ export async function initConnection(): Promise<void> {
 export async function query(
   storedProcedure: string,
   inParams: inSqlParameters | any,
-  outParams: inSqlParameters | any
+  outParams: outSqlParameters | any
 ): Promise<IResult<any>> {
   try {
     const request = dbListener.request();
