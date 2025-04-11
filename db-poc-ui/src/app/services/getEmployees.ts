@@ -3,12 +3,12 @@ export interface Employee {
   NameEmployee: string;
   Salary: number;
 }
-
+export const APIURL = "http://localhost:3005/api/v2/";
 export async function getEmployees(): Promise<Employee[]> {
   try {
     console.log("Fetching employee data");
     const response = await fetch(
-      "https://employeesapi-beta.vercel.app/api/sorted_employee",
+      APIURL+"sorted_employee",
     );
     if (!response.ok) {
       console.log(response);

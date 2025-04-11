@@ -1,5 +1,5 @@
 import { Employee } from "./getEmployees";
-
+import { APIURL } from "./getEmployees";
 export async function insertEmployee(
   name: string,
   salary: number,
@@ -7,7 +7,7 @@ export async function insertEmployee(
   try {
     console.log("Inserting new employee");
     const response = await fetch(
-      "https://employeesapi-beta.vercel.app/api/employee",
+      APIURL+"employee",
       {
         method: "POST",
         headers: {
