@@ -98,3 +98,12 @@ interface Error {
     Descripcion: string;
 }
 ```
+
+## UserStatus
+```typescript
+ enum UserStatus {
+    ACCEPTED,
+    DENIED,
+    BLOCKED
+}
+```
