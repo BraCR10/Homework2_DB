@@ -51,7 +51,7 @@ interface Movimiento {
 interface Usuario {
     Id: number;
     Username: string;
-    Password: string; // Se recomienda almacenar hash, no texto plano
+    Password: string; 
 }
 ```
 
