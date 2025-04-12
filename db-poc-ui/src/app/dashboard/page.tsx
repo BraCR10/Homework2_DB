@@ -7,6 +7,7 @@ import RowCard from "../components/RowCard";
 import InsertEmployeePopup from "../components/InsertEmployeePopup";
 import { insertEmployee } from "../services/insertEmployee";
 import Github from "../assets/Github.png";
+
 export default function Dashboard() {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
