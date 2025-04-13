@@ -37,6 +37,7 @@ const LoginForm = () => {
         const errorData = await response.json();
         setMensaje(`❌ ${errorData.error.detail}`);
       } 
+      //falta un response.status del usuario bloqueado
       else {
         setMensaje('❌ Ha ocurrido un error inesperado');
       }
