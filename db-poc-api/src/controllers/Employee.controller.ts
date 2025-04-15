@@ -4,7 +4,9 @@ import {
   GetEmployeesSuccessResponseDTO, 
   EmployeesErrorResponseDTO,
   CreateEmployeesDTO,
-  CreateEmployeesSuccessResponseDTO 
+  CreateEmployeesSuccessResponseDTO, 
+  UpdateEmployeesDTO,
+  UpdateEmployeesSuccessResponseDTO
 } from "./../dtos/EmployeeDTO";
 
 export const createEmployee = async (
@@ -72,3 +74,34 @@ export const getEmployeeById = async (
     res.status(500).json({ success: false, error: errorMessage });
   }
 };
+
+
+export const updateEmployee = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const data: UpdateEmployeesDTO = req.body;
+    // Warning : This function requires all the parameters to be passed, even if they are not updated.
+    if (!data.IdEmpleado || !data.NombreEmpleado || !data.ValorDocumentoIdentidad || !data.NombrePuesto) {
+      console.error("Request body is required.");
+      const errorResponse: EmployeesErrorResponseDTO = { success:false , code: 400, details: "Request body is required." };
+      res.status(400).json({ success: false, error: errorResponse });
+      return;
+    }
+    const response = await EmployeeService.updateEmployee(data);
+    
+    if (response.success) {
+      const { success, data: employeeData } = response as UpdateEmployeesSuccessResponseDTO;
+      res.status(200).json({ success, data: employeeData });
+    } else {
+      const { success, code, details } = response as EmployeesErrorResponseDTO;
+      res.status(500).json({ success, error: { code, details } });
+    }
+  } catch (error) {
+    console.error("Error during employee update:", error);
+    const errorMessage: EmployeesErrorResponseDTO = { success:false , code: 50008, details: "An error occurred while updating the employee" };
+    res.status(500).json({ success: errorMessage.success, error: { code: errorMessage.code, details: errorMessage.details } });
+  }
+}

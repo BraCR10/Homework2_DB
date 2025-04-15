@@ -6,7 +6,9 @@ import {
   GetEmployeesSuccessResponseDTO,
   EmployeesErrorResponseDTO,
   CreateEmployeesSuccessResponseDTO,
-  CreateEmployeesDTO  
+  CreateEmployeesDTO,
+  UpdateEmployeesDTO,
+  UpdateEmployeesSuccessResponseDTO,  
 } from "../dtos/EmployeeDTO";
 
 class EmployeeService {
@@ -82,7 +84,45 @@ class EmployeeService {
     }
   }
 
+  async updateEmployee(data: UpdateEmployeesDTO): Promise<UpdateEmployeesSuccessResponseDTO | EmployeesErrorResponseDTO> {
 
+    const params: inSqlParameters = {
+      inIdEmpleado: [String(data.IdEmpleado), TYPES.Int],
+      inNombrePuesto: [data.NombrePuesto, TYPES.VarChar],
+      inValorDocumentoIndentidad: [data.ValorDocumentoIdentidad, TYPES.VarChar],
+      inNombreEmpleado: [data.NombreEmpleado, TYPES.VarChar],
+    };
+
+    try {
+      if (useMock) return { success:true , data: { message: "Employ was updated", updatedFields: ["NombrePuesto", "ValorDocumentoIdentidad", "NombreEmpleado"] } };
+      else{
+        const response = await query("sp_update_employee", params,{});
+        if (response.output.outResultCode == 0) {
+          const data = response.recordset[0];
+          return { success:true , data: { message: "Employ was updated", updatedFields: ["NombrePuesto", "ValorDocumentoIdentidad", "NombreEmpleado"] } };
+        } else if(response.output.outResultCode == 50007){
+          return { success:false ,code: 50006, details: "Employee name already exists" };
+        }else if(response.output.outResultCode == 50006){
+          return { success:false ,code: 50007, details: "Employee Document ID already exists" };
+        } else if ( response.output.outResultCode == 50009){
+          return { success:false ,code: 50009, details: "Employee name no alphabetic " };
+        }else if (response.output.outResultCode == 50010){
+          return { success:false ,code: 50010, details: "Employee Document ID no valid" };
+        }else if (response.output.outResultCode == 50008){
+          return { success:false ,code: 50008, details: "DB error" };
+        } else {
+          throw new Error("Employ was not created due to DB error");
+        }
+      }
+    } catch (error) {
+      console.error("Error details:", error);
+      throw new Error(`An error occurred while creating the employ: ${error}`);
+    }
+
+    
+
+    
+  }
 }
 
 export default new EmployeeService();

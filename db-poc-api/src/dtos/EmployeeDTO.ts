@@ -34,6 +34,19 @@ export interface CreateEmployeesSuccessResponseDTO{
     }
 }
 
+export interface UpdateEmployeesDTO {
+    IdEmpleado: number;
+    NombrePuesto: string;
+    ValorDocumentoIdentidad: string;
+    NombreEmpleado: string;
+}
 
+export interface UpdateEmployeesSuccessResponseDTO{
+    success: boolean;
+    data: {
+        message : string;
+        updatedFields : string[];
+    }
+}
 
 export interface EmployeesErrorResponseDTO extends  ErrorResponseDTO{}
