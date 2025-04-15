@@ -5,16 +5,17 @@ import {
   getEmployeeById,
   getEmployeesSortedByName,
 } from "./controllers/Employee.controller";
-
+import { loginUser } from "./controllers/Login.controller";
 const router = Router();
 
-router.get("/health", (req, res) => {
+router.get("/health", (_req, res) => {
   res.status(200).json({ status: "OK", message: "API is running" });
 });
 
 router.get("/employee", getEmployees);
 router.get("/employee/sorted", getEmployeesSortedByName);
 router.post("/employee", createEmployee);
+router.post("/login", loginUser);
 
 // router.patch("/employee/", updateEmployee);
 // router.post("employee/deleteTry", deleteTry);

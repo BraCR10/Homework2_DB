@@ -5,12 +5,11 @@ import Router from "./routes";
 
 const app = express();
 
-//TODO: Add the allowed origins to the corsdata array
 
 const allowedOrigins = [
   'http://localhost:3001',
   'http://localhost:3000',
-  'https://logi-events.vercel.app'
+  'https:/domain.com'
 ];
 const corsOptions = {
   origin: allowedOrigins,
