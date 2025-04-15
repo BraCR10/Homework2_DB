@@ -1,5 +1,5 @@
 import {Request, Response} from "express";
-import LoginService from "../services/Login.service";
+import LoginService from "../services/Auth.service";
 import  {LoginErrorResponseDTO,LoginDTO,LoginSuccessResponseDTO}  from "../dtos/LoginDTO";
 
 export async function loginUser(req: Request, res: Response): Promise<void> {
