@@ -4,7 +4,7 @@ import { initConnection } from "./config/db.config";
 import Router from "./routes";
 
 const app = express();
-export const Mock = true;
+export const useMock = true;
 
 
 const allowedOrigins = [

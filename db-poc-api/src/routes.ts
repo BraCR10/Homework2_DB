@@ -2,8 +2,7 @@ import { Router } from "express";
 import {
   createEmployee,
   getEmployees,
-  getEmployeeById,
-  getEmployeesSortedByName,
+  getEmployeeById
 } from "./controllers/Employee.controller";
 import { loginUser } from "./controllers/Login.controller";
 const router = Router();
@@ -13,7 +12,6 @@ router.get("/health", (_req, res) => {
 });
 
 router.get("/employee", getEmployees);
-router.get("/employee/sorted", getEmployeesSortedByName);
 router.post("/employee", createEmployee);
 router.post("/login", loginUser);
 
