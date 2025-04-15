@@ -28,7 +28,7 @@ const startServer = async () => {
   try {
     await initConnection();
     app.listen(PORT, () => {
-      console.log(`Server running on http://localhost:${PORT}`);
+      console.log(`API running on http://localhost:${PORT}/api/v2`);
     });
   } catch (error) {
     console.error("Error details: ", error);

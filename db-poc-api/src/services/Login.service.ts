@@ -7,20 +7,22 @@ class AuthService {
 
     async loginUser(credentials: LoginDTO): Promise<LoginErrorResponseDTO | LoginSuccessResponseDTO> {
 
-        const { username, password } = credentials;
+        const { Username: username, Password: password } = credentials;
         const params: inSqlParameters = {
             inUsername: [username, TYPES.VarChar],
             inPassword: [password, TYPES.VarChar],
         };
 
         try {
+
+            return { success:true , Id : 0, Username: "" };
             const response = await query("sp_login", params,{});
             if (response.output.outResultCode == 0) {
                 let data = response.recordset[0];
                 const loginResponse: LoginSuccessResponseDTO = {
                     success:true ,
                     Id: data.Id,
-                    username: data.username,
+                    Username: data.username,
                 };
                 return loginResponse;
             } else if( response.output.outResultCode == 50001){

@@ -1,12 +1,12 @@
 export  interface LoginDTO {
-    username: string;
-    password: string;
+    Username: string;
+    Password: string;
 }
 
 export interface LoginSuccessResponseDTO { 
     success: boolean;
     Id: number;
-    username: string;
+    Username: string;
 }
 
 export interface LoginErrorResponseDTO { 
