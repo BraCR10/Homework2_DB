@@ -31,13 +31,15 @@ const LoginForm = () => {
       if (response.ok) {
         const data = await response.json();
         console.log('Respuesta del servidor:', data); //borrar
+        //guardar información del usuario que inició sesión
+        const usuarioLogueado = { Username: usuario }; // Usa la variable 'usuario' correctamente
+        localStorage.setItem("usuario", JSON.stringify(usuarioLogueado));
         router.push('/employee'); // Redirige al usuario a la página de empleados
       } 
       else if (response.status === 401) {
         const errorData = await response.json();
         setMensaje(`❌ ${errorData.error.detail}`);
       } 
-      //falta un response.status del usuario bloqueado
       else {
         setMensaje('❌ Ha ocurrido un error inesperado');
       }
@@ -56,7 +58,7 @@ const LoginForm = () => {
       <form onSubmit={handleLogin}> {/*Formulario por llenar*/}
 
         {/*TextBox del usuario*/}
-        <InputField 
+        <InputField
           label="Usuario:"
           type="text"
           value={usuario}

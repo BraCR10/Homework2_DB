@@ -7,11 +7,39 @@ import EmployeeRow from './EmployeeRow';
 import '../../styles/employee.css'
 
 interface EmployeeTableProps {
-  empleados: { id: number; nombre: string; documento: string }[];
+  empleados: { id: number; nombre: string; documento: string; nombrePuesto: string; saldoVacaciones: number; }[];
   handleDelete: (id: number) => void;
+  handleQuery: (empleado: {
+    id: number;
+    nombre: string;
+    documento: string;
+    nombrePuesto: string;
+    saldoVacaciones: number;
+  }) => void;
+  handleEdit: (empleado: {
+    id: number;
+    nombre: string;
+    documento: string;
+    nombrePuesto: string;
+    saldoVacaciones: number;
+  }) => void;
+  handleMovementList: (empleado: {
+    id: number;
+    nombre: string;
+    documento: string;
+    nombrePuesto: string;
+    saldoVacaciones: number;
+  }) => void;
+  handleInsertMovement: (empleado: {
+    id: number;
+    nombre: string;
+    documento: string;
+    nombrePuesto: string;
+    saldoVacaciones: number;
+  }) => void;
 }
 
-const EmployeeTable: React.FC<EmployeeTableProps> = ({ empleados, handleDelete }) => {
+const EmployeeTable: React.FC<EmployeeTableProps> = ({ empleados, handleDelete, handleQuery, handleEdit, handleMovementList, handleInsertMovement }) => {
   return (
     <table className="empleados-tabla">
       <thead>
@@ -23,7 +51,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ empleados, handleDelete }
       </thead>
       <tbody>
         {empleados.map((empleado) => (
-          <EmployeeRow key={empleado.id} empleado={empleado} handleDelete={handleDelete} />
+          <EmployeeRow key={empleado.id} empleado={empleado} handleDelete={handleDelete} handleQuery={handleQuery} handleEdit={handleEdit} handleMovementList={handleMovementList} handleInsertMovement={handleInsertMovement}/>
         ))}
       </tbody>
     </table>

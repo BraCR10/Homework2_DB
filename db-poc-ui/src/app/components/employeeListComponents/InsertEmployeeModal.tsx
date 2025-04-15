@@ -50,6 +50,10 @@ const InsertEmployeeModal: React.FC<InsertEmployeeModalProps> = ({ onClose, onSu
       setMensaje('❌ El nombre del empleado debe de contener sólo carácteres y espacios.');
       return;
     } 
+    if (!NombrePuesto) {
+      setMensaje("❌ Debes seleccionar un puesto.");
+      return;
+    }
     //todo está correcto (se envian los datos al componente padre)
     onSubmit({ documento, nombre, NombrePuesto });
     //no hay onClose, esta modal se cierra desde employeeList
