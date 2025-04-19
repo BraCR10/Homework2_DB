@@ -12,7 +12,7 @@ GO
 -- Description:	<Listar empleados>
 -- =============================================
 
-CREATE PROCEDURE [dbo].[listar_empleados]
+CREATE PROCEDURE [dbo].[sp_listar_empleados]
 (
 	@inFiltro VARCHAR(64),
 	@outResultCode INT OUTPUT
