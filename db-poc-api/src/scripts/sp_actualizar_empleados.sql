@@ -28,53 +28,55 @@ BEGIN
     -- Validación de nombre
     IF (@inNuevoNombre LIKE '%[^a-zA-Z ]%')
     BEGIN
-      SET @outResultCode = 50009;
+      SET @outResultCode = 50009; -- Nombre de empleado no alfabético
       RETURN;
     END
 
     -- Validación de cédula
     IF (@inNuevoValorDocIdentidad LIKE '%[^0-9]%')
     BEGIN
-      SET @outResultCode = 50010;
+      SET @outResultCode = 50010; -- Valor de documento de identidad no alfabético 
+	                              -- aunque QUÉ RAYOS DEBERIA DECIR NUMÉRICO
       RETURN;
     END
 
     DECLARE @idEmpleado INT;
 
     SELECT @idEmpleado = id
-    FROM Empleado
+    FROM dbo.Empleado
     WHERE ValorDocumentoIdentidad = @inValorDocIdentidad_Actual AND EsActivo = 1;
 
     IF (@idEmpleado IS NULL)
     BEGIN
-      SET @outResultCode = 50004; -- No encontrado por documento actual
+      SET @outResultCode = 50008; -- Error en base de datos, lo que pasa esq mis compitas
+								  -- no pusieron nada cuando no exista un empleado
       RETURN;
     END
 
     -- Validar que nuevo nombre no exista en otro empleado
     IF EXISTS (
-        SELECT 1 FROM Empleado 
+        SELECT 1 FROM dbo.Empleado
         WHERE RTRIM(LTRIM(Nombre)) = RTRIM(LTRIM(@inNuevoNombre)) 
           AND id <> @idEmpleado
     )
     BEGIN
-      SET @outResultCode = 50007;
+      SET @outResultCode = 50007; -- Empleado con mismo nombre ya existe en actualización
       RETURN;
     END
 
     -- Validar que nuevo documento no exista en otro empleado
     IF EXISTS (
-        SELECT 1 FROM Empleado 
+        SELECT 1 FROM dbo.Empleado 
         WHERE ValorDocumentoIdentidad = @inNuevoValorDocIdentidad
           AND id <> @idEmpleado
     )
     BEGIN
-      SET @outResultCode = 50006;
+      SET @outResultCode = 50006; -- Empleado con ValorDocumentoIdentidad ya existe en actualizacion
       RETURN;
     END
 
     -- Realizar actualización
-    UPDATE Empleado
+    UPDATE dbo.Empleado
     SET 
       Nombre = @inNuevoNombre,
       ValorDocumentoIdentidad = @inNuevoValorDocIdentidad,
@@ -86,7 +88,7 @@ BEGIN
 
   END TRY
   BEGIN CATCH
-    SET @outResultCode = 50008;
+    SET @outResultCode = 50008; -- Error de base de datos
   END CATCH
   SET NOCOUNT OFF;
 END
