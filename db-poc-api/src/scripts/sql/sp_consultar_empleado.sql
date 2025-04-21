@@ -28,8 +28,8 @@ BEGIN
       E.Nombre,
       P.Nombre AS NombrePuesto,
       E.SaldoVacaciones
-    FROM Empleado E
-    INNER JOIN Puesto P ON E.IdPuesto = P.Id
+    FROM dbo.Empleado E
+    INNER JOIN dbo.Puesto P ON E.IdPuesto = P.Id
     WHERE 
       E.ValorDocumentoIdentidad = @inValorDocumentoIdentidad AND
       E.EsActivo = 1;
@@ -38,7 +38,7 @@ BEGIN
 
   END TRY
   BEGIN CATCH
-    SET @outResultCode = 50008; --No existe el empleado.
+    SET @outResultCode = 50008; --No existe el empleado, entonces error en base de datos
   END CATCH
   SET NOCOUNT OFF;
 END
