@@ -24,11 +24,11 @@ BEGIN
 
     -- Verificar existencia
     IF NOT EXISTS (
-        SELECT 1 FROM dbo.Empleado 
+        SELECT 1 FROM dbo.Empleado
         WHERE ValorDocumentoIdentidad = @inValorDocumentoIdentidad AND EsActivo = 1
     )
     BEGIN
-      SET @outResultCode = 50004; --No existe el empelado
+      SET @outResultCode = 50008; --No existe el empleado y no hay uno en específico
       RETURN;
     END
 
