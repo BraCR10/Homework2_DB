@@ -24,7 +24,7 @@ BEGIN
 
     -- Verificar existencia
     IF NOT EXISTS (
-        SELECT 1 FROM Empleado 
+        SELECT 1 FROM dbo.Empleado 
         WHERE ValorDocumentoIdentidad = @inValorDocumentoIdentidad AND EsActivo = 1
     )
     BEGIN
@@ -33,7 +33,7 @@ BEGIN
     END
 
     -- Realizar borrado lógico
-    UPDATE Empleado
+    UPDATE dbo.Empleado
     SET EsActivo = 0
     WHERE ValorDocumentoIdentidad = @inValorDocumentoIdentidad;
 
