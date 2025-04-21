@@ -27,39 +27,39 @@ BEGIN
     -- Validación: el nombre debe ser alfabético (puede incluir espacios)
     IF (@inNombreEmpleado LIKE '%[^a-zA-Z ]%')
     BEGIN
-      SET @outResultCode = 50009; -- Error: nombre no alfabético
+      SET @outResultCode = 50009; -- Nombre de empleado no alfabético
       RETURN;
     END
 
     -- Validación: el valor de documento debe ser numérico
     IF (@inValorDocumentoIdentidad LIKE '%[^0-9]%')
     BEGIN
-      SET @outResultCode = 50010; -- Error: documento no numérico
+      SET @outResultCode = 50010; -- Valor de documento de identidad no alfabético
       RETURN;
     END
 
     -- Validación: no exista empleado con mismo nombre
     IF EXISTS (
-        SELECT 1 FROM Empleado 
+        SELECT 1 FROM dbo.Empleado 
         WHERE RTRIM(LTRIM(Nombre)) = RTRIM(LTRIM(@inNombreEmpleado))
     )
     BEGIN
-      SET @outResultCode = 50005; -- Error: nombre ya existe
+      SET @outResultCode = 50005; -- Empleado con mismo nombre ya existe en inserción
       RETURN;
     END
 
     -- Validación: no exista empleado con mismo documento
     IF EXISTS (
-        SELECT 1 FROM Empleado 
+        SELECT 1 FROM dbo.Empleado 
         WHERE ValorDocumentoIdentidad = @inValorDocumentoIdentidad
     )
     BEGIN
-      SET @outResultCode = 50004; -- Error: documento ya existe
+      SET @outResultCode = 50004; -- Empleado con ValorDocumentoIdentidad ya existe en inserción
       RETURN;
     END
 
     -- Inserción del nuevo empleado
-    INSERT INTO Empleado
+    INSERT INTO dbo.Empleado
     (
         IdPuesto,
         ValorDocumentoIdentidad,
@@ -86,3 +86,4 @@ BEGIN
   END CATCH
   SET NOCOUNT OFF;
 END
+GO
