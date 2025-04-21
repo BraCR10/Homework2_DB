@@ -34,8 +34,8 @@ BEGIN
         P.Nombre AS NombrePuesto,
         E.SaldoVacaciones
       FROM 
-        Empleado E
-        INNER JOIN Puesto P ON E.IdPuesto = P.Id
+        dbo.Empleado E
+        INNER JOIN dbo.Puesto P ON E.IdPuesto = P.Id
       WHERE 
         E.EsActivo = 1
       ORDER BY 
@@ -54,8 +54,8 @@ BEGIN
         P.Nombre AS NombrePuesto,
         E.SaldoVacaciones
       FROM 
-        Empleado E
-        INNER JOIN Puesto P ON E.IdPuesto = P.Id
+        dbo.Empleado E
+        INNER JOIN dbo.Puesto P ON E.IdPuesto = P.Id
       WHERE 
         E.EsActivo = 1
         AND E.Nombre LIKE '%' + @inFiltro + '%'
@@ -75,8 +75,8 @@ BEGIN
         P.Nombre AS NombrePuesto,
         E.SaldoVacaciones
       FROM 
-        Empleado E
-        INNER JOIN Puesto P ON E.IdPuesto = P.Id
+        dbo.Empleado E
+        INNER JOIN dbo.Puesto P ON E.IdPuesto = P.Id
       WHERE 
         E.EsActivo = 1
         AND CAST(E.ValorDocumentoIdentidad AS VARCHAR) LIKE '%' + @inFiltro + '%'
@@ -90,7 +90,8 @@ BEGIN
     SET @outResultCode = 0;
   END TRY
   BEGIN CATCH 
-	SET @outResultCode=50005; -- Código 50005 significa que hubo un error listando los empleados
+	SET @outResultCode=50008; -- Error de base de datos
   END CATCH
   SET NOCOUNT OFF;
 END
+GO
