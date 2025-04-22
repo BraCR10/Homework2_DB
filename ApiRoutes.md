@@ -142,17 +142,18 @@ POST /api/v2/employee
 
 ### Actualizar empleado
 ```
-PATCH /api/v2/employee
+PATCH /api/v2/employee/:IdEmpelado
 ```
 
 **Descripción**: Actualiza información de un empleado existente.
 
-**Parámetros**: Ninguno
+**Parámetros**: 
+- `IdEmpelado`: Id del empleado
+
 
 **Body**:
 ```json
 {
-  "IdEmpelado": 1,
   "NombrePuesto": "string", // opcional
   "ValorDocumentoIdentidad": "string", // opcional
   "NombreEmpleado": "string" // opcional
@@ -183,19 +184,16 @@ PATCH /api/v2/employee
 
 ### Eliminar empleado
 ```
-DELETE /api/v2/employee
+DELETE /api/v2/employee/:IdEmpelado
 ```
 
 **Descripción**: Elimina permanentemente un empleado.
 
-**Parámetros**: Ninguno
+**Parámetros**: 
+- `IdEmpelado`: Id del empleado
 
-**Body**:
-```json
-{
-  "IdEmpelado": 1
-}
-```
+
+**Body**: Ninguno
 
 **Respuesta exitosa** (200 OK):
 ```json
@@ -209,19 +207,15 @@ DELETE /api/v2/employee
 
 ### Intentar eliminar empleado (verificación)
 ```
-POST /api/v2/employee/deleteTry
+POST /api/v2/employee/deleteTry/:IdEmpelado
 ```
 
 **Descripción**: Verifica si un empleado puede ser eliminado sin afectar la integridad de datos.
 
-**Parámetros**: Ninguno
+**Parámetros**: 
+- `IdEmpelado`: Id del empleado
 
-**Body**:
-```json
-{
-  "IdEmpelado": 1
-}
-```
+**Body**: Ninguno
 
 **Respuesta exitosa** (200 OK):
 ```json
