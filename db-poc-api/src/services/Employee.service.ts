@@ -1,15 +1,15 @@
-import { query } from "../config/db.config";
+import { execute } from "../config/db.config";
 import { TYPES } from "mssql";
 import { inSqlParameters } from "../types/queryParams.type";
 import { useMock } from "../app";
-import ErrorHandler  from "../utils/ErrorHandler";
+import ErrorHandler from "../utils/ErrorHandler";
 import {
   GetEmployeesSuccessResponseDTO,
   CreateEmployeesSuccessResponseDTO,
   CreateEmployeesDTO,
   EmployeesErrorResponseDTO,
   UpdateEmployeesDTO,
-  UpdateEmployeesSuccessResponseDTO,  
+  UpdateEmployeesSuccessResponseDTO,
   TryDeleteEmployeeDTO,
   TryDeleteEmployeeSuccessResponseDTO,
   DeleteEmployeeDTO,
@@ -21,7 +21,9 @@ import {
 } from "../dtos/EmployeeDTO";
 
 class EmployeeService {
-  async createEmployee(data : CreateEmployeesDTO): Promise<CreateEmployeesSuccessResponseDTO | EmployeesErrorResponseDTO> {
+  async createEmployee(
+    data: CreateEmployeesDTO,
+  ): Promise<CreateEmployeesSuccessResponseDTO | EmployeesErrorResponseDTO> {
     const params: inSqlParameters = {
       inNombrePuesto: [data.NombrePuesto, TYPES.VarChar],
       inValorDocumentoIndentidad: [data.ValorDocumentoIdentidad, TYPES.VarChar],
@@ -29,16 +31,20 @@ class EmployeeService {
     };
 
     try {
-      if (useMock) return { success:true , data: { id: 1, detail: "Employ was created" } };
-      else{
-        const response = await query("sp_create_employee", params,{});
+      if (useMock)
+        return { success: true, data: { id: 1, detail: "Employ was created" } };
+      else {
+        const response = await execute("sp_create_employee", params, {});
         if (response.output.outResultCode == 0) {
           const data = response.recordset[0];
-          return  { success:true , data: { id: data.Id, detail: "Employ was created" } };
-        } else{
+          return {
+            success: true,
+            data: { id: data.Id, detail: "Employ was created" },
+          };
+        } else {
           return ErrorHandler(response) as EmployeesErrorResponseDTO;
         }
-      /*
+        /*
         } else if( response.output.outResultCode == 50005){
           return { success:false ,code: 50005, details: "Employee name already exists" };
         }else if(response.output.outResultCode == 50004){
@@ -59,14 +65,42 @@ class EmployeeService {
     }
   }
 
-  async getEmployees(): Promise<GetEmployeesSuccessResponseDTO | EmployeesErrorResponseDTO> {
-    if (useMock) return { success:true , data: { total: 1, empleados: [{ Id: 1, IdPuesto: 1, NombrePuesto: "test", ValorDocumentoIdentidad: "test", Nombre: "test", FechaContratacion: "2023-10-01", SaldoVacaciones: 0, EsActivo: true }] } };
+  async getEmployees(): Promise<
+    GetEmployeesSuccessResponseDTO | EmployeesErrorResponseDTO
+  > {
+    if (useMock)
+      return {
+        success: true,
+        data: {
+          total: 1,
+          empleados: [
+            {
+              Id: 1,
+              IdPuesto: 1,
+              NombrePuesto: "test",
+              ValorDocumentoIdentidad: "test",
+              Nombre: "test",
+              FechaContratacion: "2023-10-01",
+              SaldoVacaciones: 0,
+              EsActivo: true,
+            },
+          ],
+        },
+      };
     else {
       try {
-        const response = await query("sp_get_all_employees", {},{});
+        const response = await execute("sp_get_all_employees", {}, {});
         if (response.output.outResultCode == 0) {
-          const sortedEmployees = response.recordset.sort((a, b) => a.NameEmployee.localeCompare(b.NameEmployee));
-          return { success:true , data: { total: response.recordset.length, empleados: sortedEmployees } };
+          const sortedEmployees = response.recordset.sort((a, b) =>
+            a.NameEmployee.localeCompare(b.NameEmployee),
+          );
+          return {
+            success: true,
+            data: {
+              total: response.recordset.length,
+              empleados: sortedEmployees,
+            },
+          };
         } else {
           return ErrorHandler(response) as EmployeesErrorResponseDTO;
         }
@@ -75,7 +109,7 @@ class EmployeeService {
       }
     }
   }
-/*
+  /*
   async getEmployeeById(id: number): Promise<any> {
     if (!id || id < 1) {
       throw new Error("Invalid id");
@@ -98,8 +132,9 @@ class EmployeeService {
     }
   }
 */
-  async updateEmployee(data: UpdateEmployeesDTO): Promise<UpdateEmployeesSuccessResponseDTO | EmployeesErrorResponseDTO> {
-
+  async updateEmployee(
+    data: UpdateEmployeesDTO,
+  ): Promise<UpdateEmployeesSuccessResponseDTO | EmployeesErrorResponseDTO> {
     const params: inSqlParameters = {
       inIdEmpleado: [String(data.IdEmpleado), TYPES.Int],
       inNombrePuesto: [data.NombrePuesto, TYPES.VarChar],
@@ -108,13 +143,34 @@ class EmployeeService {
     };
 
     try {
-      if (useMock) return { success:true , data: { message: "Employ was updated", updatedFields: ["NombrePuesto", "ValorDocumentoIdentidad", "NombreEmpleado"] } };
-      else{
-        const response = await query("sp_update_employee", params,{});
+      if (useMock)
+        return {
+          success: true,
+          data: {
+            message: "Employ was updated",
+            updatedFields: [
+              "NombrePuesto",
+              "ValorDocumentoIdentidad",
+              "NombreEmpleado",
+            ],
+          },
+        };
+      else {
+        const response = await execute("sp_update_employee", params, {});
         if (response.output.outResultCode == 0) {
           const data = response.recordset[0];
-          return { success:true , data: { message: "Employ was updated", updatedFields: ["NombrePuesto", "ValorDocumentoIdentidad", "NombreEmpleado"] } };
-        }else{
+          return {
+            success: true,
+            data: {
+              message: "Employ was updated",
+              updatedFields: [
+                "NombrePuesto",
+                "ValorDocumentoIdentidad",
+                "NombreEmpleado",
+              ],
+            },
+          };
+        } else {
           return ErrorHandler(response) as EmployeesErrorResponseDTO;
         }
         /*} else if(response.output.outResultCode == 50007){
@@ -137,19 +193,34 @@ class EmployeeService {
     }
   }
 
-  async tryDeleteEmployee(data: TryDeleteEmployeeDTO): Promise<TryDeleteEmployeeSuccessResponseDTO | EmployeesErrorResponseDTO> {
+  async tryDeleteEmployee(
+    data: TryDeleteEmployeeDTO,
+  ): Promise<TryDeleteEmployeeSuccessResponseDTO | EmployeesErrorResponseDTO> {
     const params: inSqlParameters = {
       inIdEmpleado: [String(data.IdEmpleado), TYPES.Int],
     };
 
     try {
-      if (useMock) return { success:true , data: { canDelete: true, detail: "Employee can be deleted without conflicts" } };
-      else{
-        const response = await query("sp_try_delete_employee", params,{});
+      if (useMock)
+        return {
+          success: true,
+          data: {
+            canDelete: true,
+            detail: "Employee can be deleted without conflicts",
+          },
+        };
+      else {
+        const response = await execute("sp_try_delete_employee", params, {});
         if (response.output.outResultCode == 0) {
           const data = response.recordset[0];
-          return { success:true , data: { canDelete: data.CanDelete, detail: "Employee can be deleted without conflicts"  } };
-        }else{
+          return {
+            success: true,
+            data: {
+              canDelete: data.CanDelete,
+              detail: "Employee can be deleted without conflicts",
+            },
+          };
+        } else {
           return ErrorHandler(response) as EmployeesErrorResponseDTO;
         }
       }
@@ -159,19 +230,22 @@ class EmployeeService {
     }
   }
 
-  async deleteEmployee(data: DeleteEmployeeDTO): Promise<DeleteEmployeeSuccessResponseDTO | EmployeesErrorResponseDTO> {
+  async deleteEmployee(
+    data: DeleteEmployeeDTO,
+  ): Promise<DeleteEmployeeSuccessResponseDTO | EmployeesErrorResponseDTO> {
     const params: inSqlParameters = {
       inIdEmpleado: [String(data.IdEmpleado), TYPES.Int],
     };
 
     try {
-      if (useMock) return { success:true , data: { message: "Employ was deleted", deletedId: 1 } };
-      else{
-        const response = await query("sp_delete_employee", params,{});
+      if (useMock)
+        return { success: true, data: { detail: "Employ was deleted" } };
+      else {
+        const response = await execute("sp_delete_employee", params, {});
         if (response.output.outResultCode == 0) {
           const data = response.recordset[0];
-          return { success:true , data: { message: "Employ was deleted", deletedId: data.Id } };
-        }else{
+          return { success: true, data: { detail: "Employ was deleted" } };
+        } else {
           return ErrorHandler(response) as EmployeesErrorResponseDTO;
         }
       }
@@ -181,19 +255,47 @@ class EmployeeService {
     }
   }
 
-  async getEmployeeByName(data: GetEmployeeByNameDTO): Promise<GetEmployeeByNameSuccessResponseDTO | EmployeesErrorResponseDTO> {
+  async getEmployeeByName(
+    data: GetEmployeeByNameDTO,
+  ): Promise<GetEmployeeByNameSuccessResponseDTO | EmployeesErrorResponseDTO> {
     const params: inSqlParameters = {
-      inNombreEmpleado: [data.EmployeeName, TYPES.VarChar],
+      inNombreEmpleado: [data.employeeName, TYPES.VarChar],
     };
 
     try {
-      if (useMock) return { success:true , data: { total: 1, empleados: [{ Id: 1, IdPuesto: 1, NombrePuesto: "test", ValorDocumentoIdentidad: "test", Nombre: "test", FechaContratacion: "2023-10-01", SaldoVacaciones: 0, EsActivo: true }] } };
-      else{
-        const response = await query("sp_get_employee_by_name", params,{});
+      if (useMock)
+        return {
+          success: true,
+          data: {
+            total: 1,
+            empleados: [
+              {
+                Id: 1,
+                IdPuesto: 1,
+                NombrePuesto: "test",
+                ValorDocumentoIdentidad: "1211111",
+                Nombre: "test",
+                FechaContratacion: "2023-10-01",
+                SaldoVacaciones: 0,
+                EsActivo: true,
+              },
+            ],
+          },
+        };
+      else {
+        const response = await execute("sp_get_employee_by_name", params, {});
         if (response.output.outResultCode == 0) {
-          const sortedEmployees = response.recordset.sort((a, b) => a.NameEmployee.localeCompare(b.NameEmployee));
-          return { success:true , data: { total: response.recordset.length, empleados: sortedEmployees } };
-        }else{
+          const sortedEmployees = response.recordset.sort((a, b) =>
+            a.NameEmployee.localeCompare(b.NameEmployee),
+          );
+          return {
+            success: true,
+            data: {
+              total: response.recordset.length,
+              empleados: sortedEmployees,
+            },
+          };
+        } else {
           return ErrorHandler(response) as EmployeesErrorResponseDTO;
         }
       }
@@ -203,20 +305,47 @@ class EmployeeService {
     }
   }
 
-
-  async getEmployeeByDNI(data: GetEmployeeByDNIDTO): Promise<GetEmployeeByDNISuccessResponseDTO | EmployeesErrorResponseDTO> {
+  async getEmployeeByDNI(
+    data: GetEmployeeByDNIDTO,
+  ): Promise<GetEmployeeByDNISuccessResponseDTO | EmployeesErrorResponseDTO> {
     const params: inSqlParameters = {
       inValorDocumentoIdentidad: [data.employeeDNI, TYPES.VarChar],
     };
 
     try {
-      if (useMock) return { success:true , data: { total: 1, empleados: [{ Id: 1, IdPuesto: 1, NombrePuesto: "test", ValorDocumentoIdentidad: "test", Nombre: "test", FechaContratacion: "2023-10-01", SaldoVacaciones: 0, EsActivo: true }] } };
-      else{
-        const response = await query("sp_get_employee_by_dni", params,{});
+      if (useMock)
+        return {
+          success: true,
+          data: {
+            total: 1,
+            empleados: [
+              {
+                Id: 1,
+                IdPuesto: 1,
+                NombrePuesto: "1211111",
+                ValorDocumentoIdentidad: "test",
+                Nombre: "test",
+                FechaContratacion: "2023-10-01",
+                SaldoVacaciones: 0,
+                EsActivo: true,
+              },
+            ],
+          },
+        };
+      else {
+        const response = await execute("sp_get_employee_by_dni", params, {});
         if (response.output.outResultCode == 0) {
-          const sortedEmployees = response.recordset.sort((a, b) => a.NameEmployee.localeCompare(b.NameEmployee));
-          return { success:true , data: { total: response.recordset.length, empleados: sortedEmployees } };
-        }else{
+          const sortedEmployees = response.recordset.sort((a, b) =>
+            a.NameEmployee.localeCompare(b.NameEmployee),
+          );
+          return {
+            success: true,
+            data: {
+              total: response.recordset.length,
+              empleados: sortedEmployees,
+            },
+          };
+        } else {
           return ErrorHandler(response) as EmployeesErrorResponseDTO;
         }
       }

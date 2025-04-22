@@ -1,41 +1,45 @@
-import  {LoginErrorResponseDTO,LoginDTO,LoginSuccessResponseDTO}  from "../dtos/AuthDTO";
-import { query } from "../config/db.config";
+import {
+  LoginErrorResponseDTO,
+  LoginDTO,
+  LoginSuccessResponseDTO,
+} from "../dtos/AuthDTO";
+import { execute } from "../config/db.config";
 import { TYPES } from "mssql";
 import { inSqlParameters } from "../types/queryParams.type";
 import { useMock } from "../app";
 
 class AuthService {
+  async loginUser(
+    credentials: LoginDTO,
+  ): Promise<LoginErrorResponseDTO | LoginSuccessResponseDTO> {
+    const { Username: username, Password: password } = credentials;
+    const params: inSqlParameters = {
+      inUsername: [username, TYPES.VarChar],
+      inPassword: [password, TYPES.VarChar],
+    };
 
-    async loginUser(credentials: LoginDTO): Promise<LoginErrorResponseDTO | LoginSuccessResponseDTO> {
-
-        const { Username: username, Password: password } = credentials;
-        const params: inSqlParameters = {
-            inUsername: [username, TYPES.VarChar],
-            inPassword: [password, TYPES.VarChar],
-        };
-
-        try {
-            if (useMock) return { success:true , Id : 1, Username: "test" };
-            else{
-                const response = await query("sp_login", params,{});
-                if (response.output.outResultCode == 0) {
-                    let data = response.recordset[0];
-                    const loginResponse: LoginSuccessResponseDTO = {
-                        success:true ,
-                        Id: data.Id,
-                        Username: credentials.Username,
-                    };
-                    return loginResponse;
-                }else {
-                    const mssqlError = response.recordset[0].Descripcion;
-                    const errorResponse: LoginErrorResponseDTO = {
-                        success:false ,
-                        code: response.output.outResultCode,
-                        details: mssqlError,
-                    };
-                    return errorResponse;
-                }
-                /*    
+    try {
+      if (useMock) return { success: true, Id: 1, Username: "test" };
+      else {
+        const response = await execute("sp_login", params, {});
+        if (response.output.outResultCode == 0) {
+          let data = response.recordset[0];
+          const loginResponse: LoginSuccessResponseDTO = {
+            success: true,
+            Id: data.Id,
+            Username: credentials.Username,
+          };
+          return loginResponse;
+        } else {
+          const mssqlError = response.recordset[0].Descripcion;
+          const errorResponse: LoginErrorResponseDTO = {
+            success: false,
+            code: response.output.outResultCode,
+            details: mssqlError,
+          };
+          return errorResponse;
+        }
+        /*    
                 } else if( response.output.outResultCode == 50001){
                     return { success:false ,code: 50001, details: "username doesn't exist" };
                 } else if(response.output.outResultCode == 50002){
@@ -50,39 +54,35 @@ class AuthService {
                 else {
                     throw new Error("Employ was not created due to DB error");
                 }*/
-
-            }
-        } catch (error) {
-            console.error("Error details:", error);
-            throw new Error(`An error occurred while creating the employ: ${error}`);
-        }
+      }
+    } catch (error) {
+      console.error("Error details:", error);
+      throw new Error(`An error occurred while creating the employ: ${error}`);
     }
+  }
 
-    async logoutUser(userId: number): Promise<boolean> {
-        if (!userId){
-            false
-        }
-        const params: inSqlParameters = {
-            inUserId: [String(userId), TYPES.Int],
-        };
-        try {
-            if (useMock) return true;
-            else {
-                const response = await query("sp_logout", params, {});
-                if (response.output.outResultCode == 0) {
-                    return true;
-                } 
-                else {
-                    throw new Error("DB error");
-                }
-            }
-        }
-        catch (error) {
-            console.error("Error details:", error);
-            throw new Error(`An error occurred while creating the employ: ${error}`);
-        }
+  async logoutUser(userId: number): Promise<boolean> {
+    if (!userId) {
+      false;
     }
-
+    const params: inSqlParameters = {
+      inUserId: [String(userId), TYPES.Int],
+    };
+    try {
+      if (useMock) return true;
+      else {
+        const response = await execute("sp_logout", params, {});
+        if (response.output.outResultCode == 0) {
+          return true;
+        } else {
+          throw new Error("DB error");
+        }
+      }
+    } catch (error) {
+      console.error("Error details:", error);
+      throw new Error(`An error occurred while creating the employ: ${error}`);
+    }
+  }
 }
 
 export default new AuthService();
