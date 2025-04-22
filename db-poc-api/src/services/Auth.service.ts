@@ -23,9 +23,19 @@ class AuthService {
                     const loginResponse: LoginSuccessResponseDTO = {
                         success:true ,
                         Id: data.Id,
-                        Username: data.Username,
+                        Username: credentials.Username,
                     };
                     return loginResponse;
+                }else {
+                    const mssqlError = response.recordset[0].Descripcion;
+                    const errorResponse: LoginErrorResponseDTO = {
+                        success:false ,
+                        code: response.output.outResultCode,
+                        details: mssqlError,
+                    };
+                    return errorResponse;
+                }
+                /*    
                 } else if( response.output.outResultCode == 50001){
                     return { success:false ,code: 50001, details: "username doesn't exist" };
                 } else if(response.output.outResultCode == 50002){
@@ -39,7 +49,8 @@ class AuthService {
                 } 
                 else {
                     throw new Error("Employ was not created due to DB error");
-                }
+                }*/
+
             }
         } catch (error) {
             console.error("Error details:", error);

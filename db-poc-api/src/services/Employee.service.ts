@@ -26,6 +26,16 @@ class EmployeeService {
         if (response.output.outResultCode == 0) {
           const data = response.recordset[0];
           return  { success:true , data: { id: data.Id, detail: "Employ was created" } };
+        } else{
+          const mssqlError = response.recordset[0].Descripcion;
+          const errorResponse: EmployeesErrorResponseDTO = {
+            success:false ,
+            code: response.output.outResultCode,
+            details: mssqlError,
+          };
+          return errorResponse;
+        }
+      /*
         } else if( response.output.outResultCode == 50005){
           return { success:false ,code: 50005, details: "Employee name already exists" };
         }else if(response.output.outResultCode == 50004){
@@ -38,7 +48,7 @@ class EmployeeService {
           return { success:false ,code: 50008, details: "DB error" };
         } else {
           throw new Error("Employ was not created due to DB error");
-        }
+        }*/
       }
     } catch (error) {
       console.error("Error details:", error);
@@ -55,14 +65,20 @@ class EmployeeService {
           const sortedEmployees = response.recordset.sort((a, b) => a.NameEmployee.localeCompare(b.NameEmployee));
           return { success:true , data: { total: response.recordset.length, empleados: sortedEmployees } };
         } else {
-          return { success:false , code: 50008, details: "DB error" };
+          const mssqlError = response.recordset[0].Descripcion;
+          const errorResponse: EmployeesErrorResponseDTO = {
+            success:false ,
+            code: response.output.outResultCode,
+            details: mssqlError,
+          };
+          return errorResponse;
         }
       } catch (error) {
         throw new Error("Error fetching the data in the DB.");
       }
     }
   }
-
+/*
   async getEmployeeById(id: number): Promise<any> {
     if (!id || id < 1) {
       throw new Error("Invalid id");
@@ -77,13 +93,14 @@ class EmployeeService {
       if (response.output.outResultCode == 0) {
         return response.recordset[0];
       } else {
-        throw new Error("Employ was not created due to DB error");
+        
+
       }
     } catch (error) {
       throw new Error("Error fetching the data.");
     }
   }
-
+*/
   async updateEmployee(data: UpdateEmployeesDTO): Promise<UpdateEmployeesSuccessResponseDTO | EmployeesErrorResponseDTO> {
 
     const params: inSqlParameters = {
@@ -100,7 +117,16 @@ class EmployeeService {
         if (response.output.outResultCode == 0) {
           const data = response.recordset[0];
           return { success:true , data: { message: "Employ was updated", updatedFields: ["NombrePuesto", "ValorDocumentoIdentidad", "NombreEmpleado"] } };
-        } else if(response.output.outResultCode == 50007){
+        }else{
+          const mssqlError = response.recordset[0].Descripcion;
+          const errorResponse: EmployeesErrorResponseDTO = {
+            success:false ,
+            code: response.output.outResultCode,
+            details: mssqlError,
+          };
+          return errorResponse;
+        }
+        /*} else if(response.output.outResultCode == 50007){
           return { success:false ,code: 50006, details: "Employee name already exists" };
         }else if(response.output.outResultCode == 50006){
           return { success:false ,code: 50007, details: "Employee Document ID already exists" };
@@ -112,7 +138,7 @@ class EmployeeService {
           return { success:false ,code: 50008, details: "DB error" };
         } else {
           throw new Error("Employ was not created due to DB error");
-        }
+        }*/
       }
     } catch (error) {
       console.error("Error details:", error);
