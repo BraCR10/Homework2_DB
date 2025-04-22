@@ -6,11 +6,10 @@ import Router from "./routes";
 const app = express();
 export const useMock = true;
 
-
 const allowedOrigins = [
-  'http://localhost:3001',
-  'http://localhost:3000',
-  'https:/domain.com'
+  "http://localhost:3001",
+  "http://localhost:3000",
+  
 ];
 const corsOptions = {
   origin: allowedOrigins,
