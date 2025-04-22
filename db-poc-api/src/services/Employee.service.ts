@@ -15,7 +15,9 @@ import {
   DeleteEmployeeDTO,
   DeleteEmployeeSuccessResponseDTO,
   GetEmployeeByNameDTO,
-  GetEmployeeByNameSuccessResponseDTO
+  GetEmployeeByNameSuccessResponseDTO,
+  GetEmployeeByDNIDTO,
+  GetEmployeeByDNISuccessResponseDTO,
 } from "../dtos/EmployeeDTO";
 
 class EmployeeService {
@@ -202,7 +204,27 @@ class EmployeeService {
   }
 
 
-  //async getEmployeeByDNI()
+  async getEmployeeByDNI(data: GetEmployeeByDNIDTO): Promise<GetEmployeeByDNISuccessResponseDTO | EmployeesErrorResponseDTO> {
+    const params: inSqlParameters = {
+      inValorDocumentoIdentidad: [data.employeeDNI, TYPES.VarChar],
+    };
+
+    try {
+      if (useMock) return { success:true , data: { total: 1, empleados: [{ Id: 1, IdPuesto: 1, NombrePuesto: "test", ValorDocumentoIdentidad: "test", Nombre: "test", FechaContratacion: "2023-10-01", SaldoVacaciones: 0, EsActivo: true }] } };
+      else{
+        const response = await query("sp_get_employee_by_dni", params,{});
+        if (response.output.outResultCode == 0) {
+          const sortedEmployees = response.recordset.sort((a, b) => a.NameEmployee.localeCompare(b.NameEmployee));
+          return { success:true , data: { total: response.recordset.length, empleados: sortedEmployees } };
+        }else{
+          return ErrorHandler(response) as EmployeesErrorResponseDTO;
+        }
+      }
+    } catch (error) {
+      console.error("Error details:", error);
+      throw new Error(`An error occurred while creating the employ: ${error}`);
+    }
+  }
 }
 
 export default new EmployeeService();
