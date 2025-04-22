@@ -59,7 +59,7 @@ export const getEmployees = async (
 };
 
 
-
+/*
 export const getEmployeeById = async (
   req: Request,
   res: Response,
@@ -74,7 +74,7 @@ export const getEmployeeById = async (
     res.status(500).json({ success: false, error: errorMessage });
   }
 };
-
+*/
 
 export const updateEmployee = async (
   req: Request,
