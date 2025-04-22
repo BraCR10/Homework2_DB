@@ -4,7 +4,6 @@ import {
   GetEmployeeMovementsDTO,
   MovementsErrorResponseDTO,
   CreateMovementsDTO,
-  MovementsTypesDataDTO,
 } from "../dtos/MovementsDTO";
 
 export const getEmployeeMovements = async (
