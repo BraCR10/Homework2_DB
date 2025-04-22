@@ -29,7 +29,7 @@ router.patch("/employee/:IdEmpelado", updateEmployee);
 router.delete("/employee/:IdEmpelado", deleteEmployee);
 router.post("/employee/deleteTry/:IdEmpelado", tryDeleteEmployee);
 router.get("/employee/name/:employeeName", getEmployeeByName);
-router.get("/employee//DNI/:employeeDNI", getEmployeeByDNI);
+router.get("/employee/DNI/:employeeDNI", getEmployeeByDNI);
 
 // Movement routes
 router.get("/movement/:idEmpleado", getEmployeeMovements);

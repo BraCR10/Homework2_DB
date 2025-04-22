@@ -100,7 +100,7 @@ export const updateEmployee = async (
   try {
     const IdEmpleado = Number(req.params.IdEmpleado);
 
-    if (isNaN(IdEmpleado) || IdEmpleado <= 0) {
+    if (!isNaN(IdEmpleado) || IdEmpleado <= 0) {
       const errorResponse: EmployeesErrorResponseDTO = {
         success: false,
         code: 400,
@@ -180,7 +180,7 @@ export const deleteEmployee = async (
 ): Promise<void> => {
   const IdEmpleado = Number(req.params.IdEmpleado);
 
-  if (isNaN(IdEmpleado) || IdEmpleado <= 0) {
+  if (!isNaN(IdEmpleado) || IdEmpleado <= 0) {
     const errorResponse: EmployeesErrorResponseDTO = {
       success: false,
       code: 400,
@@ -217,7 +217,7 @@ export const tryDeleteEmployee = async (
 ): Promise<void> => {
   const IdEmpleado = Number(req.params.IdEmpleado);
 
-  if (isNaN(IdEmpleado) || IdEmpleado <= 0) {
+  if (!isNaN(IdEmpleado) || IdEmpleado <= 0) {
     const errorResponse: EmployeesErrorResponseDTO = {
       success: false,
       code: 400,
