@@ -49,4 +49,51 @@ export interface UpdateEmployeesSuccessResponseDTO{
     }
 }
 
+export interface TryDeleteEmployeeDTO {
+    IdEmpleado: number;
+}
+export interface TryDeleteEmployeeSuccessResponseDTO{
+    success: boolean;
+    data: {
+        canDelete : boolean;
+        detail : string;
+    }
+}
+
+export interface DeleteEmployeeDTO {
+    IdEmpleado: number;
+}
+export interface DeleteEmployeeSuccessResponseDTO{
+    success: boolean;
+    data: {
+        message : string;
+        deletedId : number;
+    }
+}
+
+export interface GetEmployeeByNameDTO {
+    EmployeeName: string;
+}
+export interface GetEmployeeByNameSuccessResponseDTO{
+    success: boolean;
+    data: {
+        total: number;
+        empleados: EmployeesDataDTO[];
+    }
+}
+
+export interface GetEmployeeByDNIDTO {
+    employeeDNI: string;
+}
+export interface GetEmployeeByDNISuccessResponseDTO{
+    success: boolean;
+    data: {
+        total: number;
+        empleados: EmployeesDataDTO[];
+    }
+}
+
+
+
+
 export interface EmployeesErrorResponseDTO extends  ErrorResponseDTO{}
