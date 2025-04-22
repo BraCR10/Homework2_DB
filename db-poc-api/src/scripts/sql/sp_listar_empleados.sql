@@ -28,11 +28,16 @@ BEGIN
     -- Si el filtro está vacío, se listan todos los empleados activos
     IF (@inFiltro = '')
     BEGIN
-      SELECT 
+      SELECT
+	    E.Id,
+		E.IdPuesto,
+		P.Nombre AS NombrePuesto,
+		E.ValorDocumentoIdentidad,
         E.Nombre,
-        E.ValorDocumentoIdentidad,
-        P.Nombre AS NombrePuesto,
-        E.SaldoVacaciones
+		E.FechaContratacion,
+        E.SaldoVacaciones,
+		E.EsActivo
+
       FROM 
         dbo.Empleado E
         INNER JOIN dbo.Puesto P ON E.IdPuesto = P.Id
@@ -49,10 +54,14 @@ BEGIN
     IF (@inFiltro LIKE '%[^0-9]%')
     BEGIN
       SELECT 
+        E.Id,
+		E.IdPuesto,
+		P.Nombre AS NombrePuesto,
+		E.ValorDocumentoIdentidad,
         E.Nombre,
-        E.ValorDocumentoIdentidad,
-        P.Nombre AS NombrePuesto,
-        E.SaldoVacaciones
+		E.FechaContratacion,
+        E.SaldoVacaciones,
+		E.EsActivo
       FROM 
         dbo.Empleado E
         INNER JOIN dbo.Puesto P ON E.IdPuesto = P.Id
@@ -69,11 +78,15 @@ BEGIN
     -- Si el filtro contiene solo números (búsqueda por documento)
     IF (@inFiltro NOT LIKE '%[^0-9]%')
     BEGIN
-      SELECT 
+      SELECT
+		E.Id,
+		E.IdPuesto,
+		P.Nombre AS NombrePuesto,
+		E.ValorDocumentoIdentidad,
         E.Nombre,
-        E.ValorDocumentoIdentidad,
-        P.Nombre AS NombrePuesto,
-        E.SaldoVacaciones
+		E.FechaContratacion,
+        E.SaldoVacaciones,
+		E.EsActivo
       FROM 
         dbo.Empleado E
         INNER JOIN dbo.Puesto P ON E.IdPuesto = P.Id
