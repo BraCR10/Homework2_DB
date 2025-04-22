@@ -16,9 +16,7 @@ CREATE PROCEDURE [dbo].[sp_login]
     @inUsername VARCHAR(64),
     @inPassword VARCHAR(64),
     @inIP VARCHAR(64),
-    @outResultCode INT OUTPUT,
-	@outIdevent INT OUTPUT,
-	@outDescripcion VARCHAR(128) OUTPUT
+    @outResultCode INT OUTPUT
 )
 AS
 BEGIN
@@ -28,6 +26,7 @@ BEGIN
     DECLARE @userId INT;
     DECLARE @intentosFallidos INT;
     DECLARE @fechaUltimoDeshabilitado DATETIME;
+	DECLARE @Descripcion VARCHAR(128);
 
     -- Verificar si el usuario existe
     SELECT @userId = Id
@@ -42,7 +41,7 @@ BEGIN
         INSERT INTO dbo.BitacoraEvento (IdTipoEvento, Descripcion, IdPostByUser, PostInIP, PostTime)
         VALUES (2, 'Username no existe', NULL, @inIP, GETDATE());
 
-		SELECT @outDescripcion = Descripcion
+		SELECT @Descripcion = Descripcion
 		FROM dbo.Error
 		WHERE Codigo = @outResultCode;
 
@@ -75,7 +74,7 @@ BEGIN
 
             SET @outResultCode = 50003; -- Login deshabilitado
 
-			SELECT @outDescripcion = Descripcion
+			SELECT @Descripcion = Descripcion
 			FROM dbo.Error
 			WHERE Codigo = @outResultCode;
 
@@ -84,7 +83,7 @@ BEGIN
         BEGIN
             SET @outResultCode = 50003; -- Login deshabilitado recientemente
 
-			SELECT @outDescripcion = Descripcion
+			SELECT @Descripcion = Descripcion
 			FROM dbo.Error
 			WHERE Codigo = @outResultCode;
 
@@ -114,7 +113,7 @@ BEGIN
 
         SET @outResultCode = 50002; -- Contraseña incorrecta
 
-		SELECT @outDescripcion = Descripcion
+		SELECT @Descripcion = Descripcion
 		FROM dbo.Error
 		WHERE Codigo = @outResultCode;
 
@@ -134,13 +133,13 @@ BEGIN
     );
 
     SET @outResultCode = 0; -- Login exitoso
-	SET @outIdevent = 1; -- login exitoso
+	SELECT @userId;
 
   END TRY
   BEGIN CATCH
     SET @outResultCode = 50008; -- Error general de base de datos
 
-	SELECT @outDescripcion = Descripcion
+	SELECT @Descripcion = Descripcion
 	FROM dbo.Error
 	WHERE Codigo = @outResultCode;
 
