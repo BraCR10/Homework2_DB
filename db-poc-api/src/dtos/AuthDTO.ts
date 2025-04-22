@@ -1,14 +1,14 @@
-import ErrorResponseDTO  from "./ErrorResponseDTO";
+import ErrorResponseDTO from "./ErrorResponseDTO";
 
-export  interface LoginDTO {
-    Username: string;
-    Password: string;
+export interface LoginDTO {
+  Username: string;
+  Password: string;
 }
 
-export interface LoginSuccessResponseDTO { 
-    success: boolean;
-    Id: number;
-    Username: string;
+export interface LoginSuccessResponseDTO {
+  success: boolean;
+  Id: number;
+  Username: string;
 }
 
 export interface LoginErrorResponseDTO extends ErrorResponseDTO {}
