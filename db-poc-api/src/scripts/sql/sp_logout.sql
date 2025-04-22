@@ -12,6 +12,14 @@ GO
 -- Description:	<Registrar logout>
 -- =============================================
 CREATE PROCEDURE [dbo].[sp_logout]
+USE [Database_Tarea2]
+GO
+/****** Object:  StoredProcedure [dbo].[sp_logout]    Script Date: 4/22/2025 2:08:42 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[sp_logout]
 (
     @inUserId INT,
     @inIP VARCHAR(64),
@@ -21,6 +29,8 @@ AS
 BEGIN
   SET NOCOUNT ON;
   BEGIN TRY
+
+	DECLARE @Descripcion VARCHAR(128);
 
     INSERT INTO dbo.BitacoraEvento (
         IdTipoEvento,
@@ -38,6 +48,8 @@ BEGIN
     );
 
     SET @outResultCode = 0;
+
+	SELECT @Descripcion = 'Sesión finalizada correctamente';
 
   END TRY
   BEGIN CATCH
