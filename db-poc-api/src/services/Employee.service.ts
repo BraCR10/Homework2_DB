@@ -2,13 +2,20 @@ import { query } from "../config/db.config";
 import { TYPES } from "mssql";
 import { inSqlParameters } from "../types/queryParams.type";
 import { useMock } from "../app";
+import ErrorHandler  from "../utils/ErrorHandler";
 import {
   GetEmployeesSuccessResponseDTO,
-  EmployeesErrorResponseDTO,
   CreateEmployeesSuccessResponseDTO,
   CreateEmployeesDTO,
+  EmployeesErrorResponseDTO,
   UpdateEmployeesDTO,
   UpdateEmployeesSuccessResponseDTO,  
+  TryDeleteEmployeeDTO,
+  TryDeleteEmployeeSuccessResponseDTO,
+  DeleteEmployeeDTO,
+  DeleteEmployeeSuccessResponseDTO,
+  GetEmployeeByNameDTO,
+  GetEmployeeByNameSuccessResponseDTO
 } from "../dtos/EmployeeDTO";
 
 class EmployeeService {
@@ -27,13 +34,7 @@ class EmployeeService {
           const data = response.recordset[0];
           return  { success:true , data: { id: data.Id, detail: "Employ was created" } };
         } else{
-          const mssqlError = response.recordset[0].Descripcion;
-          const errorResponse: EmployeesErrorResponseDTO = {
-            success:false ,
-            code: response.output.outResultCode,
-            details: mssqlError,
-          };
-          return errorResponse;
+          return ErrorHandler(response) as EmployeesErrorResponseDTO;
         }
       /*
         } else if( response.output.outResultCode == 50005){
@@ -65,13 +66,7 @@ class EmployeeService {
           const sortedEmployees = response.recordset.sort((a, b) => a.NameEmployee.localeCompare(b.NameEmployee));
           return { success:true , data: { total: response.recordset.length, empleados: sortedEmployees } };
         } else {
-          const mssqlError = response.recordset[0].Descripcion;
-          const errorResponse: EmployeesErrorResponseDTO = {
-            success:false ,
-            code: response.output.outResultCode,
-            details: mssqlError,
-          };
-          return errorResponse;
+          return ErrorHandler(response) as EmployeesErrorResponseDTO;
         }
       } catch (error) {
         throw new Error("Error fetching the data in the DB.");
@@ -118,13 +113,7 @@ class EmployeeService {
           const data = response.recordset[0];
           return { success:true , data: { message: "Employ was updated", updatedFields: ["NombrePuesto", "ValorDocumentoIdentidad", "NombreEmpleado"] } };
         }else{
-          const mssqlError = response.recordset[0].Descripcion;
-          const errorResponse: EmployeesErrorResponseDTO = {
-            success:false ,
-            code: response.output.outResultCode,
-            details: mssqlError,
-          };
-          return errorResponse;
+          return ErrorHandler(response) as EmployeesErrorResponseDTO;
         }
         /*} else if(response.output.outResultCode == 50007){
           return { success:false ,code: 50006, details: "Employee name already exists" };
@@ -144,11 +133,76 @@ class EmployeeService {
       console.error("Error details:", error);
       throw new Error(`An error occurred while creating the employ: ${error}`);
     }
-
-    
-
-    
   }
+
+  async tryDeleteEmployee(data: TryDeleteEmployeeDTO): Promise<TryDeleteEmployeeSuccessResponseDTO | EmployeesErrorResponseDTO> {
+    const params: inSqlParameters = {
+      inIdEmpleado: [String(data.IdEmpleado), TYPES.Int],
+    };
+
+    try {
+      if (useMock) return { success:true , data: { canDelete: true, detail: "Employee can be deleted without conflicts" } };
+      else{
+        const response = await query("sp_try_delete_employee", params,{});
+        if (response.output.outResultCode == 0) {
+          const data = response.recordset[0];
+          return { success:true , data: { canDelete: data.CanDelete, detail: "Employee can be deleted without conflicts"  } };
+        }else{
+          return ErrorHandler(response) as EmployeesErrorResponseDTO;
+        }
+      }
+    } catch (error) {
+      console.error("Error details:", error);
+      throw new Error(`An error occurred while creating the employ: ${error}`);
+    }
+  }
+
+  async deleteEmployee(data: DeleteEmployeeDTO): Promise<DeleteEmployeeSuccessResponseDTO | EmployeesErrorResponseDTO> {
+    const params: inSqlParameters = {
+      inIdEmpleado: [String(data.IdEmpleado), TYPES.Int],
+    };
+
+    try {
+      if (useMock) return { success:true , data: { message: "Employ was deleted", deletedId: 1 } };
+      else{
+        const response = await query("sp_delete_employee", params,{});
+        if (response.output.outResultCode == 0) {
+          const data = response.recordset[0];
+          return { success:true , data: { message: "Employ was deleted", deletedId: data.Id } };
+        }else{
+          return ErrorHandler(response) as EmployeesErrorResponseDTO;
+        }
+      }
+    } catch (error) {
+      console.error("Error details:", error);
+      throw new Error(`An error occurred while creating the employ: ${error}`);
+    }
+  }
+
+  async getEmployeeByName(data: GetEmployeeByNameDTO): Promise<GetEmployeeByNameSuccessResponseDTO | EmployeesErrorResponseDTO> {
+    const params: inSqlParameters = {
+      inNombreEmpleado: [data.EmployeeName, TYPES.VarChar],
+    };
+
+    try {
+      if (useMock) return { success:true , data: { total: 1, empleados: [{ Id: 1, IdPuesto: 1, NombrePuesto: "test", ValorDocumentoIdentidad: "test", Nombre: "test", FechaContratacion: "2023-10-01", SaldoVacaciones: 0, EsActivo: true }] } };
+      else{
+        const response = await query("sp_get_employee_by_name", params,{});
+        if (response.output.outResultCode == 0) {
+          const sortedEmployees = response.recordset.sort((a, b) => a.NameEmployee.localeCompare(b.NameEmployee));
+          return { success:true , data: { total: response.recordset.length, empleados: sortedEmployees } };
+        }else{
+          return ErrorHandler(response) as EmployeesErrorResponseDTO;
+        }
+      }
+    } catch (error) {
+      console.error("Error details:", error);
+      throw new Error(`An error occurred while creating the employ: ${error}`);
+    }
+  }
+
+
+  //async getEmployeeByDNI()
 }
 
 export default new EmployeeService();
