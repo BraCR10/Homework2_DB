@@ -22,7 +22,7 @@ GO
 ALTER PROCEDURE [dbo].[sp_logout]
 (
     @inUserId INT,
-    @inIP VARCHAR(64),
+    @inIP VARCHAR(32),
     @outResultCode INT OUTPUT
 )
 AS
@@ -30,7 +30,7 @@ BEGIN
   SET NOCOUNT ON;
   BEGIN TRY
 
-	DECLARE @Descripcion VARCHAR(128);
+	DECLARE @detail VARCHAR(64);
 
     INSERT INTO dbo.BitacoraEvento (
         IdTipoEvento,
@@ -49,7 +49,7 @@ BEGIN
 
     SET @outResultCode = 0;
 
-	SELECT @Descripcion = 'Sesión finalizada correctamente';
+	SELECT @detail = 'Sesión finalizada correctamente';
 
   END TRY
   BEGIN CATCH
@@ -57,4 +57,5 @@ BEGIN
   END CATCH
   SET NOCOUNT OFF;
 END
+
 GO
