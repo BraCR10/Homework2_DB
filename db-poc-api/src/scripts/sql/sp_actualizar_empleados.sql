@@ -29,6 +29,11 @@ BEGIN
     IF (@inNuevoNombre LIKE '%[^a-zA-Z ]%')
     BEGIN
       SET @outResultCode = 50009; -- Nombre de empleado no alfabético
+
+	  SELECT Descripcion AS detail
+	  FROM dbo.Error
+	  WHERE Codigo = @outResultCode;
+
       RETURN;
     END
 
@@ -36,7 +41,11 @@ BEGIN
     IF (@inNuevoValorDocIdentidad LIKE '%[^0-9]%')
     BEGIN
       SET @outResultCode = 50010; -- Valor de documento de identidad no alfabético 
-	                              -- aunque QUÉ RAYOS DEBERIA DECIR NUMÉRICO
+	  
+	  SELECT Descripcion AS detail
+	  FROM dbo.Error
+	  WHERE Codigo = @outResultCode;
+
       RETURN;
     END
 
@@ -48,8 +57,12 @@ BEGIN
 
     IF (@idEmpleado IS NULL)
     BEGIN
-      SET @outResultCode = 50008; -- Error en base de datos, lo que pasa esq mis compitas
-								  -- no pusieron nada cuando no exista un empleado
+      SET @outResultCode = 50008; -- Error en base de datos
+
+	  SELECT Descripcion AS detail
+	  FROM dbo.Error
+	  WHERE Codigo = @outResultCode;
+
       RETURN;
     END
 
@@ -61,6 +74,11 @@ BEGIN
     )
     BEGIN
       SET @outResultCode = 50007; -- Empleado con mismo nombre ya existe en actualización
+
+	  SELECT Descripcion AS detail
+	  FROM dbo.Error
+	  WHERE Codigo = @outResultCode;
+
       RETURN;
     END
 
@@ -72,6 +90,11 @@ BEGIN
     )
     BEGIN
       SET @outResultCode = 50006; -- Empleado con ValorDocumentoIdentidad ya existe en actualizacion
+
+	  SELECT Descripcion AS detail
+	  FROM dbo.Error
+	  WHERE Codigo = @outResultCode;
+
       RETURN;
     END
 
@@ -86,9 +109,21 @@ BEGIN
 
     SET @outResultCode = 0;
 
+	SELECT Nombre AS message
+	FROM dbo.TipoEvento
+	WHERE Id = 8;
+
+	SELECT @inNuevoNombre;
+	SELECT @inNuevoIdPuesto;
+
   END TRY
   BEGIN CATCH
     SET @outResultCode = 50008; -- Error de base de datos
+
+	SELECT Descripcion AS detail
+	FROM dbo.Error
+	WHERE Codigo = @outResultCode;
+
   END CATCH
   SET NOCOUNT OFF;
 END
