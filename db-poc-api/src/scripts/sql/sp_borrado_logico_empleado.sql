@@ -21,6 +21,8 @@ AS
 BEGIN
   SET NOCOUNT ON;
   BEGIN TRY
+	
+	DECLARE @canDelete BIT;
 
     -- Verificar existencia
     IF NOT EXISTS (
@@ -29,6 +31,14 @@ BEGIN
     )
     BEGIN
       SET @outResultCode = 50008; --No existe el empleado y no hay uno en específico
+
+	SELECT Nombre AS detail
+	FROM dbo.TipoEvento
+	WHERE Id = 9;
+
+	SET @canDelete = 0;
+	SELECT @canDelete;
+
       RETURN;
     END
 
@@ -37,12 +47,26 @@ BEGIN
     SET EsActivo = 0
     WHERE ValorDocumentoIdentidad = @inValorDocumentoIdentidad;
 
+	SELECT Nombre AS detail
+	FROM dbo.TipoEvento
+	WHERE Id = 10;
+
+	SET @canDelete = 1;
+	SELECT @canDelete;
+
     SET @outResultCode = 0;
 
   END TRY
   BEGIN CATCH
     SET @outResultCode = 50008; --No se pudo actualizar correctamente.
+
+	SELECT Nombre AS detail
+	FROM dbo.TipoEvento
+	WHERE Id = 9;
+
+	SET @canDelete = 0;
+	SELECT @canDelete;
+
   END CATCH
   SET NOCOUNT OFF;
-END
 GO
