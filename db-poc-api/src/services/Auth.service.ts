@@ -12,10 +12,11 @@ class AuthService {
   async loginUser(
     credentials: LoginDTO,
   ): Promise<LoginErrorResponseDTO | LoginSuccessResponseDTO> {
-    const { Username: username, Password: password } = credentials;
+    const { Username: username, Password: password,  IpAddress:IP} = credentials;
     const params: inSqlParameters = {
       inUsername: [username, TYPES.VarChar],
       inPassword: [password, TYPES.VarChar],
+      inIP : [IP, TYPES.VarChar],
     };
 
     try {
@@ -26,8 +27,8 @@ class AuthService {
           let data = response.recordset[0];
           const loginResponse: LoginSuccessResponseDTO = {
             success: true,
-            Id: data.Id,
-            Username: credentials.Username,
+            Id: data.userId,
+            Username: username,
           };
           return loginResponse;
         } else {
@@ -35,7 +36,7 @@ class AuthService {
           const errorResponse: LoginErrorResponseDTO = {
             success: false,
             code: response.output.outResultCode,
-            details: mssqlError,
+            detail: mssqlError,
           };
           return errorResponse;
         }
@@ -61,12 +62,13 @@ class AuthService {
     }
   }
 
-  async logoutUser(userId: number): Promise<boolean> {
+  async logoutUser(userId: number,ip :string): Promise<boolean> {
     if (!userId) {
       false;
     }
     const params: inSqlParameters = {
       inUserId: [String(userId), TYPES.Int],
+      inIP: [ip, TYPES.VarChar],
     };
     try {
       if (useMock) return true;

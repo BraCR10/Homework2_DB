@@ -3,19 +3,19 @@ import LoginService from "../services/Auth.service";
 import {
   LoginErrorResponseDTO,
   LoginDTO,
-  LoginSuccessResponseDTO,
 } from "../dtos/AuthDTO";
 
 export async function loginUser(req: Request, res: Response): Promise<void> {
   try {
-    const credentials: LoginDTO = req.body;
-    const { Username, Password } = credentials;
+    const {Username,Password} = req.body;
+    
+
     if (!Username || !Password) {
       console.error("Username and password are required.");
       const errorResponse: LoginErrorResponseDTO = {
         success: false,
         code: 400,
-        details: "Username and password are required.",
+        detail: "Username and password are required.",
       };
       res.status(400).json({ success: false, error: errorResponse });
       return;
@@ -26,44 +26,33 @@ export async function loginUser(req: Request, res: Response): Promise<void> {
       const errorResponse: LoginErrorResponseDTO = {
         success: false,
         code: 400,
-        details: "Username and password must be strings.",
+        detail: "Username and password must be strings.",
       };
       res.status(400).json({ success: false, error: errorResponse });
       return;
     }
 
+    const credentials: LoginDTO = {
+      Username: Username,
+      Password: Password,
+      IpAddress: req.ip ? req.ip : "",
+    };
     const response = await LoginService.loginUser(credentials);
 
     if (response.success) {
-      const {
-        success,
-        Id,
-        Username: username,
-      } = response as LoginSuccessResponseDTO;
-      res.status(200).json({
-        success: success,
-        data: {
-          loginStatus: {
-            Id: Id,
-            Username: username,
-          },
-        },
-      });
+      res.status(200).json(response);
     } else {
-      const { success, code, details } = response as LoginErrorResponseDTO;
-      res
-        .status(401)
-        .json({ success: success, error: { code: code, detail: details } });
+      res.status(401).json(response);
     }
   } catch (error) {
     const errorMessage: LoginErrorResponseDTO = {
       success: false,
       code: 50008,
-      details: "An error occurred while logging in",
+      detail: "An error occurred while logging in",
     };
     res.status(500).json({
       success: errorMessage.success,
-      error: { code: errorMessage.code, details: errorMessage.details },
+      error: { code: errorMessage.code, details: errorMessage.detail },
     });
   }
 }
@@ -79,11 +68,11 @@ export async function logoutUser(req: Request, res: Response): Promise<void> {
       });
       return;
     }
-
-    const response = await LoginService.logoutUser(userId);
+    const ip = req.ip ? req.ip : "";
+    const response = await LoginService.logoutUser(userId,ip);
 
     if (response) {
-      res.status(200).json({ success: true, detail: "Logout successful" });
+      res.status(200).json({ success: true, detail: "Sesión finalizada correctamente" });
     } else {
       res.status(401).json({
         success: false,
@@ -94,7 +83,7 @@ export async function logoutUser(req: Request, res: Response): Promise<void> {
     console.error("Error during logout:", error);
     res.status(500).json({
       success: false,
-      error: { code: 50008, details: "An error occurred while logging out" },
+      error: { code: 50008, detail: "An error occurred while logging out" },
     });
   }
 }
