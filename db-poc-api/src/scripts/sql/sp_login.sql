@@ -26,7 +26,6 @@ BEGIN
     DECLARE @userId INT;
     DECLARE @intentosFallidos INT;
     DECLARE @fechaUltimoDeshabilitado DATETIME;
-	DECLARE @Descripcion VARCHAR(128);
 
     -- Verificar si el usuario existe
     SELECT @userId = Id
@@ -41,7 +40,7 @@ BEGIN
         INSERT INTO dbo.BitacoraEvento (IdTipoEvento, Descripcion, IdPostByUser, PostInIP, PostTime)
         VALUES (2, 'Username no existe', NULL, @inIP, GETDATE());
 
-		SELECT @Descripcion = Descripcion
+		SELECT Descripcion AS detail
 		FROM dbo.Error
 		WHERE Codigo = @outResultCode;
 
@@ -74,7 +73,7 @@ BEGIN
 
             SET @outResultCode = 50003; -- Login deshabilitado
 
-			SELECT @Descripcion = Descripcion
+			SELECT Descripcion AS detail
 			FROM dbo.Error
 			WHERE Codigo = @outResultCode;
 
@@ -83,7 +82,7 @@ BEGIN
         BEGIN
             SET @outResultCode = 50003; -- Login deshabilitado recientemente
 
-			SELECT @Descripcion = Descripcion
+			SELECT Descripcion AS detail
 			FROM dbo.Error
 			WHERE Codigo = @outResultCode;
 
@@ -113,7 +112,7 @@ BEGIN
 
         SET @outResultCode = 50002; -- Contraseña incorrecta
 
-		SELECT @Descripcion = Descripcion
+		SELECT Descripcion AS detail
 		FROM dbo.Error
 		WHERE Codigo = @outResultCode;
 
@@ -133,13 +132,13 @@ BEGIN
     );
 
     SET @outResultCode = 0; -- Login exitoso
-	SELECT @userId;
+	SELECT @userId AS Id;
 
   END TRY
   BEGIN CATCH
     SET @outResultCode = 50008; -- Error general de base de datos
 
-	SELECT @Descripcion = Descripcion
+	SELECT Descripcion AS detail
 	FROM dbo.Error
 	WHERE Codigo = @outResultCode;
 
