@@ -28,14 +28,24 @@ BEGIN
     IF (@inNombreEmpleado LIKE '%[^a-zA-Z ]%')
     BEGIN
       SET @outResultCode = 50009; -- Nombre de empleado no alfabético
-      RETURN;
+	  
+	  SELECT Descripcion AS detail
+	  FROM dbo.Error
+	  WHERE Codigo = @outResultCode;
+      
+	  RETURN;
     END
 
     -- Validación: el valor de documento debe ser numérico
     IF (@inValorDocumentoIdentidad LIKE '%[^0-9]%')
     BEGIN
       SET @outResultCode = 50010; -- Valor de documento de identidad no alfabético
-      RETURN;
+      
+	  SELECT Descripcion AS detail
+	  FROM dbo.Error
+	  WHERE Codigo = @outResultCode;
+	  
+	  RETURN;
     END
 
     -- Validación: no exista empleado con mismo nombre
@@ -45,7 +55,12 @@ BEGIN
     )
     BEGIN
       SET @outResultCode = 50005; -- Empleado con mismo nombre ya existe en inserción
-      RETURN;
+      
+	  SELECT Descripcion AS detail
+	  FROM dbo.Error
+	  WHERE Codigo = @outResultCode;
+	  
+	  RETURN;
     END
 
     -- Validación: no exista empleado con mismo documento
@@ -55,7 +70,12 @@ BEGIN
     )
     BEGIN
       SET @outResultCode = 50004; -- Empleado con ValorDocumentoIdentidad ya existe en inserción
-      RETURN;
+      
+	  SELECT Descripcion AS detail
+	  FROM dbo.Error
+	  WHERE Codigo = @outResultCode;
+	  
+	  RETURN;
     END
 
     -- Inserción del nuevo empleado
@@ -80,9 +100,21 @@ BEGIN
 
     SET @outResultCode = 0; -- Éxito
 
+	SELECT 
+		E.Id
+	FROM dbo. Empleado E;
+
+	SELECT 
+		TE.Nombre AS detail
+	FROM TipoEvento TE;
+
   END TRY
   BEGIN CATCH
     SET @outResultCode = 50008; -- Error general de base de datos
+
+	SELECT Descripcion AS detail
+	FROM dbo.Error
+	WHERE Codigo = @outResultCode;
   END CATCH
   SET NOCOUNT OFF;
 END

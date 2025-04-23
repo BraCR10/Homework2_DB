@@ -54,6 +54,11 @@ BEGIN
   END TRY
   BEGIN CATCH
     SET @outResultCode = 50008; -- Error en base de datos
+
+    SELECT Descripcion AS detail
+	  FROM dbo.Error
+	  WHERE Codigo = @outResultCode;
+  
   END CATCH
   SET NOCOUNT OFF;
 END
