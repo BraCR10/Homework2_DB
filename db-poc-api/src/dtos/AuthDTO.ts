@@ -3,6 +3,7 @@ import ErrorResponseDTO from "./ErrorResponseDTO";
 export interface LoginDTO {
   Username: string;
   Password: string;
+  IpAddress: string;
 }
 
 export interface LoginSuccessResponseDTO {

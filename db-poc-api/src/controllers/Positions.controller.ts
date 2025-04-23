@@ -18,11 +18,11 @@ export const getPositions = async (
     const errorMessage: PositionErrorResponseDTO = {
       success: false,
       code: 50010,
-      details: "An error occurred while retrieving positions",
+      detail: "An error occurred while retrieving positions",
     };
     res.status(500).json({
       success: errorMessage.success,
-      error: { code: errorMessage.code, details: errorMessage.details },
+      error: { code: errorMessage.code, details: errorMessage.detail },
     });
   }
 };
