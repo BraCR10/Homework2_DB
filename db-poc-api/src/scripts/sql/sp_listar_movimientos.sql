@@ -27,13 +27,19 @@ BEGIN
         WHERE ValorDocumentoIdentidad = @inValorDocumentoIdentidad AND EsActivo = 1
     )
     BEGIN
-      SET @outResultCode = 50004; -- Error de base de datos
+      SET @outResultCode = 50008; -- Error de base de datos
+
+	  SELECT Descripcion AS detail
+	  FROM dbo.Error
+	  WHERE Codigo = @outResultCode;
+
       RETURN;
     END
 
     -- Información general del empleado
     SELECT 
       E.ValorDocumentoIdentidad,
+	  
       E.Nombre,
       E.SaldoVacaciones
     FROM 
@@ -43,13 +49,15 @@ BEGIN
 
     -- Movimientos del empleado, ordenados por fecha descendente
     SELECT 
-      M.Fecha,
-      TM.Nombre AS TipoMovimiento,
+      TM.Nombre AS NombreTipoMovimiento,
+	  M.Fecha,
       M.Monto,
       M.NuevoSaldo,
-      U.Username AS Usuario,
+	  M.IdPostByUser,
+      U.Username AS UsuarioPostByUser,
       M.PostInIP,
       M.PostTime
+
     FROM 
       dbo.Movimiento M
       INNER JOIN Empleado E ON M.IdEmpleado = E.Id
@@ -65,6 +73,11 @@ BEGIN
   END TRY
   BEGIN CATCH
     SET @outResultCode = 50008; -- Error general de base de datos
+
+	SELECT Descripcion AS detail
+	FROM dbo.Error
+	WHERE Codigo = @outResultCode;
+
   END CATCH
   SET NOCOUNT OFF;
 END
