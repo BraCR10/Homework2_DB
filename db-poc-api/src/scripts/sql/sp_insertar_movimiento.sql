@@ -41,6 +41,11 @@ BEGIN
 	IF (@idEmpleado IS NULL)
     BEGIN
         SET @outResultCode = 50008; -- Error de base de datos
+
+		SELECT Descripcion AS detail
+		FROM dbo.Error
+		WHERE Codigo = @outResultCode;
+
         RETURN;
     END
 
@@ -58,7 +63,12 @@ BEGIN
         IF (@nuevoSaldo < 0)
         BEGIN
             SET @outResultCode = 50011; -- Monto del movimiento rechazado pues si se aplicar el saldo seria negativo.
-            RETURN;
+            
+			SELECT Descripcion AS detail
+			FROM dbo.Error
+			WHERE Codigo = @outResultCode;
+			
+			RETURN;
         END
     END
     ELSE IF (@tipoAccion = 'Credito')
@@ -68,7 +78,12 @@ BEGIN
     ELSE
     BEGIN
         SET @outResultCode = 50008; -- Error de base de datos
-        RETURN;
+        
+		SELECT Descripcion AS detail
+		FROM dbo.Error
+		WHERE Codigo = @outResultCode;
+		
+		RETURN;
     END
 
     -- Insertar movimiento
@@ -103,6 +118,11 @@ BEGIN
   END TRY
   BEGIN CATCH
     SET @outResultCode = 50008; -- Error en base de datos
+
+	SELECT Descripcion AS detail
+	FROM dbo.Error
+	WHERE Codigo = @outResultCode;
+
   END CATCH
   SET NOCOUNT OFF;
 END
