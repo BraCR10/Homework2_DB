@@ -26,7 +26,7 @@ export const createEmployee = async (
       const errorResponse: EmployeesErrorResponseDTO = {
         success: false,
         code: 400,
-        details: "Request body is required.",
+        detail: "Request body is required.",
       };
       res.status(400).json({ success: false, error: errorResponse });
       return;
@@ -44,11 +44,11 @@ export const createEmployee = async (
     const errorMessage: EmployeesErrorResponseDTO = {
       success: false,
       code: 50008,
-      details: "An error occurred while creating the employee",
+      detail: "An error occurred while creating the employee",
     };
     res.status(500).json({
       success: errorMessage.success,
-      error: { code: errorMessage.code, details: errorMessage.details },
+      error: { code: errorMessage.code, details: errorMessage.detail },
     });
   }
 };
@@ -104,7 +104,7 @@ export const updateEmployee = async (
       const errorResponse: EmployeesErrorResponseDTO = {
         success: false,
         code: 400,
-        details: "Valid employee ID is required",
+        detail: "Valid employee ID is required",
       };
       res.status(400).json({ success: false, error: errorResponse });
       return;
@@ -117,7 +117,7 @@ export const updateEmployee = async (
       const errorResponse: EmployeesErrorResponseDTO = {
         success: false,
         code: 400,
-        details: "Request body is required.",
+        detail: "Request body is required.",
       };
       res.status(400).json({ success: false, error: errorResponse });
       return;
@@ -128,7 +128,7 @@ export const updateEmployee = async (
       const errorResponse: EmployeesErrorResponseDTO = {
         success: false,
         code: 400,
-        details:
+        detail:
           "Employee name or Position must contain only alphabetic characters",
       };
       res.status(400).json({ success: false, error: errorResponse });
@@ -140,7 +140,7 @@ export const updateEmployee = async (
       const errorResponse: EmployeesErrorResponseDTO = {
         success: false,
         code: 400,
-        details: "Employee DNI has an invalid format",
+        detail: "Employee DNI has an invalid format",
       };
       res.status(400).json({ success: false, error: errorResponse });
       return;
@@ -165,11 +165,11 @@ export const updateEmployee = async (
     const errorMessage: EmployeesErrorResponseDTO = {
       success: false,
       code: 50008,
-      details: "An error occurred while updating the employee",
+      detail: "An error occurred while updating the employee",
     };
     res.status(500).json({
       success: errorMessage.success,
-      error: { code: errorMessage.code, details: errorMessage.details },
+      error: { code: errorMessage.code, details: errorMessage.detail },
     });
   }
 };
@@ -184,7 +184,7 @@ export const deleteEmployee = async (
     const errorResponse: EmployeesErrorResponseDTO = {
       success: false,
       code: 400,
-      details: "Valid employee ID is required",
+      detail: "Valid employee ID is required",
     };
     res.status(400).json({ success: false, error: errorResponse });
     return;
@@ -202,11 +202,11 @@ export const deleteEmployee = async (
     const errorMessage: EmployeesErrorResponseDTO = {
       success: false,
       code: 50008,
-      details: "An error occurred while deleting the employee",
+      detail: "An error occurred while deleting the employee",
     };
     res.status(500).json({
       success: errorMessage.success,
-      error: { code: errorMessage.code, details: errorMessage.details },
+      error: { code: errorMessage.code, details: errorMessage.detail },
     });
   }
 };
@@ -221,7 +221,7 @@ export const tryDeleteEmployee = async (
     const errorResponse: EmployeesErrorResponseDTO = {
       success: false,
       code: 400,
-      details: "Valid employee ID is required",
+      detail: "Valid employee ID is required",
     };
     res.status(400).json({ success: false, error: errorResponse });
     return;
@@ -239,11 +239,11 @@ export const tryDeleteEmployee = async (
     const errorMessage: EmployeesErrorResponseDTO = {
       success: false,
       code: 50008,
-      details: "An error occurred while deleting the employee",
+      detail: "An error occurred while deleting the employee",
     };
     res.status(500).json({
       success: errorMessage.success,
-      error: { code: errorMessage.code, details: errorMessage.details },
+      error: { code: errorMessage.code, details: errorMessage.detail },
     });
   }
 };
@@ -261,7 +261,7 @@ export const getEmployeeByName = async (
     const errorResponse: EmployeesErrorResponseDTO = {
       success: false,
       code: 400,
-      details: "Employee name is required",
+      detail: "Employee name is required",
     };
     res.status(400).json({ success: false, error: errorResponse });
     return;
@@ -272,7 +272,7 @@ export const getEmployeeByName = async (
     const errorResponse: EmployeesErrorResponseDTO = {
       success: false,
       code: 400,
-      details: "Employee name must contain only alphabetic characters",
+      detail: "Employee name must contain only alphabetic characters",
     };
     res.status(400).json({ success: false, error: errorResponse });
     return;
@@ -285,7 +285,7 @@ export const getEmployeeByName = async (
     const errorResponse: EmployeesErrorResponseDTO = {
       success: false,
       code: 400,
-      details: "Employee name is required.",
+      detail: "Employee name is required.",
     };
     res.status(400).json({ success: false, error: errorResponse });
     return;
@@ -302,11 +302,11 @@ export const getEmployeeByName = async (
     const errorMessage: EmployeesErrorResponseDTO = {
       success: false,
       code: 50008,
-      details: "Error fetching employees by name",
+      detail: "Error fetching employees by name",
     };
     res.status(500).json({
       success: errorMessage.success,
-      error: { code: errorMessage.code, details: errorMessage.details },
+      error: { code: errorMessage.code, details: errorMessage.detail },
     });
   }
 };
@@ -325,7 +325,7 @@ export const getEmployeeByDNI = async (
     const errorResponse: EmployeesErrorResponseDTO = {
       success: false,
       code: 400,
-      details: "Valid employee DNI is required",
+      detail: "Valid employee DNI is required",
     };
     res.status(400).json({ success: false, error: errorResponse });
     return;
@@ -336,7 +336,7 @@ export const getEmployeeByDNI = async (
     const errorResponse: EmployeesErrorResponseDTO = {
       success: false,
       code: 400,
-      details: "Employee DNI has an invalid format",
+      detail: "Employee DNI has an invalid format",
     };
     res.status(400).json({ success: false, error: errorResponse });
     return;
@@ -349,7 +349,7 @@ export const getEmployeeByDNI = async (
     const errorResponse: EmployeesErrorResponseDTO = {
       success: false,
       code: 400,
-      details: "Employee DNI is required.",
+      detail: "Employee DNI is required.",
     };
     res.status(400).json({ success: false, error: errorResponse });
     return;
@@ -366,11 +366,11 @@ export const getEmployeeByDNI = async (
     const errorMessage: EmployeesErrorResponseDTO = {
       success: false,
       code: 50008,
-      details: "Error fetching employees by DNI",
+      detail: "Error fetching employees by DNI",
     };
     res.status(500).json({
       success: errorMessage.success,
-      error: { code: errorMessage.code, details: errorMessage.details },
+      error: { code: errorMessage.code, details: errorMessage.detail },
     });
   }
 };

@@ -16,7 +16,7 @@ export const getEmployeeMovements = async (
     const errorResponse: MovementsErrorResponseDTO = {
       success: false,
       code: 400,
-      details: "Valid employee ID is required",
+      detail: "Valid employee ID is required",
     };
     res.status(400).json({ success: false, error: errorResponse });
     return;
@@ -38,11 +38,11 @@ export const getEmployeeMovements = async (
     const errorMessage: MovementsErrorResponseDTO = {
       success: false,
       code: 50008,
-      details: "An error occurred while retrieving employee movements",
+      detail: "An error occurred while retrieving employee movements",
     };
     res.status(500).json({
       success: errorMessage.success,
-      error: { code: errorMessage.code, details: errorMessage.details },
+      error: { code: errorMessage.code, details: errorMessage.detail },
     });
   }
 };
@@ -57,7 +57,7 @@ export const createMovement = async (
     const errorResponse: MovementsErrorResponseDTO = {
       success: false,
       code: 400,
-      details: "Request body is required",
+      detail: "Request body is required",
     };
     res.status(400).json({ success: false, error: errorResponse });
     return;
@@ -71,7 +71,7 @@ export const createMovement = async (
     const errorResponse: MovementsErrorResponseDTO = {
       success: false,
       code: 400,
-      details: "Movement type name is required",
+      detail: "Movement type name is required",
     };
     res.status(400).json({ success: false, error: errorResponse });
     return;
@@ -85,7 +85,7 @@ export const createMovement = async (
     const errorResponse: MovementsErrorResponseDTO = {
       success: false,
       code: 400,
-      details: "Valid amount is required",
+      detail: "Valid amount is required",
     };
     res.status(400).json({ success: false, error: errorResponse });
     return;
@@ -99,7 +99,7 @@ export const createMovement = async (
     const errorResponse: MovementsErrorResponseDTO = {
       success: false,
       code: 400,
-      details: "Valid employee ID is required",
+      detail: "Valid employee ID is required",
     };
     res.status(400).json({ success: false, error: errorResponse });
     return;
@@ -113,7 +113,7 @@ export const createMovement = async (
     const errorResponse: MovementsErrorResponseDTO = {
       success: false,
       code: 400,
-      details: "Username is required",
+      detail: "Username is required",
     };
     res.status(400).json({ success: false, error: errorResponse });
     return;
@@ -132,11 +132,11 @@ export const createMovement = async (
     const errorMessage: MovementsErrorResponseDTO = {
       success: false,
       code: 50009,
-      details: "An error occurred while creating the movement",
+      detail: "An error occurred while creating the movement",
     };
     res.status(500).json({
       success: errorMessage.success,
-      error: { code: errorMessage.code, details: errorMessage.details },
+      error: { code: errorMessage.code, details: errorMessage.detail },
     });
   }
 };
@@ -155,11 +155,11 @@ export const getMovementsTypes = async (_req: Request, res: Response) => {
     const errorMessage: MovementsErrorResponseDTO = {
       success: false,
       code: 50010,
-      details: "An error occurred while retrieving movement types",
+      detail: "An error occurred while retrieving movement types",
     };
     res.status(500).json({
       success: errorMessage.success,
-      error: { code: errorMessage.code, details: errorMessage.details },
+      error: { code: errorMessage.code, details: errorMessage.detail },
     });
   }
 };
