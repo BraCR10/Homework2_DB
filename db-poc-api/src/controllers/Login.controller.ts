@@ -14,8 +14,10 @@ export async function loginUser(req: Request, res: Response): Promise<void> {
       console.error("Username and password are required.");
       const errorResponse: LoginErrorResponseDTO = {
         success: false,
-        code: 400,
-        detail: "Username and password are required.",
+        error: {
+          code: 400,
+          detail: "Username and password are required.",
+        },
       };
       res.status(400).json({ success: false, error: errorResponse });
       return;
@@ -25,8 +27,10 @@ export async function loginUser(req: Request, res: Response): Promise<void> {
       console.error("Username and password must be strings.");
       const errorResponse: LoginErrorResponseDTO = {
         success: false,
-        code: 400,
-        detail: "Username and password must be strings.",
+        error: {
+          code: 400,
+          detail: "Username and password must be strings.",
+        },
       };
       res.status(400).json({ success: false, error: errorResponse });
       return;
@@ -47,12 +51,14 @@ export async function loginUser(req: Request, res: Response): Promise<void> {
   } catch (error) {
     const errorMessage: LoginErrorResponseDTO = {
       success: false,
-      code: 50008,
-      detail: "An error occurred while logging in",
+      error: {
+        code: 50008,
+        detail: "An error occurred while logging in",
+      },
     };
     res.status(500).json({
       success: errorMessage.success,
-      error: { code: errorMessage.code, details: errorMessage.detail },
+      error: { code: errorMessage.error.code, details: errorMessage.error.detail },
     });
   }
 }

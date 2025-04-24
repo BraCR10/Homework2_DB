@@ -17,12 +17,14 @@ export const getPositions = async (
     console.error("Error retrieving movement types:", error);
     const errorMessage: PositionErrorResponseDTO = {
       success: false,
-      code: 50010,
-      detail: "An error occurred while retrieving positions",
+      error:{
+        code: 50010,
+        detail: "An error occurred while retrieving positions",
+      },
     };
     res.status(500).json({
       success: errorMessage.success,
-      error: { code: errorMessage.code, details: errorMessage.detail },
+      error: { code: errorMessage.error.code, details: errorMessage.error.detail },
     });
   }
 };

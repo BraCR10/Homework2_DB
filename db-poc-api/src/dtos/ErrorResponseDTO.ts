@@ -1,5 +1,7 @@
 export default interface ErrorResponseDTO {
   success: boolean;
-  code: number;
-  detail: string;
+  error:{
+    code: number;
+    detail: string;
+  }
 }

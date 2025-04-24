@@ -15,8 +15,10 @@ export const getEmployeeMovements = async (
   if (!idEmpleado || isNaN(Number(idEmpleado)) || Number(idEmpleado) <= 0) {
     const errorResponse: MovementsErrorResponseDTO = {
       success: false,
-      code: 400,
-      detail: "Valid employee ID is required",
+      error: {
+        code: 400,
+        detail: "Valid employee ID is required",
+      },
     };
     res.status(400).json({ success: false, error: errorResponse });
     return;
@@ -37,12 +39,14 @@ export const getEmployeeMovements = async (
     console.error("Error during employee movements retrieval:", error);
     const errorMessage: MovementsErrorResponseDTO = {
       success: false,
-      code: 50008,
-      detail: "An error occurred while retrieving employee movements",
+      error: {
+        code: 50008,
+        detail: "An error occurred while retrieving employee movements",
+      },
     };
     res.status(500).json({
       success: errorMessage.success,
-      error: { code: errorMessage.code, details: errorMessage.detail },
+      error: { code: errorMessage.error.code, details: errorMessage.error.detail },
     });
   }
 };
@@ -56,8 +60,10 @@ export const createMovement = async (
   if (!data) {
     const errorResponse: MovementsErrorResponseDTO = {
       success: false,
-      code: 400,
-      detail: "Request body is required",
+      error: {
+        code: 400,
+        detail: "Request body is required",
+      },
     };
     res.status(400).json({ success: false, error: errorResponse });
     return;
@@ -70,8 +76,10 @@ export const createMovement = async (
   ) {
     const errorResponse: MovementsErrorResponseDTO = {
       success: false,
-      code: 400,
-      detail: "Movement type name is required",
+      error: {
+        code: 400,
+        detail: "Movement type name is required",
+      },
     };
     res.status(400).json({ success: false, error: errorResponse });
     return;
@@ -84,8 +92,10 @@ export const createMovement = async (
   ) {
     const errorResponse: MovementsErrorResponseDTO = {
       success: false,
-      code: 400,
-      detail: "Valid amount is required",
+      error: {
+        code: 400,
+        detail: "Valid amount is required",
+      },
     };
     res.status(400).json({ success: false, error: errorResponse });
     return;
@@ -98,8 +108,10 @@ export const createMovement = async (
   ) {
     const errorResponse: MovementsErrorResponseDTO = {
       success: false,
-      code: 400,
-      detail: "Valid employee ID is required",
+      error: {
+        code: 400,
+        detail: "Valid employee ID is required",
+      },
     };
     res.status(400).json({ success: false, error: errorResponse });
     return;
@@ -112,8 +124,10 @@ export const createMovement = async (
   ) {
     const errorResponse: MovementsErrorResponseDTO = {
       success: false,
-      code: 400,
-      detail: "Username is required",
+      error: {
+        code: 400,
+        detail: "Username is required",
+      },
     };
     res.status(400).json({ success: false, error: errorResponse });
     return;
@@ -131,12 +145,14 @@ export const createMovement = async (
     console.error("Error during movement creation:", error);
     const errorMessage: MovementsErrorResponseDTO = {
       success: false,
-      code: 50009,
-      detail: "An error occurred while creating the movement",
+      error : {
+        code: 50009,
+        detail: "An error occurred while creating the movement",
+      },
     };
     res.status(500).json({
       success: errorMessage.success,
-      error: { code: errorMessage.code, details: errorMessage.detail },
+      error: { code: errorMessage.error.code, details: errorMessage.error.detail },
     });
   }
 };
@@ -154,12 +170,14 @@ export const getMovementsTypes = async (_req: Request, res: Response) => {
     console.error("Error retrieving movement types:", error);
     const errorMessage: MovementsErrorResponseDTO = {
       success: false,
-      code: 50010,
-      detail: "An error occurred while retrieving movement types",
+      error: {
+        code: 50010,
+        detail: "An error occurred while retrieving movement types",
+      },
     };
     res.status(500).json({
       success: errorMessage.success,
-      error: { code: errorMessage.code, details: errorMessage.detail },
+      error: { code: errorMessage.error.code, details: errorMessage.error.detail },
     });
   }
 };
