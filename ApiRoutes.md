@@ -148,7 +148,7 @@ PATCH /api/v2/employee/:DNI
 **Descripción**: Actualiza información de un empleado existente.
 
 **Parámetros**: 
-- `DNI`: DNI del empleado number
+- `DNI`: DNI del empleado 
 
 
 **Body**:
@@ -194,7 +194,7 @@ DELETE /api/v2/employee/:IdEmpelado
 **Descripción**: Elimina permanentemente un empleado.
 
 **Parámetros**: 
-- `IdEmpelado`: Id del empleado
+- `DNI`: DNI del empleado 
 
 
 **Body**: Ninguno
@@ -219,7 +219,12 @@ POST /api/v2/employee/deleteTry/:IdEmpelado
 **Parámetros**: 
 - `IdEmpelado`: Id del empleado
 
-**Body**: Ninguno
+**Body**: 
+```json
+{
+  "IdUser": "number", 
+}
+```
 
 **Respuesta exitosa** (200 OK):
 ```json
