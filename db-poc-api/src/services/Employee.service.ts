@@ -25,8 +25,8 @@ class EmployeeService {
     data: CreateEmployeesDTO,
   ): Promise<CreateEmployeesSuccessResponseDTO | EmployeesErrorResponseDTO> {
     const params: inSqlParameters = {
-      inNombrePuesto: [data.NombrePuesto, TYPES.VarChar],
-      inValorDocumentoIndentidad: [data.ValorDocumentoIdentidad, TYPES.VarChar],
+      inIdPuesto: [String(data.IdPuesto), TYPES.Int],
+      inValorDocumentoIdentidad: [data.ValorDocumentoIdentidad, TYPES.VarChar],
       inNombreEmpleado: [data.NombreEmpleado, TYPES.VarChar],
     };
 
@@ -34,30 +34,17 @@ class EmployeeService {
       if (useMock)
         return { success: true, data: { id: 1, detail: "Employ was created" } };
       else {
-        const response = await execute("sp_create_employee", params, {});
+        const response = await execute("sp_insertar_empleado", params, {});
         if (response.output.outResultCode == 0) {
           const data = response.recordset[0];
           return {
             success: true,
-            data: { id: data.Id, detail: "Employ was created" },
+            data: { id: data.Id, detail: "Empleado creado" },
           };
         } else {
           return ErrorHandler(response) as EmployeesErrorResponseDTO;
         }
-        /*
-        } else if( response.output.outResultCode == 50005){
-          return { success:false ,code: 50005, details: "Employee name already exists" };
-        }else if(response.output.outResultCode == 50004){
-          return { success:false ,code: 50004, details: "Employee Document ID already exists" };
-        } else if(response.output.outResultCode == 50009){
-          return { success:false ,code: 50009, details: "Employee name no alphabetic " };
-        } else if (response.output.outResultCode == 50010){
-          return { success:false ,code: 50010, details: "Employee Document ID no valid" };
-        } else if (response.output.outResultCode == 50008){
-          return { success:false ,code: 50008, details: "DB error" };
-        } else {
-          throw new Error("Employ was not created due to DB error");
-        }*/
+        
       }
     } catch (error) {
       console.error("Error details:", error);

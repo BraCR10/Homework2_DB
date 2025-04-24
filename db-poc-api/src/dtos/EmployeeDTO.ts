@@ -20,7 +20,7 @@ export interface GetEmployeesSuccessResponseDTO {
 }
 
 export interface CreateEmployeesDTO {
-  NombrePuesto: string;
+  IdPuesto: number;
   ValorDocumentoIdentidad: string;
   NombreEmpleado: string;
 }

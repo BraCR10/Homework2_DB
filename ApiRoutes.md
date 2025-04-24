@@ -112,7 +112,7 @@ POST /api/v2/employee
 **Body**:
 ```json
 {
-  "NombrePuesto": "string",
+  "IdPuesto": "number",
   "ValorDocumentoIdentidad": "string",
   "NombreEmpleado": "string"
 }

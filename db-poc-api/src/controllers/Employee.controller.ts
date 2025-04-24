@@ -20,14 +20,27 @@ export const createEmployee = async (
     if (
       !data.NombreEmpleado ||
       !data.ValorDocumentoIdentidad ||
-      !data.NombrePuesto
+      !data.IdPuesto
     ) {
       console.error("Request body is required.");
       const errorResponse: EmployeesErrorResponseDTO = {
         success: false,
         error: {
           code: 400,
-          detail: "Request body is required.",
+          detail: "El body de la petición es requerido.",
+        },
+      };
+      res.status(400).json({ success: false, error: errorResponse });
+      return;
+    }
+
+    
+    if (!data.IdPuesto || typeof data.IdPuesto !== "number") {
+      const errorResponse: EmployeesErrorResponseDTO = {
+        success: false,
+        error: {
+          code: 400,
+          detail: "El ID de puesto es requerido y numerico",
         },
       };
       res.status(400).json({ success: false, error: errorResponse });
@@ -47,7 +60,7 @@ export const createEmployee = async (
       success: false,
       error: {
         code: 50008,
-        detail: "An error occurred while creating the employee",
+        detail: "Error del sistema creando el empleado",
       },
     };
     res.status(500).json({
@@ -59,6 +72,7 @@ export const createEmployee = async (
     });
   }
 };
+
 
 export const getEmployees = async (
   _req: Request,
