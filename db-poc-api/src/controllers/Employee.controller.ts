@@ -210,20 +210,33 @@ export const deleteEmployee = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  const IdEmpleado = Number(req.params.IdEmpleado);
+  const DNI =req.params.DNI;
 
-  if (!isNaN(IdEmpleado) || IdEmpleado <= 0) {
+  const DNIRegex = /^[0-9]+$/;
+  if (!DNI || typeof DNI !== "string" || DNI.trim() === "") {
     const errorResponse: EmployeesErrorResponseDTO = {
       success: false,
       error: {
         code: 400,
-        detail: "Valid employee ID is required",
+        detail: "El DNI es requerido",
       },
     };
     res.status(400).json({ success: false, error: errorResponse });
     return;
   }
-  const data: DeleteEmployeeDTO = { IdEmpleado };
+  if (!DNIRegex.test(DNI)) {
+    const errorResponse: EmployeesErrorResponseDTO = {
+      success: false,
+      error: {
+        code: 400,
+        detail: "DNI tiene un formato invalido",
+      },
+    };
+    res.status(400).json({ success: false, error: errorResponse });
+    return;
+  }
+
+  const data: DeleteEmployeeDTO = { ValorDocumentoIdentidad: DNI };
   try {
     const response = await EmployeeService.deleteEmployee(data);
     if (response.success) {
@@ -237,7 +250,7 @@ export const deleteEmployee = async (
       success: false,
       error: {
         code: 50008,
-        detail: "An error occurred while deleting the employee",
+        detail: "Un error a ocurrido al eliminar el empleado",
       },
     };
     res.status(500).json({

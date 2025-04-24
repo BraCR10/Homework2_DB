@@ -130,6 +130,7 @@ BEGIN
 		<error Codigo="50011" Descripcion="Monto del movimiento rechazado pues si se aplicar el saldo seria negativo."/>
 		<error Codigo="50012" Descripcion="Nombre de usuario o contraseña incorrectos." />
 		<error Codigo="50013" Descripcion="Usuario bloqueado tras exceder el número de intentos de inicio de sesión permitidos." />
+		<error Codigo="50014" Descripcion="No se puede eliminar el empleado."/>
 	</Error>
 	<Movimientos>
 		<movimiento ValorDocId="7989721" IdTipoMovimiento="6" Fecha="2024-01-01" Monto="3" PostByUser="Axel" PostInIP="147.245.84.48" PostTime="2024-01-01 10:16:37"/>

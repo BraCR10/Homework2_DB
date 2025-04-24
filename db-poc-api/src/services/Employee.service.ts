@@ -205,17 +205,17 @@ class EmployeeService {
     data: DeleteEmployeeDTO,
   ): Promise<DeleteEmployeeSuccessResponseDTO | EmployeesErrorResponseDTO> {
     const params: inSqlParameters = {
-      inIdEmpleado: [String(data.IdEmpleado), TYPES.Int],
+      inValorDocumentoIdentidad: [String(data.ValorDocumentoIdentidad), TYPES.VarChar],
     };
 
     try {
       if (useMock)
         return { success: true, data: { detail: "Employ was deleted" } };
       else {
-        const response = await execute("sp_delete_employee", params, {});
+        const response = await execute("sp_borrado_logico_empleado", params, {});
         if (response.output.outResultCode == 0) {
           const data = response.recordset[0];
-          return { success: true, data: { detail: "Employ was deleted" } };
+          return { success: true, data: { detail: "Empledo borrado" } };
         } else {
           return ErrorHandler(response) as EmployeesErrorResponseDTO;
         }

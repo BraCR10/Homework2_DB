@@ -60,7 +60,7 @@ export interface TryDeleteEmployeeSuccessResponseDTO {
 }
 
 export interface DeleteEmployeeDTO {
-  IdEmpleado: number;
+  ValorDocumentoIdentidad: string;
 }
 export interface DeleteEmployeeSuccessResponseDTO {
   success: boolean;
