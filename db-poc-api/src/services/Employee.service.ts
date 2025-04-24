@@ -76,16 +76,13 @@ class EmployeeService {
       };
     else {
       try {
-        const response = await execute("sp_get_all_employees", {}, {});
+        const response = await execute("sp_listar_empleados", {}, {});
         if (response.output.outResultCode == 0) {
-          const sortedEmployees = response.recordset.sort((a, b) =>
-            a.NameEmployee.localeCompare(b.NameEmployee),
-          );
           return {
             success: true,
             data: {
               total: response.recordset.length,
-              empleados: sortedEmployees,
+              empleados: response.recordset,
             },
           };
         } else {

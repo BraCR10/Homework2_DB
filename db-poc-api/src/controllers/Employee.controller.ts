@@ -91,7 +91,7 @@ export const getEmployees = async (
       success: false,
       error: {
         code: 50008,
-        details: "An error occurred while getting employees",
+        details: "Un error a ocurrido mientras se obtienen los empleados",
       },
     });
   }
