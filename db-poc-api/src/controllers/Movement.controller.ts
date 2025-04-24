@@ -46,7 +46,10 @@ export const getEmployeeMovements = async (
     };
     res.status(500).json({
       success: errorMessage.success,
-      error: { code: errorMessage.error.code, details: errorMessage.error.detail },
+      error: {
+        code: errorMessage.error.code,
+        details: errorMessage.error.detail,
+      },
     });
   }
 };
@@ -145,14 +148,17 @@ export const createMovement = async (
     console.error("Error during movement creation:", error);
     const errorMessage: MovementsErrorResponseDTO = {
       success: false,
-      error : {
+      error: {
         code: 50009,
         detail: "An error occurred while creating the movement",
       },
     };
     res.status(500).json({
       success: errorMessage.success,
-      error: { code: errorMessage.error.code, details: errorMessage.error.detail },
+      error: {
+        code: errorMessage.error.code,
+        details: errorMessage.error.detail,
+      },
     });
   }
 };
@@ -177,7 +183,10 @@ export const getMovementsTypes = async (_req: Request, res: Response) => {
     };
     res.status(500).json({
       success: errorMessage.success,
-      error: { code: errorMessage.error.code, details: errorMessage.error.detail },
+      error: {
+        code: errorMessage.error.code,
+        details: errorMessage.error.detail,
+      },
     });
   }
 };

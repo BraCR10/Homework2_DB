@@ -25,9 +25,9 @@ export const createEmployee = async (
       console.error("Request body is required.");
       const errorResponse: EmployeesErrorResponseDTO = {
         success: false,
-        error:{
-        code: 400,
-        detail: "Request body is required.",
+        error: {
+          code: 400,
+          detail: "Request body is required.",
         },
       };
       res.status(400).json({ success: false, error: errorResponse });
@@ -52,7 +52,10 @@ export const createEmployee = async (
     };
     res.status(500).json({
       success: errorMessage.success,
-      error: { code: errorMessage.error.code, details: errorMessage.error.detail },
+      error: {
+        code: errorMessage.error.code,
+        details: errorMessage.error.detail,
+      },
     });
   }
 };
@@ -137,9 +140,9 @@ export const updateEmployee = async (
         success: false,
         error: {
           code: 400,
-          detail:"Employee name or Position must contain only alphabetic characters",
+          detail:
+            "Employee name or Position must contain only alphabetic characters",
         },
-
       };
       res.status(400).json({ success: false, error: errorResponse });
       return;
@@ -183,7 +186,10 @@ export const updateEmployee = async (
     };
     res.status(500).json({
       success: errorMessage.success,
-      error: { code: errorMessage.error.code, details: errorMessage.error.detail },
+      error: {
+        code: errorMessage.error.code,
+        details: errorMessage.error.detail,
+      },
     });
   }
 };
@@ -224,7 +230,10 @@ export const deleteEmployee = async (
     };
     res.status(500).json({
       success: errorMessage.success,
-      error: { code: errorMessage.error.code, details: errorMessage.error.detail },
+      error: {
+        code: errorMessage.error.code,
+        details: errorMessage.error.detail,
+      },
     });
   }
 };
@@ -265,7 +274,10 @@ export const tryDeleteEmployee = async (
     };
     res.status(500).json({
       success: errorMessage.success,
-      error: { code: errorMessage.error.code, details: errorMessage.error.detail },
+      error: {
+        code: errorMessage.error.code,
+        details: errorMessage.error.detail,
+      },
     });
   }
 };
@@ -336,7 +348,10 @@ export const getEmployeeByName = async (
     };
     res.status(500).json({
       success: errorMessage.success,
-      error: { code: errorMessage.error.code, details: errorMessage.error.detail },
+      error: {
+        code: errorMessage.error.code,
+        details: errorMessage.error.detail,
+      },
     });
   }
 };
@@ -367,7 +382,7 @@ export const getEmployeeByDNI = async (
   if (!dniRegex.test(employeeDNI)) {
     const errorResponse: EmployeesErrorResponseDTO = {
       success: false,
-      error:{
+      error: {
         code: 400,
         detail: "Employee DNI has an invalid format",
       },
@@ -408,7 +423,10 @@ export const getEmployeeByDNI = async (
     };
     res.status(500).json({
       success: errorMessage.success,
-      error: { code: errorMessage.error.code, details: errorMessage.error.detail },
+      error: {
+        code: errorMessage.error.code,
+        details: errorMessage.error.detail,
+      },
     });
   }
 };

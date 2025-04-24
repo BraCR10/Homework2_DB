@@ -6,9 +6,10 @@ import Router from "./routes";
 const app = express();
 export const useMock = process.env.USE_MOCK === "True" ? true : false;
 
-const allowedOrigins = process.env.NODE_ENV === 'production' 
-  ? ['http://localhost:3000', 'http://localhost:30001'] 
-  : ['http://localhost:3000', 'http://localhost:30001'];
+const allowedOrigins =
+  process.env.NODE_ENV === "production"
+    ? ["http://localhost:3000", "http://localhost:30001"]
+    : ["http://localhost:3000", "http://localhost:30001"];
 
 const corsOptions = {
   origin: allowedOrigins,
@@ -21,9 +22,9 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use("/api/v2", Router);
 
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV !== "production") {
   const PORT = process.env.PORT || 3000;
-  
+
   const startServer = async (): Promise<void> => {
     try {
       await initConnection();
@@ -35,15 +36,15 @@ if (process.env.NODE_ENV !== 'production') {
       process.exit(1);
     }
   };
-  
+
   startServer();
 }
 
 (async () => {
-  if (process.env.NODE_ENV === 'production') {
+  if (process.env.NODE_ENV === "production") {
     try {
       await initConnection();
-      console.log('Database connection initialized for serverless environment');
+      console.log("Database connection initialized for serverless environment");
     } catch (error) {
       console.error("Error initializing database connection:", error);
     }

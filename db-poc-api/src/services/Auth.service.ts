@@ -13,11 +13,15 @@ class AuthService {
   async loginUser(
     credentials: LoginDTO,
   ): Promise<LoginErrorResponseDTO | LoginSuccessResponseDTO> {
-    const { Username: username, Password: password,  IpAddress:IP} = credentials;
+    const {
+      Username: username,
+      Password: password,
+      IpAddress: IP,
+    } = credentials;
     const params: inSqlParameters = {
       inUsername: [username, TYPES.VarChar],
       inPassword: [password, TYPES.VarChar],
-      inIP : [IP, TYPES.VarChar],
+      inIP: [IP, TYPES.VarChar],
     };
 
     try {
@@ -42,7 +46,7 @@ class AuthService {
     }
   }
 
-  async logoutUser(userId: number,ip :string): Promise<boolean> {
+  async logoutUser(userId: number, ip: string): Promise<boolean> {
     if (!userId) {
       false;
     }

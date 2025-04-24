@@ -1,14 +1,10 @@
 import { Request, Response } from "express";
 import LoginService from "../services/Auth.service";
-import {
-  LoginErrorResponseDTO,
-  LoginDTO,
-} from "../dtos/AuthDTO";
+import { LoginErrorResponseDTO, LoginDTO } from "../dtos/AuthDTO";
 
 export async function loginUser(req: Request, res: Response): Promise<void> {
   try {
-    const {Username,Password} = req.body;
-    
+    const { Username, Password } = req.body;
 
     if (!Username || !Password) {
       console.error("Username and password are required.");
@@ -58,7 +54,10 @@ export async function loginUser(req: Request, res: Response): Promise<void> {
     };
     res.status(500).json({
       success: errorMessage.success,
-      error: { code: errorMessage.error.code, details: errorMessage.error.detail },
+      error: {
+        code: errorMessage.error.code,
+        details: errorMessage.error.detail,
+      },
     });
   }
 }
@@ -75,10 +74,12 @@ export async function logoutUser(req: Request, res: Response): Promise<void> {
       return;
     }
     const ip = req.ip ? req.ip : "";
-    const response = await LoginService.logoutUser(userId,ip);
+    const response = await LoginService.logoutUser(userId, ip);
 
     if (response) {
-      res.status(200).json({ success: true, detail: "Sesión finalizada correctamente" });
+      res
+        .status(200)
+        .json({ success: true, detail: "Sesión finalizada correctamente" });
     } else {
       res.status(401).json({
         success: false,
