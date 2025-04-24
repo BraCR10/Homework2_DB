@@ -119,56 +119,54 @@ export const updateEmployee = async (
   res: Response,
 ): Promise<void> => {
   try {
-    const IdEmpleado = Number(req.params.IdEmpleado);
+    const DNI = req.params.DNI;
 
-    if (!isNaN(IdEmpleado) || IdEmpleado <= 0) {
+    if (!DNI || typeof DNI !== "string" || DNI.trim() === "") {
       const errorResponse: EmployeesErrorResponseDTO = {
         success: false,
         error: {
           code: 400,
-          detail: "Valid employee ID is required",
+          detail: "El DNI es requerido",
+        },
+      };
+      res.status(400).json({ success: false, error: errorResponse });
+      return;
+    }
+    const dniRegex = /^[0-9]+$/;
+
+    if (!dniRegex.test(DNI)) {
+      const errorResponse: EmployeesErrorResponseDTO = {
+        success: false,
+        error: {
+          code: 400,
+          detail: "DNI tiene un formato invalido",
         },
       };
       res.status(400).json({ success: false, error: errorResponse });
       return;
     }
 
-    const { NombrePuesto, ValorDocumentoIdentidad, NombreEmpleado } = req.body;
+    const { IdPuestoNuevo, ValorDocumentoIdentidadNuevo, NombreEmpleadoNuevo } = req.body;
     // Warning : This function requires all the parameters to be passed, even if they are not updated.
-    if (!NombrePuesto || !ValorDocumentoIdentidad || !NombreEmpleado) {
+    if (!IdPuestoNuevo || !ValorDocumentoIdentidadNuevo || !NombreEmpleadoNuevo) {
       console.error("Request body is required.");
       const errorResponse: EmployeesErrorResponseDTO = {
         success: false,
         error: {
           code: 400,
-          detail: "Request body is required.",
+          detail: "El body de la petición es requerido.",
         },
       };
       res.status(400).json({ success: false, error: errorResponse });
       return;
     }
 
-    const nameRegex = /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ \s]+$/;
-    if (!nameRegex.test(NombrePuesto || NombreEmpleado)) {
+    if (!IdPuestoNuevo || typeof IdPuestoNuevo !== "number") {
       const errorResponse: EmployeesErrorResponseDTO = {
         success: false,
         error: {
           code: 400,
-          detail:
-            "Employee name or Position must contain only alphabetic characters",
-        },
-      };
-      res.status(400).json({ success: false, error: errorResponse });
-      return;
-    }
-
-    const dniRegex = /^[0-9]+$/;
-    if (!dniRegex.test(ValorDocumentoIdentidad)) {
-      const errorResponse: EmployeesErrorResponseDTO = {
-        success: false,
-        error: {
-          code: 400,
-          detail: "Employee DNI has an invalid format",
+          detail: "El ID de puesto es requerido y numerico",
         },
       };
       res.status(400).json({ success: false, error: errorResponse });
@@ -176,10 +174,10 @@ export const updateEmployee = async (
     }
 
     const data: UpdateEmployeesDTO = {
-      IdEmpleado,
-      NombrePuesto,
-      ValorDocumentoIdentidad,
-      NombreEmpleado,
+      ValorDocumentoIdentidadActual: DNI,
+      IdPuestoNuevo: IdPuestoNuevo,
+      ValorDocumentoIdentidadNuevo: ValorDocumentoIdentidadNuevo,
+      NombreEmpleadoNuevo: NombreEmpleadoNuevo,
     };
 
     const response = await EmployeeService.updateEmployee(data);
@@ -195,7 +193,7 @@ export const updateEmployee = async (
       success: false,
       error: {
         code: 50008,
-        detail: "An error occurred while updating the employee",
+        detail: "Error del sistema actualizando el empleado",
       },
     };
     res.status(500).json({

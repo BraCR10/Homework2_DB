@@ -120,10 +120,10 @@ class EmployeeService {
     data: UpdateEmployeesDTO,
   ): Promise<UpdateEmployeesSuccessResponseDTO | EmployeesErrorResponseDTO> {
     const params: inSqlParameters = {
-      inIdEmpleado: [String(data.IdEmpleado), TYPES.Int],
-      inNombrePuesto: [data.NombrePuesto, TYPES.VarChar],
-      inValorDocumentoIndentidad: [data.ValorDocumentoIdentidad, TYPES.VarChar],
-      inNombreEmpleado: [data.NombreEmpleado, TYPES.VarChar],
+      inValorDocIdentidad_Actual: [data.ValorDocumentoIdentidadActual, TYPES.VarChar],
+      inNuevoIdPuesto: [String(data.IdPuestoNuevo), TYPES.Int],
+      inNuevoValorDocIdentidad: [data.ValorDocumentoIdentidadNuevo, TYPES.VarChar],
+      inNuevoNombre: [data.NombreEmpleadoNuevo, TYPES.VarChar],
     };
 
     try {
@@ -140,15 +140,15 @@ class EmployeeService {
           },
         };
       else {
-        const response = await execute("sp_update_employee", params, {});
+        const response = await execute("sp_actualizar_empleados", params, {});
         if (response.output.outResultCode == 0) {
           const data = response.recordset[0];
           return {
             success: true,
             data: {
-              message: "Employ was updated",
+              message: "Empleado actualizado",
               updatedFields: [
-                "NombrePuesto",
+                "IdPuesto",
                 "ValorDocumentoIdentidad",
                 "NombreEmpleado",
               ],
@@ -157,19 +157,6 @@ class EmployeeService {
         } else {
           return ErrorHandler(response) as EmployeesErrorResponseDTO;
         }
-        /*} else if(response.output.outResultCode == 50007){
-          return { success:false ,code: 50006, details: "Employee name already exists" };
-        }else if(response.output.outResultCode == 50006){
-          return { success:false ,code: 50007, details: "Employee Document ID already exists" };
-        } else if ( response.output.outResultCode == 50009){
-          return { success:false ,code: 50009, details: "Employee name no alphabetic " };
-        }else if (response.output.outResultCode == 50010){
-          return { success:false ,code: 50010, details: "Employee Document ID no valid" };
-        }else if (response.output.outResultCode == 50008){
-          return { success:false ,code: 50008, details: "DB error" };
-        } else {
-          throw new Error("Employ was not created due to DB error");
-        }*/
       }
     } catch (error) {
       console.error("Error details:", error);

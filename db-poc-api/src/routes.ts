@@ -25,7 +25,7 @@ router.get("/health", (_req, res) => {
 // Employee routes
 router.get("/employee", getEmployees);
 router.post("/employee", createEmployee);
-router.patch("/employee/:IdEmpelado", updateEmployee);
+router.patch("/employee/:DNI", updateEmployee);
 router.delete("/employee/:IdEmpelado", deleteEmployee);
 router.post("/employee/deleteTry/:IdEmpelado", tryDeleteEmployee);
 router.get("/employee/name/:employeeName", getEmployeeByName);

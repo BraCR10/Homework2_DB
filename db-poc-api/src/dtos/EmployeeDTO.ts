@@ -34,10 +34,10 @@ export interface CreateEmployeesSuccessResponseDTO {
 }
 
 export interface UpdateEmployeesDTO {
-  IdEmpleado: number;
-  NombrePuesto: string;
-  ValorDocumentoIdentidad: string;
-  NombreEmpleado: string;
+  ValorDocumentoIdentidadActual: string;
+  ValorDocumentoIdentidadNuevo: string;
+  IdPuestoNuevo: number;
+  NombreEmpleadoNuevo: string;
 }
 
 export interface UpdateEmployeesSuccessResponseDTO {
