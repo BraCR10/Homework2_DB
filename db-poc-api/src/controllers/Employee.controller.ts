@@ -335,35 +335,35 @@ export const getEmployeeByName = async (
       success: false,
       error: {
         code: 400,
-        detail: "Employee name is required",
+        detail: "Nombre de empleado es requerido",
       },
     };
     res.status(400).json({ success: false, error: errorResponse });
     return;
   }
 
-  const nameRegex = /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ \s]+$/;
+  
+  const data: GetEmployeeByNameDTO = { employeeName };
+  const nameRegex = /^[a-zA-Z\s]+$/;
   if (!nameRegex.test(employeeName)) {
     const errorResponse: EmployeesErrorResponseDTO = {
       success: false,
       error: {
         code: 400,
-        detail: "Employee name must contain only alphabetic characters",
+        detail: "Nombre de empleado tiene un formato invalido",
       },
     };
+
     res.status(400).json({ success: false, error: errorResponse });
     return;
   }
-
-  const data: GetEmployeeByNameDTO = { employeeName };
-
   if (!data.employeeName) {
     console.error("Employee name is required.");
     const errorResponse: EmployeesErrorResponseDTO = {
       success: false,
       error: {
         code: 400,
-        detail: "Employee name is required.",
+        detail: "Nombre de empleado es requerido.",
       },
     };
     res.status(400).json({ success: false, error: errorResponse });
@@ -382,7 +382,7 @@ export const getEmployeeByName = async (
       success: false,
       error: {
         code: 50008,
-        detail: "Error fetching employees by name",
+        detail: "Error al buscar empleados por nombre",
       },
     };
     res.status(500).json({
@@ -423,13 +423,13 @@ export const getEmployeeByDNI = async (
       success: false,
       error: {
         code: 400,
-        detail: "Employee DNI has an invalid format",
+        detail: "DNI tiene un formato invalido",
       },
     };
     res.status(400).json({ success: false, error: errorResponse });
     return;
   }
-
+  
   const data: GetEmployeeByDNIDTO = { employeeDNI };
 
   if (!data.employeeDNI) {
@@ -438,7 +438,7 @@ export const getEmployeeByDNI = async (
       success: false,
       error: {
         code: 400,
-        detail: "Employee DNI is required.",
+        detail: "DNI de empleado es requerido.",
       },
     };
     res.status(400).json({ success: false, error: errorResponse });
@@ -457,7 +457,7 @@ export const getEmployeeByDNI = async (
       success: false,
       error: {
         code: 50008,
-        detail: "Error fetching employees by DNI",
+        detail: "Error al buscar empleados por DNI",
       },
     };
     res.status(500).json({

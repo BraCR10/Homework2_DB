@@ -231,7 +231,7 @@ class EmployeeService {
     data: GetEmployeeByNameDTO,
   ): Promise<GetEmployeeByNameSuccessResponseDTO | EmployeesErrorResponseDTO> {
     const params: inSqlParameters = {
-      inNombreEmpleado: [data.employeeName, TYPES.VarChar],
+      inFiltro: [data.employeeName, TYPES.VarChar],
     };
 
     try {
@@ -255,16 +255,13 @@ class EmployeeService {
           },
         };
       else {
-        const response = await execute("sp_get_employee_by_name", params, {});
+        const response = await execute("sp_consultar_empleado", params, {});
         if (response.output.outResultCode == 0) {
-          const sortedEmployees = response.recordset.sort((a, b) =>
-            a.NameEmployee.localeCompare(b.NameEmployee),
-          );
           return {
             success: true,
             data: {
               total: response.recordset.length,
-              empleados: sortedEmployees,
+              empleados: response.recordset,
             },
           };
         } else {
@@ -281,7 +278,7 @@ class EmployeeService {
     data: GetEmployeeByDNIDTO,
   ): Promise<GetEmployeeByDNISuccessResponseDTO | EmployeesErrorResponseDTO> {
     const params: inSqlParameters = {
-      inValorDocumentoIdentidad: [data.employeeDNI, TYPES.VarChar],
+      inFiltro: [data.employeeDNI, TYPES.VarChar],
     };
 
     try {
@@ -305,16 +302,13 @@ class EmployeeService {
           },
         };
       else {
-        const response = await execute("sp_get_employee_by_dni", params, {});
+        const response = await execute("sp_consultar_empleado", params, {});
         if (response.output.outResultCode == 0) {
-          const sortedEmployees = response.recordset.sort((a, b) =>
-            a.NameEmployee.localeCompare(b.NameEmployee),
-          );
           return {
             success: true,
             data: {
               total: response.recordset.length,
-              empleados: sortedEmployees,
+              empleados: response.recordset,
             },
           };
         } else {
