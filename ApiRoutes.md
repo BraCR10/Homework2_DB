@@ -142,21 +142,21 @@ POST /api/v2/employee
 
 ### Actualizar empleado
 ```
-PATCH /api/v2/employee/:IdEmpelado
+PATCH /api/v2/employee/:DNI
 ```
 
 **Descripción**: Actualiza información de un empleado existente.
 
 **Parámetros**: 
-- `IdEmpelado`: Id del empleado
+- `DNI`: DNI del empleado number
 
 
 **Body**:
 ```json
 {
-  "NombrePuesto": "string", // opcional
-  "ValorDocumentoIdentidad": "string", // opcional
-  "NombreEmpleado": "string" // opcional
+  "IdPuestoNuevo": "number", 
+  "ValorDocumentoIdentidadNuevo": "string", 
+  "NombreEmpleadoNuevo": "string" 
 }
 ```
 
@@ -166,7 +166,11 @@ PATCH /api/v2/employee/:IdEmpelado
   "success": true,
   "data": {
     "message": "Empleado actualizado correctamente",
-    "updatedFields": ["NombrePuesto", "NombreEmpleado"]
+    "updatedFields": [
+            "NombrePuesto",
+            "ValorDocumentoIdentidad",
+            "NombreEmpleado"
+        ]
   }
 }
 ```
