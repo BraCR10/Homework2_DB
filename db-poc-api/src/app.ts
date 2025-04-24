@@ -28,7 +28,7 @@ if (process.env.NODE_ENV !== 'production') {
     try {
       await initConnection();
       app.listen(PORT, () => {
-        console.log(`API running on port ${PORT}`);
+        console.log(`API running on port http://localhost:${PORT}`);
       });
     } catch (error) {
       console.error("Error details: ", error);

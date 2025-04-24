@@ -32,7 +32,7 @@ class AuthService {
           };
           return loginResponse;
         } else {
-          const mssqlError = response.recordset[0].Descripcion;
+          const mssqlError = response.recordset[0].detail;
           const errorResponse: LoginErrorResponseDTO = {
             success: false,
             code: response.output.outResultCode,
