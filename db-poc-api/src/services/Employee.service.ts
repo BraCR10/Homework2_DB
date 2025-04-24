@@ -168,7 +168,9 @@ class EmployeeService {
     data: TryDeleteEmployeeDTO,
   ): Promise<TryDeleteEmployeeSuccessResponseDTO | EmployeesErrorResponseDTO> {
     const params: inSqlParameters = {
-      inIdEmpleado: [String(data.IdEmpleado), TYPES.Int],
+      inEmpleadoId: [String(data.IdEmpleado), TYPES.Int],
+      inUserId: [String(data.IdUser), TYPES.Int],
+      inIP: [data.IPAddress, TYPES.VarChar],
     };
 
     try {
@@ -177,18 +179,17 @@ class EmployeeService {
           success: true,
           data: {
             canDelete: true,
-            detail: "Employee can be deleted without conflicts",
+            detail: "Empleado puede ser borrado sin conflictos",
           },
         };
       else {
-        const response = await execute("sp_try_delete_employee", params, {});
+        const response = await execute("sp_intento_borrado_no_confirmado", params, {});
         if (response.output.outResultCode == 0) {
-          const data = response.recordset[0];
           return {
             success: true,
             data: {
-              canDelete: data.CanDelete,
-              detail: "Employee can be deleted without conflicts",
+              canDelete: true,
+              detail: "Empleado puede ser borrado sin conflictos",
             },
           };
         } else {

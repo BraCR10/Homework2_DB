@@ -50,6 +50,8 @@ export interface UpdateEmployeesSuccessResponseDTO {
 
 export interface TryDeleteEmployeeDTO {
   IdEmpleado: number;
+  IdUser: number;
+  IPAddress : string;
 }
 export interface TryDeleteEmployeeSuccessResponseDTO {
   success: boolean;

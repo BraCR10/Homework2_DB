@@ -269,18 +269,32 @@ export const tryDeleteEmployee = async (
 ): Promise<void> => {
   const IdEmpleado = Number(req.params.IdEmpleado);
 
-  if (!isNaN(IdEmpleado) || IdEmpleado <= 0) {
+  if (isNaN(IdEmpleado) || IdEmpleado <= 0) {
     const errorResponse: EmployeesErrorResponseDTO = {
       success: false,
       error: {
         code: 400,
-        detail: "Valid employee ID is required",
+        detail: "El ID de empleado es requerido",
       },
     };
     res.status(400).json({ success: false, error: errorResponse });
     return;
   }
-  const data: TryDeleteEmployeeDTO = { IdEmpleado };
+
+  const { IdUser } = req.body;
+  if (!IdUser || typeof IdUser !== "number") {
+    const errorResponse: EmployeesErrorResponseDTO = {
+      success: false,
+      error: {
+        code: 400,
+        detail: "El ID de usuario es requerido y numerico",
+      },
+    };
+    res.status(400).json({ success: false, error: errorResponse });
+    return;
+  }
+  const IPAddress = req.ip ? req.ip : "";
+  const data: TryDeleteEmployeeDTO = { IdEmpleado, IdUser, IPAddress };
   try {
     const response = await EmployeeService.tryDeleteEmployee(data);
     if (response.success) {
@@ -294,7 +308,7 @@ export const tryDeleteEmployee = async (
       success: false,
       error: {
         code: 50008,
-        detail: "An error occurred while deleting the employee",
+        detail: "Un error a ocurrido al eliminar el empleado",
       },
     };
     res.status(500).json({
