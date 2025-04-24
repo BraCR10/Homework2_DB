@@ -7,6 +7,7 @@ import { execute } from "../config/db.config";
 import { TYPES } from "mssql";
 import { inSqlParameters } from "../types/queryParams.type";
 import { useMock } from "../app";
+import ErrorHandler from "../utils/ErrorHandler";
 
 class AuthService {
   async loginUser(
@@ -27,34 +28,13 @@ class AuthService {
           let data = response.recordset[0];
           const loginResponse: LoginSuccessResponseDTO = {
             success: true,
-            Id: data.userId,
+            Id: data.Id,
             Username: username,
           };
           return loginResponse;
         } else {
-          const mssqlError = response.recordset[0].detail;
-          const errorResponse: LoginErrorResponseDTO = {
-            success: false,
-            code: response.output.outResultCode,
-            detail: mssqlError,
-          };
-          return errorResponse;
+          return ErrorHandler(response) as LoginErrorResponseDTO;
         }
-        /*    
-                } else if( response.output.outResultCode == 50001){
-                    return { success:false ,code: 50001, details: "username doesn't exist" };
-                } else if(response.output.outResultCode == 50002){
-                    return { success:false ,code: 50002, details: "Password doesn't match" };
-                }
-                else if(response.output.outResultCode == 50003){
-                    return { success:false ,code: 50003, details: "User is blocked" };
-                }
-                else if(response.output.outResultCode == 50008){
-                    return { success:false ,code: 50008, details: "DB error" };
-                } 
-                else {
-                    throw new Error("Employ was not created due to DB error");
-                }*/
       }
     } catch (error) {
       console.error("Error details:", error);
