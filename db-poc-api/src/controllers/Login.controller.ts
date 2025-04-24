@@ -49,7 +49,7 @@ export async function loginUser(req: Request, res: Response): Promise<void> {
       success: false,
       error: {
         code: 50008,
-        detail: "An error occurred while logging in",
+        detail: "Un error a ocurrido al iniciar sesión",
       },
     };
     res.status(500).json({
@@ -90,7 +90,7 @@ export async function logoutUser(req: Request, res: Response): Promise<void> {
     console.error("Error during logout:", error);
     res.status(500).json({
       success: false,
-      error: { code: 50008, detail: "An error occurred while logging out" },
+      error: { code: 50008, detail: "Un error a ocurrido mientras el cierre de sesion " },
     });
   }
 }
