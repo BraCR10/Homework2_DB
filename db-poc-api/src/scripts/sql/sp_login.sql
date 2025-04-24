@@ -136,6 +136,7 @@ BEGIN
 
   END TRY
   BEGIN CATCH
+
     SET @outResultCode = 50008; -- Error general de base de datos
 
 	SELECT Descripcion AS detail

@@ -117,5 +117,5 @@ BEGIN
 	WHERE Codigo = @outResultCode;
   END CATCH
   SET NOCOUNT OFF;
-  END
-  GO
+END
+GO
