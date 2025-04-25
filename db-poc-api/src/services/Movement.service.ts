@@ -173,15 +173,15 @@ class MovementService {
           },
         };
       else {
-        const response = await execute("sp_get_tipos_movimiento", {}, {});
+        const response = await execute("sp_listar_tipos_movimientos", {}, {});
         if (response.output.outResultCode == 0) {
-          let data = response.recordset[0];
+          let data = response.recordset;
           const getMovementsTypesResponse: getMovementsTypesSuccessResponseDTO =
             {
               success: true,
               data: {
-                total: data.total,
-                tiposMovimientos: data.tiposMovimientos,
+                total: data.length,
+                tiposMovimientos: data,
               },
             };
           return getMovementsTypesResponse;

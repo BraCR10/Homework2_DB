@@ -29,9 +29,9 @@ class PositionService {
           },
         };
       } else {
-        const response = await execute("sp_get_puestos", params, {});
+        const response = await execute("sp_listar_puestos", params, {});
         if (response.output.outResultCode === 0) {
-          const data = response.recordset[0];
+          const data = response.recordset;
           return {
             success: true,
             data: {

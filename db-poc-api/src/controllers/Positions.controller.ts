@@ -18,8 +18,8 @@ export const getPositions = async (
     const errorMessage: PositionErrorResponseDTO = {
       success: false,
       error: {
-        code: 50010,
-        detail: "An error occurred while retrieving positions",
+        code: 50008,
+        detail: "Un error a ocurrido al obtener los puestos",
       },
     };
     res.status(500).json({

@@ -177,8 +177,8 @@ export const getMovementsTypes = async (_req: Request, res: Response) => {
     const errorMessage: MovementsErrorResponseDTO = {
       success: false,
       error: {
-        code: 50010,
-        detail: "An error occurred while retrieving movement types",
+        code: 50008,
+        detail: "Un error a ocurrido al obtener los tipos de movimiento",
       },
     };
     res.status(500).json({
