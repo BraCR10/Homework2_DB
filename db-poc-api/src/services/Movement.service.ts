@@ -19,7 +19,7 @@ class MovementService {
     GetEmployeeMovementsSuccessResponseDTO | MovementsErrorResponseDTO
   > {
     const params: inSqlParameters = {
-      inIdEmpleado: [String(data.idEmpleado), TYPES.Int],
+      inValorDocumentoIdentidad: [data.DNI, TYPES.VarChar],
     };
 
     try {
@@ -57,19 +57,41 @@ class MovementService {
         };
       else {
         const response = await execute(
-          "sp_get_empleado_movimientos",
+          "sp_listar_movimientos",
           params,
           {},
         );
         if (response.output.outResultCode == 0) {
-          let data = response.recordset[0];
+          let data = response.recordset;
+          console.log("Response data:", data);
           const employeeMovementsResponse: GetEmployeeMovementsSuccessResponseDTO =
             {
               success: true,
               data: {
-                empleado: data.empleado,
-                total: data.total,
-                movimientos: data.movimientos,
+                empleado: {
+                  Id: Number(data[0].IdEmpleado),
+                  IdPuesto: Number(data[0].IdPuesto),
+                  NombrePuesto: data[0].NombrePuesto,
+                  ValorDocumentoIdentidad: data[0].ValorDocumentoIdentidad,
+                  Nombre: data[0].Nombre,
+                  FechaContratacion: data[0].FechaContratacion,
+                  SaldoVacaciones: Number(data[0].SaldoVacaciones),
+                  EsActivo: data[0].EsActivo,
+                },
+                total: data.length,
+                movimientos: data.map((movimiento: any) => ({
+                  Id: Number(movimiento.Id),
+                  IdEmpleado: Number(movimiento.IdEmpleado),
+                  IdTipoMovimiento: Number(movimiento.IdTipoMovimiento),
+                  NombreTipoMovimiento: movimiento.NombreTipoMovimiento,
+                  Fecha: new Date(movimiento.Fecha),
+                  Monto: Number(movimiento.Monto),
+                  NuevoSaldo: Number(movimiento.NuevoSaldo),
+                  IdPostByUser: Number(movimiento.IdPostByUser),
+                  UsernamePostByUser: movimiento.UsernamePostByUser,
+                  PostInIp: movimiento.PostInIp,
+                  PostTime: new Date(movimiento.PostTime),
+                })),
               },
             };
           return employeeMovementsResponse;
@@ -89,10 +111,11 @@ class MovementService {
     data: CreateMovementsDTO,
   ): Promise<CreateMovementsSuccessResponseDTO | MovementsErrorResponseDTO> {
     const params: inSqlParameters = {
-      inNombreTipoMovimiento: [data.NombreTipoMovimiento, TYPES.VarChar],
+      inIdTipoMovimiento: [String(data.IdTipoMovimiento), TYPES.Int],
       inMonto: [String(data.Monto), TYPES.Int],
-      inIdEmpleado: [String(data.IdEmpleado), TYPES.Int],
-      inUsernameUsuario: [data.UsernameUsuario, TYPES.VarChar],
+      inValorDocumentoIdentidad: [data.DNIEmpleado, TYPES.VarChar],
+      inPostByUserId: [String(data.IdUser), TYPES.Int],
+      inPostInIP: [data.IpAddress, TYPES.VarChar],
     };
     try {
       if (useMock)
@@ -104,13 +127,14 @@ class MovementService {
           },
         };
       else {
-        const response = await execute("sp_create_movimiento", params, {});
+        const response = await execute("sp_insertar_movimiento", params, {});
         if (response.output.outResultCode == 0) {
           let data = response.recordset[0];
+          console.log("Response data:", data);
           const createMovementResponse: CreateMovementsSuccessResponseDTO = {
             success: true,
             data: {
-              id: data.id,
+              id: data.Id,
               message: "Movimiento creado exitosamente",
             },
           };

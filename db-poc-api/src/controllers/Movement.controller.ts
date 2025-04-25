@@ -10,14 +10,26 @@ export const getEmployeeMovements = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  const idEmpleado = req.params.idEmpleado;
+  const DNI = req.params.DNI;
 
-  if (!idEmpleado || isNaN(Number(idEmpleado)) || Number(idEmpleado) <= 0) {
+  if (!DNI) {
     const errorResponse: MovementsErrorResponseDTO = {
       success: false,
       error: {
         code: 400,
-        detail: "Valid employee ID is required",
+        detail: "DNI es requerido",
+      },
+    };
+    res.status(400).json({ success: false, error: errorResponse });
+    return;
+  }
+  const DNIregex = /^[0-9]+$/;
+  if (!DNIregex.test(DNI)) {
+    const errorResponse: MovementsErrorResponseDTO = {
+      success: false,
+      error: {
+        code: 400,
+        detail: "El DNI debe ser un número",
       },
     };
     res.status(400).json({ success: false, error: errorResponse });
@@ -25,7 +37,7 @@ export const getEmployeeMovements = async (
   }
 
   const data: GetEmployeeMovementsDTO = {
-    idEmpleado: Number(idEmpleado),
+    DNI: DNI,
   };
   try {
     const response = await MovementService.employeeMovements(data);
@@ -41,7 +53,7 @@ export const getEmployeeMovements = async (
       success: false,
       error: {
         code: 50008,
-        detail: "An error occurred while retrieving employee movements",
+        detail: "Un error a ocurrido al obtener los movimientos del empleado",
       },
     };
     res.status(500).json({
@@ -58,83 +70,71 @@ export const createMovement = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  const data: CreateMovementsDTO = req.body;
+  const {IdTipoMovimiento,Monto,DNIEmpleado,IdUser} = req.body;
 
-  if (!data) {
+  if (!IdTipoMovimiento || !Monto || !DNIEmpleado || !IdUser) {
     const errorResponse: MovementsErrorResponseDTO = {
       success: false,
       error: {
         code: 400,
-        detail: "Request body is required",
+        detail: "IdTipoMovimiento, Monto, DNIEmpleado e IdUser son requeridos",
       },
     };
     res.status(400).json({ success: false, error: errorResponse });
     return;
   }
 
-  if (
-    !data.NombreTipoMovimiento ||
-    typeof data.NombreTipoMovimiento !== "string" ||
-    data.NombreTipoMovimiento.trim() === ""
-  ) {
-    const errorResponse: MovementsErrorResponseDTO = {
-      success: false,
-      error: {
-        code: 400,
-        detail: "Movement type name is required",
-      },
-    };
-    res.status(400).json({ success: false, error: errorResponse });
-    return;
-  }
+  const regex = /^[0-9]+$/;
 
-  if (
-    data.Monto === undefined ||
-    typeof data.Monto !== "number" ||
-    isNaN(data.Monto)
-  ) {
+  if (!regex.test(DNIEmpleado) ) {
     const errorResponse: MovementsErrorResponseDTO = {
       success: false,
       error: {
         code: 400,
-        detail: "Valid amount is required",
+        detail: "DNIEmpleado debe ser números",
       },
     };
     res.status(400).json({ success: false, error: errorResponse });
     return;
   }
+  
+  if ( 
+      typeof Monto !== "number" || 
+      typeof IdTipoMovimiento !== "number" ||
+      typeof IdUser !== "number"
+  )
+  {
+    const errorResponse: MovementsErrorResponseDTO = {
+      success: false,
+      error: {
+        code: 400,
+        detail: "IdTipoMovimiento, Monto e IdUser deben ser números",
+      },
+    };
+    res.status(400).json({ success: false, error: errorResponse });
+    return;
+  }
+  
+  if (Number.isInteger(Monto) === false) {
+    const errorResponse: MovementsErrorResponseDTO = {
+      success: false,
+      error: {
+        code: 400,
+        detail: "Monto debe ser un número entero",
+      },
+    };
+    res.status(400).json({ success: false, error: errorResponse });
+    return;
+  }
+  const data: CreateMovementsDTO = {
+    IdTipoMovimiento: IdTipoMovimiento,
+    Monto: Monto,
+    DNIEmpleado: DNIEmpleado,
+    IdUser: IdUser,
+    IpAddress: req.ip ? req.ip : "",
+  };
 
-  if (
-    !data.IdEmpleado ||
-    typeof data.IdEmpleado !== "number" ||
-    data.IdEmpleado <= 0
-  ) {
-    const errorResponse: MovementsErrorResponseDTO = {
-      success: false,
-      error: {
-        code: 400,
-        detail: "Valid employee ID is required",
-      },
-    };
-    res.status(400).json({ success: false, error: errorResponse });
-    return;
-  }
-
-  if (
-    !data.UsernameUsuario ||
-    typeof data.UsernameUsuario !== "string" ||
-    data.UsernameUsuario.trim() === ""
-  ) {
-    const errorResponse: MovementsErrorResponseDTO = {
-      success: false,
-      error: {
-        code: 400,
-        detail: "Username is required",
-      },
-    };
-    res.status(400).json({ success: false, error: errorResponse });
-    return;
-  }
+  
 
   try {
     const response = await MovementService.createMovement(data);
@@ -149,7 +149,7 @@ export const createMovement = async (
     const errorMessage: MovementsErrorResponseDTO = {
       success: false,
       error: {
-        code: 50009,
+        code: 50008,
         detail: "An error occurred while creating the movement",
       },
     };

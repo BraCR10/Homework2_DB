@@ -16,7 +16,7 @@ export interface MovementsDataDTO {
 }
 
 export interface GetEmployeeMovementsDTO {
-  idEmpleado: number;
+  DNI: string;
 }
 
 export interface GetEmployeeMovementsSuccessResponseDTO {
@@ -29,10 +29,11 @@ export interface GetEmployeeMovementsSuccessResponseDTO {
 }
 
 export interface CreateMovementsDTO {
-  NombreTipoMovimiento: string;
+  IdTipoMovimiento: number;
   Monto: number;
-  IdEmpleado: number;
-  UsernameUsuario: string;
+  DNIEmpleado: string;
+  IdUser: number;
+  IpAddress: string;
 }
 
 export interface CreateMovementsSuccessResponseDTO {

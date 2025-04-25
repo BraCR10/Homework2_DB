@@ -32,7 +32,7 @@ router.get("/employee/name/:employeeName", getEmployeeByName);
 router.get("/employee/DNI/:employeeDNI", getEmployeeByDNI);
 
 // Movement routes
-router.get("/movement/:idEmpleado", getEmployeeMovements);
+router.get("/movement/:DNI", getEmployeeMovements);
 router.post("/movement", createMovement);
 router.get("/movementType", getMovementsTypes);
 
