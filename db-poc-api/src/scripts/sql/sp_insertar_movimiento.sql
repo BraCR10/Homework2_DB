@@ -25,9 +25,10 @@ AS
 BEGIN
   SET NOCOUNT ON;
   BEGIN TRY
+	BEGIN TRANSACTION;
 
     DECLARE @idEmpleado INT;
-    DECLARE @saldoActual FLOAT;
+    DECLARE @saldoActual INT;
     DECLARE @nuevoSaldo FLOAT;
     DECLARE @tipoAccion VARCHAR(16);
 
@@ -42,10 +43,32 @@ BEGIN
     BEGIN
         SET @outResultCode = 50008; -- Error de base de datos
 
+		INSERT INTO dbo.DBError (
+                UserName
+                , Number
+                , Estado
+                , Severidad
+                , Linea
+                , ProcedureError
+                , Mensaje
+				, FechaHora
+            )
+            VALUES (
+                SUSER_NAME()
+                , ERROR_NUMBER()
+                , ERROR_STATE()
+                , ERROR_SEVERITY()
+                , ERROR_LINE()
+                , ERROR_PROCEDURE()
+                , ERROR_MESSAGE()
+				, GETDATE()
+            );
+
 		SELECT Descripcion AS detail
 		FROM dbo.Error
 		WHERE Codigo = @outResultCode;
 
+		ROLLBACK;
         RETURN;
     END
 
@@ -64,10 +87,32 @@ BEGIN
         BEGIN
             SET @outResultCode = 50011; -- Monto del movimiento rechazado pues si se aplicar el saldo seria negativo.
             
+			INSERT INTO dbo.DBError (
+                UserName
+                , Number
+                , Estado
+                , Severidad
+                , Linea
+                , ProcedureError
+                , Mensaje
+				, FechaHora
+            )
+            VALUES (
+                SUSER_NAME()
+                , ERROR_NUMBER()
+                , ERROR_STATE()
+                , ERROR_SEVERITY()
+                , ERROR_LINE()
+                , ERROR_PROCEDURE()
+                , ERROR_MESSAGE()
+				, GETDATE()
+            );
+
 			SELECT Descripcion AS detail
 			FROM dbo.Error
 			WHERE Codigo = @outResultCode;
 			
+			ROLLBACK;
 			RETURN;
         END
     END
@@ -79,10 +124,32 @@ BEGIN
     BEGIN
         SET @outResultCode = 50008; -- Error de base de datos
         
+		INSERT INTO dbo.DBError (
+                UserName
+                , Number
+                , Estado
+                , Severidad
+                , Linea
+                , ProcedureError
+                , Mensaje
+				, FechaHora
+            )
+            VALUES (
+                SUSER_NAME()
+                , ERROR_NUMBER()
+                , ERROR_STATE()
+                , ERROR_SEVERITY()
+                , ERROR_LINE()
+                , ERROR_PROCEDURE()
+                , ERROR_MESSAGE()
+				, GETDATE()
+            );
+
 		SELECT Descripcion AS detail
 		FROM dbo.Error
 		WHERE Codigo = @outResultCode;
 		
+		ROLLBACK;
 		RETURN;
     END
 
@@ -113,11 +180,36 @@ BEGIN
     SET SaldoVacaciones = @nuevoSaldo
     WHERE id = @idEmpleado;
 
+	SELECT @idEmpleado AS Id;
     SET @outResultCode = 0; -- Éxito
-
+	COMMIT;
   END TRY
   BEGIN CATCH
+	IF @@TRANCOUNT > 0
+		ROLLBACK;
+
     SET @outResultCode = 50008; -- Error en base de datos
+
+	INSERT INTO dbo.DBError (
+                UserName
+                , Number
+                , Estado
+                , Severidad
+                , Linea
+                , ProcedureError
+                , Mensaje
+				, FechaHora
+            )
+            VALUES (
+                SUSER_NAME()
+                , ERROR_NUMBER()
+                , ERROR_STATE()
+                , ERROR_SEVERITY()
+                , ERROR_LINE()
+                , ERROR_PROCEDURE()
+                , ERROR_MESSAGE()
+				, GETDATE()
+            );
 
 	SELECT Descripcion AS detail
 	FROM dbo.Error
@@ -126,4 +218,4 @@ BEGIN
   END CATCH
   SET NOCOUNT OFF;
 END
-GO 
+GO

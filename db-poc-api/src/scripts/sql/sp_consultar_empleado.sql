@@ -23,7 +23,7 @@ BEGIN
   BEGIN TRY
 
     -- Limpieza de espacios en blanco
-    SET @inFiltro = LTRIM(RTRIM(@inFiltro));
+    SET @inFiltro = LTRIM(RTRIM(@inFiltro));   
 
     -- Si el filtro está vacío, se listan todos los empleados activos
     IF (@inFiltro = '')
@@ -102,8 +102,30 @@ BEGIN
 
     SET @outResultCode = 0;
   END TRY
-  BEGIN CATCH 
+  BEGIN CATCH
+
 	SET @outResultCode=50008; -- Error de base de datos
+
+	INSERT INTO dbo.DBError (
+                UserName
+                , Number
+                , Estado
+                , Severidad
+                , Linea
+                , ProcedureError
+                , Mensaje
+				, FechaHora
+            )
+            VALUES (
+                SUSER_NAME()
+                , ERROR_NUMBER()
+                , ERROR_STATE()
+                , ERROR_SEVERITY()
+                , ERROR_LINE()
+                , ERROR_PROCEDURE()
+                , ERROR_MESSAGE()
+				, GETDATE()
+            );
 
 	SELECT Descripcion AS detail
 	FROM dbo.Error
@@ -111,5 +133,5 @@ BEGIN
 
   END CATCH
   SET NOCOUNT OFF;
-END
+END 
 GO

@@ -24,16 +24,39 @@ AS
 BEGIN
   SET NOCOUNT ON;
   BEGIN TRY
+	BEGIN TRANSACTION;
 
     -- Validación de nombre
     IF (@inNuevoNombre LIKE '%[^a-zA-Z ]%')
     BEGIN
       SET @outResultCode = 50009; -- Nombre de empleado no alfabético
 
+	  INSERT INTO dbo.DBError (
+                UserName
+                , Number
+                , Estado
+                , Severidad
+                , Linea
+                , ProcedureError
+                , Mensaje
+				, FechaHora
+            )
+            VALUES (
+                SUSER_NAME()
+                , ERROR_NUMBER()
+                , ERROR_STATE()
+                , ERROR_SEVERITY()
+                , ERROR_LINE()
+                , ERROR_PROCEDURE()
+                , ERROR_MESSAGE()
+				, GETDATE()
+            );
+
 	  SELECT Descripcion AS detail
 	  FROM dbo.Error
 	  WHERE Codigo = @outResultCode;
 
+	  ROLLBACK;
       RETURN;
     END
 
@@ -42,10 +65,32 @@ BEGIN
     BEGIN
       SET @outResultCode = 50010; -- Valor de documento de identidad no alfabético 
 	  
+	  INSERT INTO dbo.DBError (
+                UserName
+                , Number
+                , Estado
+                , Severidad
+                , Linea
+                , ProcedureError
+                , Mensaje
+				, FechaHora
+            )
+            VALUES (
+                SUSER_NAME()
+                , ERROR_NUMBER()
+                , ERROR_STATE()
+                , ERROR_SEVERITY()
+                , ERROR_LINE()
+                , ERROR_PROCEDURE()
+                , ERROR_MESSAGE()
+				, GETDATE()
+            );
+
 	  SELECT Descripcion AS detail
 	  FROM dbo.Error
 	  WHERE Codigo = @outResultCode;
 
+	  ROLLBACK;
       RETURN;
     END
 
@@ -59,10 +104,32 @@ BEGIN
     BEGIN
       SET @outResultCode = 50008; -- Error en base de datos
 
+	  INSERT INTO dbo.DBError (
+                UserName
+                , Number
+                , Estado
+                , Severidad
+                , Linea
+                , ProcedureError
+                , Mensaje
+				, FechaHora
+            )
+            VALUES (
+                SUSER_NAME()
+                , ERROR_NUMBER()
+                , ERROR_STATE()
+                , ERROR_SEVERITY()
+                , ERROR_LINE()
+                , ERROR_PROCEDURE()
+                , ERROR_MESSAGE()
+				, GETDATE()
+            );
+
 	  SELECT Descripcion AS detail
 	  FROM dbo.Error
 	  WHERE Codigo = @outResultCode;
 
+	  ROLLBACK;
       RETURN;
     END
 
@@ -75,10 +142,32 @@ BEGIN
     BEGIN
       SET @outResultCode = 50007; -- Empleado con mismo nombre ya existe en actualización
 
+	  INSERT INTO dbo.DBError (
+                UserName
+                , Number
+                , Estado
+                , Severidad
+                , Linea
+                , ProcedureError
+                , Mensaje
+				, FechaHora
+            )
+            VALUES (
+                SUSER_NAME()
+                , ERROR_NUMBER()
+                , ERROR_STATE()
+                , ERROR_SEVERITY()
+                , ERROR_LINE()
+                , ERROR_PROCEDURE()
+                , ERROR_MESSAGE()
+				, GETDATE()
+            );
+
 	  SELECT Descripcion AS detail
 	  FROM dbo.Error
 	  WHERE Codigo = @outResultCode;
 
+	  ROLLBACK;
       RETURN;
     END
 
@@ -91,10 +180,32 @@ BEGIN
     BEGIN
       SET @outResultCode = 50006; -- Empleado con ValorDocumentoIdentidad ya existe en actualizacion
 
+	  INSERT INTO dbo.DBError (
+                UserName
+                , Number
+                , Estado
+                , Severidad
+                , Linea
+                , ProcedureError
+                , Mensaje
+				, FechaHora
+            )
+            VALUES (
+                SUSER_NAME()
+                , ERROR_NUMBER()
+                , ERROR_STATE()
+                , ERROR_SEVERITY()
+                , ERROR_LINE()
+                , ERROR_PROCEDURE()
+                , ERROR_MESSAGE()
+				, GETDATE()
+            );
+
 	  SELECT Descripcion AS detail
 	  FROM dbo.Error
 	  WHERE Codigo = @outResultCode;
 
+	  ROLLBACK;
       RETURN;
     END
 
@@ -116,9 +227,35 @@ BEGIN
 	SELECT @inNuevoNombre;
 	SELECT @inNuevoIdPuesto;
 
+	COMMIT;
+
   END TRY
   BEGIN CATCH
+
+	IF @@TRANCOUNT > 0
+        ROLLBACK;
     SET @outResultCode = 50008; -- Error de base de datos
+
+	INSERT INTO dbo.DBError (
+                UserName
+                , Number
+                , Estado
+                , Severidad
+                , Linea
+                , ProcedureError
+                , Mensaje
+				, FechaHora
+            )
+            VALUES (
+                SUSER_NAME()
+                , ERROR_NUMBER()
+                , ERROR_STATE()
+                , ERROR_SEVERITY()
+                , ERROR_LINE()
+                , ERROR_PROCEDURE()
+                , ERROR_MESSAGE()
+				, GETDATE()
+            );
 
 	SELECT Descripcion AS detail
 	FROM dbo.Error

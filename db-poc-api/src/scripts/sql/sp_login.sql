@@ -22,10 +22,13 @@ AS
 BEGIN
   SET NOCOUNT ON;
   BEGIN TRY
+	
+	BEGIN TRANSACTION;
 
     DECLARE @userId INT;
     DECLARE @intentosFallidos INT;
     DECLARE @fechaUltimoDeshabilitado DATETIME;
+	DECLARE @mensajeerror VARCHAR(128);
 
     -- Verificar si el usuario existe
     SELECT @userId = Id
@@ -35,15 +38,47 @@ BEGIN
     IF (@userId IS NULL)
     BEGIN
         SET @outResultCode = 50001; -- Usuario inválido
-		
+
+		SELECT @userId = Id
+		FROM dbo.Usuario
+		WHERE Username = 'NoConocido';
+
+		SELECT @mensajeerror = E.Descripcion 
+		FROM dbo.Error AS E
+		WHERE E.Codigo = @outResultCode;
+
+
         -- Registrar intento fallido
         INSERT INTO dbo.BitacoraEvento (IdTipoEvento, Descripcion, IdPostByUser, PostInIP, PostTime)
-        VALUES (2, 'Username no existe', NULL, @inIP, GETDATE());
+        VALUES (2, @mensajeerror, @userId, @inIP, GETDATE());
 
-		SELECT Descripcion AS detail
-		FROM dbo.Error
-		WHERE Codigo = @outResultCode;
 
+
+		INSERT INTO dbo.DBError (
+                UserName
+                , Number
+                , Estado
+                , Severidad
+                , Linea
+                , ProcedureError
+                , Mensaje
+				, FechaHora
+            )
+            VALUES (
+                SUSER_NAME()
+                , ERROR_NUMBER()
+                , ERROR_STATE()
+                , ERROR_SEVERITY()
+                , ERROR_LINE()
+                , ERROR_PROCEDURE()
+                , ERROR_MESSAGE()
+				, GETDATE()
+            );
+
+	
+		SELECT @mensajeerror AS detail 
+
+		ROLLBACK
         RETURN;
     END
 
@@ -67,11 +102,17 @@ BEGIN
     BEGIN
         IF (@fechaUltimoDeshabilitado IS NULL OR DATEDIFF(MINUTE, @fechaUltimoDeshabilitado, GETDATE()) >= 10)
         BEGIN
+			
+			SET @outResultCode = 50003; -- Login deshabilitado
+
+			SELECT Descripcion = @mensajeerror
+			FROM dbo.Error
+			WHERE Codigo = @outResultCode;
+
             -- Registrar deshabilitación
             INSERT INTO dbo.BitacoraEvento (IdTipoEvento, Descripcion, IdPostByUser, PostInIP, PostTime)
-            VALUES (3, NULL, @userId, @inIP, GETDATE());
+            VALUES (3, @mensajeerror, @userId, @inIP, GETDATE());
 
-            SET @outResultCode = 50003; -- Login deshabilitado
 
 			SELECT Descripcion AS detail
 			FROM dbo.Error
@@ -86,7 +127,29 @@ BEGIN
 			FROM dbo.Error
 			WHERE Codigo = @outResultCode;
 
+			INSERT INTO dbo.DBError (
+                UserName
+                , Number
+                , Estado
+                , Severidad
+                , Linea
+                , ProcedureError
+                , Mensaje
+				, FechaHora
+            )
+            VALUES (
+                SUSER_NAME()
+                , ERROR_NUMBER()
+                , ERROR_STATE()
+                , ERROR_SEVERITY()
+                , ERROR_LINE()
+                , ERROR_PROCEDURE()
+                , ERROR_MESSAGE()
+				, GETDATE()
+            );
+
         END
+		ROLLBACK;
         RETURN;
     END
 
@@ -116,6 +179,27 @@ BEGIN
 		FROM dbo.Error
 		WHERE Codigo = @outResultCode;
 
+		INSERT INTO dbo.DBError (
+                UserName
+                , Number
+                , Estado
+                , Severidad
+                , Linea
+                , ProcedureError
+                , Mensaje
+				, FechaHora
+            )
+            VALUES (
+                SUSER_NAME()
+                , ERROR_NUMBER()
+                , ERROR_STATE()
+                , ERROR_SEVERITY()
+                , ERROR_LINE()
+                , ERROR_PROCEDURE()
+                , ERROR_MESSAGE()
+				, GETDATE()
+            );
+		ROLLBACK;
         RETURN;
     END
 
@@ -134,14 +218,39 @@ BEGIN
     SET @outResultCode = 0; -- Login exitoso
 	SELECT @userId AS Id;
 
+	COMMIT;
+
   END TRY
   BEGIN CATCH
+	IF @@TRANCOUNT > 0
+    ROLLBACK;
 
     SET @outResultCode = 50008; -- Error general de base de datos
 
 	SELECT Descripcion AS detail
 	FROM dbo.Error
 	WHERE Codigo = @outResultCode;
+
+	INSERT INTO dbo.DBError (
+                UserName
+                , Number
+                , Estado
+                , Severidad
+                , Linea
+                , ProcedureError
+                , Mensaje
+				, FechaHora
+            )
+            VALUES (
+                SUSER_NAME()
+                , ERROR_NUMBER()
+                , ERROR_STATE()
+                , ERROR_SEVERITY()
+                , ERROR_LINE()
+                , ERROR_PROCEDURE()
+                , ERROR_MESSAGE()
+				, GETDATE()
+            );
 
   END CATCH
   SET NOCOUNT OFF;

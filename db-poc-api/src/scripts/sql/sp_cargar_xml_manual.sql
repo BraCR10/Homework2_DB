@@ -14,11 +14,12 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 -- =============================================
--- Author:		<Brian Ramirez>
--- Create date: <24/4/2025>
--- Description:	<Subir XML manual>
+-- Author:		<Brian>
+-- Create date: <23/4/2025>
+-- Description:	<Subir XML manualmente>
 -- =============================================
-CREATE PROCEDURE sp_cargar_xml_manual( 
+CREATE PROCEDURE sp_cargar_xml_manual
+( 
 	@outResultCode INT OUTPUT
 )AS
 BEGIN

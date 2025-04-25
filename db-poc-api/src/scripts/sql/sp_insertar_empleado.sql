@@ -23,16 +23,39 @@ AS
 BEGIN
   SET NOCOUNT ON;
   BEGIN TRY
+	BEGIN TRANSACTION;
 
     -- Validación: el nombre debe ser alfabético (puede incluir espacios)
     IF (@inNombreEmpleado LIKE '%[^a-zA-Z ]%')
     BEGIN
       SET @outResultCode = 50009; -- Nombre de empleado no alfabético
 	  
+	  INSERT INTO dbo.DBError (
+                UserName
+                , Number
+                , Estado
+                , Severidad
+                , Linea
+                , ProcedureError
+                , Mensaje
+				, FechaHora
+            )
+            VALUES (
+                SUSER_NAME()
+                , ERROR_NUMBER()
+                , ERROR_STATE()
+                , ERROR_SEVERITY()
+                , ERROR_LINE()
+                , ERROR_PROCEDURE()
+                , ERROR_MESSAGE()
+				, GETDATE()
+            );
+
 	  SELECT Descripcion AS detail
 	  FROM dbo.Error
 	  WHERE Codigo = @outResultCode;
       
+	  ROLLBACK;
 	  RETURN;
     END
 
@@ -41,10 +64,32 @@ BEGIN
     BEGIN
       SET @outResultCode = 50010; -- Valor de documento de identidad no alfabético
       
+	  INSERT INTO dbo.DBError (
+                UserName
+                , Number
+                , Estado
+                , Severidad
+                , Linea
+                , ProcedureError
+                , Mensaje
+				, FechaHora
+            )
+            VALUES (
+                SUSER_NAME()
+                , ERROR_NUMBER()
+                , ERROR_STATE()
+                , ERROR_SEVERITY()
+                , ERROR_LINE()
+                , ERROR_PROCEDURE()
+                , ERROR_MESSAGE()
+				, GETDATE()
+            );
+
 	  SELECT Descripcion AS detail
 	  FROM dbo.Error
 	  WHERE Codigo = @outResultCode;
 	  
+	  ROLLBACK;
 	  RETURN;
     END
 
@@ -56,10 +101,32 @@ BEGIN
     BEGIN
       SET @outResultCode = 50005; -- Empleado con mismo nombre ya existe en inserción
       
+	  INSERT INTO dbo.DBError (
+                UserName
+                , Number
+                , Estado
+                , Severidad
+                , Linea
+                , ProcedureError
+                , Mensaje
+				, FechaHora
+            )
+            VALUES (
+                SUSER_NAME()
+                , ERROR_NUMBER()
+                , ERROR_STATE()
+                , ERROR_SEVERITY()
+                , ERROR_LINE()
+                , ERROR_PROCEDURE()
+                , ERROR_MESSAGE()
+				, GETDATE()
+            );
+
 	  SELECT Descripcion AS detail
 	  FROM dbo.Error
 	  WHERE Codigo = @outResultCode;
 	  
+	  ROLLBACK;
 	  RETURN;
     END
 
@@ -71,10 +138,32 @@ BEGIN
     BEGIN
       SET @outResultCode = 50004; -- Empleado con ValorDocumentoIdentidad ya existe en inserción
       
+	  INSERT INTO dbo.DBError (
+                UserName
+                , Number
+                , Estado
+                , Severidad
+                , Linea
+                , ProcedureError
+                , Mensaje
+				, FechaHora
+            )
+            VALUES (
+                SUSER_NAME()
+                , ERROR_NUMBER()
+                , ERROR_STATE()
+                , ERROR_SEVERITY()
+                , ERROR_LINE()
+                , ERROR_PROCEDURE()
+                , ERROR_MESSAGE()
+				, GETDATE()
+            );
+
 	  SELECT Descripcion AS detail
 	  FROM dbo.Error
 	  WHERE Codigo = @outResultCode;
 	  
+	  ROLLBACK;
 	  RETURN;
     END
 
@@ -107,10 +196,34 @@ BEGIN
 	SELECT 
 		TE.Nombre AS detail
 	FROM TipoEvento TE;
-
+	COMMIT;
   END TRY
   BEGIN CATCH
+	 IF @@TRANCOUNT > 0
+		ROLLBACK;
+
     SET @outResultCode = 50008; -- Error general de base de datos
+
+	INSERT INTO dbo.DBError (
+                UserName
+                , Number
+                , Estado
+                , Severidad
+                , Linea
+                , ProcedureError
+                , Mensaje
+				, FechaHora
+            )
+            VALUES (
+                SUSER_NAME()
+                , ERROR_NUMBER()
+                , ERROR_STATE()
+                , ERROR_SEVERITY()
+                , ERROR_LINE()
+                , ERROR_PROCEDURE()
+                , ERROR_MESSAGE()
+				, GETDATE()
+            );
 
 	SELECT Descripcion AS detail
 	FROM dbo.Error

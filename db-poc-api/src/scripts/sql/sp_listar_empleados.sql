@@ -42,6 +42,27 @@ BEGIN
     BEGIN CATCH 
         SET @outResultCode = 50008;
 
+		INSERT INTO dbo.DBError (
+                UserName
+                , Number
+                , Estado
+                , Severidad
+                , Linea
+                , ProcedureError
+                , Mensaje
+				, FechaHora
+            )
+            VALUES (
+                SUSER_NAME()
+                , ERROR_NUMBER()
+                , ERROR_STATE()
+                , ERROR_SEVERITY()
+                , ERROR_LINE()
+                , ERROR_PROCEDURE()
+                , ERROR_MESSAGE()
+				, GETDATE()
+            );
+
         SELECT Descripcion AS detail
         FROM dbo.Error
         WHERE Codigo = @outResultCode;

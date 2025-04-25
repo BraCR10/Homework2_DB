@@ -20,7 +20,8 @@ GO
 -- Create date: <23/4/2025>
 -- Description:	<SP para cargar el XML>
 -- =============================================
-CREATE PROCEDURE sp_cargar_xml(
+CREATE PROCEDURE sp_cargar_xml
+(
 	@inXMLData NVARCHAR(MAX), -- Maximo permitido
 	@outResultCode int OUTPUT
 )AS
@@ -685,3 +686,4 @@ BEGIN
 
 	SET NOCOUNT OFF
 END
+GO

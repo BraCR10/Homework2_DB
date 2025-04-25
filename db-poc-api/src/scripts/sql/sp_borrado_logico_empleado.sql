@@ -21,7 +21,8 @@ AS
 BEGIN
   SET NOCOUNT ON;
   BEGIN TRY
-	
+	BEGIN TRANSACTION;
+
 	DECLARE @canDelete BIT;
 
     -- Verificar existencia
@@ -30,15 +31,37 @@ BEGIN
         WHERE ValorDocumentoIdentidad = @inValorDocumentoIdentidad AND EsActivo = 1
     )
     BEGIN
-      SET @outResultCode = 50008; --No existe el empleado y no hay uno en específico
+		SET @outResultCode = 50008; --No existe el empleado y no hay uno en específico
 
-	SELECT Nombre AS detail
-	FROM dbo.TipoEvento
-	WHERE Id = 9;
+		SELECT Descripcion AS detail
+		FROM dbo.Error
+		WHERE Codigo = @outResultCode;
 
-	SET @canDelete = 0;
-	SELECT @canDelete;
+		INSERT INTO dbo.DBError (
+                UserName
+                , Number
+                , Estado
+                , Severidad
+                , Linea
+                , ProcedureError
+                , Mensaje
+				, FechaHora
+            )
+            VALUES (
+                SUSER_NAME()
+                , ERROR_NUMBER()
+                , ERROR_STATE()
+                , ERROR_SEVERITY()
+                , ERROR_LINE()
+                , ERROR_PROCEDURE()
+                , ERROR_MESSAGE()
+				, GETDATE()
+            );
 
+		SET @canDelete = 0;
+		SELECT @canDelete;
+		
+	  ROLLBACK;
       RETURN;
     END
 
@@ -56,13 +79,38 @@ BEGIN
 
     SET @outResultCode = 0;
 
+	COMMIT;
   END TRY
   BEGIN CATCH
+	 IF @@TRANCOUNT > 0
+		ROLLBACK;
+
     SET @outResultCode = 50008; --No se pudo actualizar correctamente.
 
-	SELECT Nombre AS detail
-	FROM dbo.TipoEvento
-	WHERE Id = 9;
+	INSERT INTO dbo.DBError (
+                UserName
+                , Number
+                , Estado
+                , Severidad
+                , Linea
+                , ProcedureError
+                , Mensaje
+				, FechaHora
+            )
+            VALUES (
+                SUSER_NAME()
+                , ERROR_NUMBER()
+                , ERROR_STATE()
+                , ERROR_SEVERITY()
+                , ERROR_LINE()
+                , ERROR_PROCEDURE()
+                , ERROR_MESSAGE()
+				, GETDATE()
+            );
+
+	SELECT Descripcion AS detail
+    FROM dbo.Error
+    WHERE Codigo = @outResultCode;
 
 	SET @canDelete = 0;
 	SELECT @canDelete;

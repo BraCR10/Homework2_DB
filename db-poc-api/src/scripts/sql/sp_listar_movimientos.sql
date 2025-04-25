@@ -21,63 +21,77 @@ BEGIN
   SET NOCOUNT ON;
   BEGIN TRY
 
+    DECLARE @empleadoId INT;
+
     -- Validar que el empleado existe y está activo
-    IF NOT EXISTS (
-        SELECT 1 FROM dbo.Empleado 
-        WHERE ValorDocumentoIdentidad = @inValorDocumentoIdentidad AND EsActivo = 1
-    )
-    BEGIN
-      SET @outResultCode = 50008; -- Error de base de datos
+    SELECT @empleadoId = Id
+    FROM dbo.Empleado 
+    WHERE ValorDocumentoIdentidad = @inValorDocumentoIdentidad AND EsActivo = 1;
 
-	  SELECT Descripcion AS detail
-	  FROM dbo.Error
-	  WHERE Codigo = @outResultCode;
-
-      RETURN;
-    END
-
-    -- Información general del empleado
     SELECT 
-      E.ValorDocumentoIdentidad,
-	  
-      E.Nombre,
-      E.SaldoVacaciones
+		-- Información general del empleado
+        E.Id AS IdEmpleado,
+        E.IdPuesto,
+        E.ValorDocumentoIdentidad,
+        E.Nombre,
+        E.FechaContratacion,
+        E.SaldoVacaciones,
+        E.EsActivo,
+		P.Nombre AS NombrePuesto,
+		-- Movimientos del empleado, ordenados por fecha descendente
+		TM.Id AS IdTipoMovimiento,
+		TM.Nombre AS NombreTipoMovimiento,
+		M.Id ,
+        M.Fecha,
+        M.Monto,
+        M.NuevoSaldo,
+        M.IdPostByUser,
+        U.Username AS UsuarioPostByUser,
+        M.PostInIP,
+        M.PostTime
     FROM 
-      dbo.Empleado E
+        dbo.Movimiento M
+        INNER JOIN dbo.TipoMovimiento TM ON M.IdTipoMovimiento = TM.Id
+        INNER JOIN dbo.Usuario U ON M.IdEmpleado  = U.Id
+		INNER JOIN dbo.Empleado E ON M.IdEmpleado  = E.Id
+		INNER JOIN dbo.Puesto P ON M.IdEmpleado  = P.Id
     WHERE 
-      E.ValorDocumentoIdentidad = @inValorDocumentoIdentidad;
-
-    -- Movimientos del empleado, ordenados por fecha descendente
-    SELECT 
-      TM.Nombre AS NombreTipoMovimiento,
-	  M.Fecha,
-      M.Monto,
-      M.NuevoSaldo,
-	  M.IdPostByUser,
-      U.Username AS UsuarioPostByUser,
-      M.PostInIP,
-      M.PostTime
-
-    FROM 
-      dbo.Movimiento M
-      INNER JOIN Empleado E ON M.IdEmpleado = E.Id
-      INNER JOIN TipoMovimiento TM ON M.IdTipoMovimiento = TM.Id
-      INNER JOIN Usuario U ON M.IdPostByUser = U.Id
-    WHERE 
-      E.ValorDocumentoIdentidad = @inValorDocumentoIdentidad
+        M.IdEmpleado = @empleadoId
     ORDER BY 
-      M.Fecha DESC;
+        M.Fecha DESC;
 
     SET @outResultCode = 0;
 
   END TRY
   BEGIN CATCH
-    SET @outResultCode = 50008; -- Error general de base de datos
+      SET @outResultCode = 50008; -- Error: Empleado no existe o está inactivo
 
-	SELECT Descripcion AS detail
-	FROM dbo.Error
-	WHERE Codigo = @outResultCode;
+      INSERT INTO dbo.DBError (
+                UserName
+                , Number
+                , Estado
+                , Severidad
+                , Linea
+                , ProcedureError
+                , Mensaje
+				, FechaHora
+            )
+            VALUES (
+                SUSER_NAME()
+                , ERROR_NUMBER()
+                , ERROR_STATE()
+                , ERROR_SEVERITY()
+                , ERROR_LINE()
+                , ERROR_PROCEDURE()
+                , ERROR_MESSAGE()
+				, GETDATE()
+            );
 
+      SELECT Descripcion AS detail
+      FROM dbo.Error
+      WHERE Codigo = @outResultCode;
+
+      RETURN;
   END CATCH
   SET NOCOUNT OFF;
 END
