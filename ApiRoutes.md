@@ -321,13 +321,13 @@ GET /api/v2/employee/DNI/:employeeDNI
 
 ### Obtener movimientos de un empleado
 ```
-GET /api/v2/movement/:idEmpleado
+GET /api/v2/movement/:DNI
 ```
 
 **Descripción**: Obtiene todos los movimientos asociados a un empleado específico.
 
 **Parámetros**:
-- `idEmpleado`: ID del empleado
+- `DNI`: DNI del empleado
 
 **Body**: Ninguno
 
@@ -373,10 +373,10 @@ POST /api/v2/movement/
 **Body**:
 ```json
 {
-  "NombreTipoMovimiento": "string",
-  "Monto": 0,
-  "IdEmpleado": 0,
-  "UsernameUsuario": "string"
+  "IdTipoMovimiento": "number",
+  "Monto": "number",
+  "DNIEmpleado": "string",
+  "IdUser": "number"
 }
 ```
 
