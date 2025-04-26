@@ -78,7 +78,7 @@ const EmployeeList = () => {
           nombre: empleado.Nombre,
           documento: empleado.ValorDocumentoIdentidad,
           nombrePuesto: empleado.NombrePuesto,
-          saldoVacaciones: empleado.saldoVacaciones
+          saldoVacaciones: empleado.SaldoVacaciones
         }));
         setEmpleados(empleadosBackend);
       } 
@@ -204,22 +204,28 @@ const EmployeeList = () => {
     nombre: string;
     documento: string;
     nombrePuesto: string;
-  }) => {
+  }, DNIanterior: string) => {
+    console.log("Datos enviados al backend:", {
+      IdPuestoNuevo: updatedEmployee.id,
+      ValorDocumentoIdentidadNuevo: updatedEmployee.documento,
+      NombreEmpleadoNuevo: updatedEmployee.nombre,
+    });
+    console.log("DNI", DNIanterior);
     try {
-      const response = await fetch(`${url}/api/v2/employee`, {
+      const response = await fetch(`${url}/api/v2/employee/${DNIanterior}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          IdEmpleado: updatedEmployee.id,
-          NombreEmpleado: updatedEmployee.nombre,
-          ValorDocumentoIdentidad: updatedEmployee.documento,
-          NombrePuesto: updatedEmployee.nombrePuesto,
+          IdPuestoNuevo: updatedEmployee.id,
+          ValorDocumentoIdentidadNuevo: updatedEmployee.documento,
+          NombreEmpleadoNuevo: updatedEmployee.nombre,
         }),
       });
-  
       if (response.ok) {
+        const data = await response.json();
+        console.log(data.data.message); // Mensaje de éxito del backend
         fetchEmpleados(); // Actualizar la lista de empleados
         setEditEmployeeModalVisible(false);
         alert("Empleado actualizado correctamente.");
@@ -339,15 +345,16 @@ const EmployeeList = () => {
     documento: string;
     saldoVacaciones: number;
   }) => {
+    
     try {
+      console.log("DNI:", empleado.documento);
       // Realizar la petición GET al backend
-      const response = await fetch(`${url}/api/v2/movement/${empleado.id}`, {
+      const response = await fetch(`${url}/api/v2/movement/${empleado.documento}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
       });
-  
       if (response.ok) {
         const data = await response.json();
   
@@ -630,7 +637,7 @@ const EmployeeList = () => {
         <EditEmployeeModal
           employee={employeeToEdit}
           onClose={() => setEditEmployeeModalVisible(false)}
-          onSubmit={handleEditSubmit}
+          onSubmit={(updatedEmployee) => handleEditSubmit(updatedEmployee, employeeToEdit.documento)}
         />
       )}
       {insertMovementModalVisible && employeeForMovement && (
