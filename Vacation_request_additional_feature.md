@@ -75,7 +75,7 @@ Se requiere crear una tabla con la siguiente estructura:
 4. No devuelve recordset, solo el código de resultado
 **Códigos de resultado:**
 - `0` - Operación exitosa
-- `50014` - Usuario desde tener los permisos para el tramite
+- `50015` - Usuario desde tener los permisos para el tramite
 ### *Devolver como detail  desde la tabla Error la descripcion de los errores en el recordset*
 **Referencia del SP llamado:**
 ```
