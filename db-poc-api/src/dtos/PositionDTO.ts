@@ -1,16 +1,11 @@
 import ErrorResponseDTO from "./ErrorResponseDTO";
-
-export interface PositionDataDTO {
-  Id: number;
-  Nombre: string;
-  SalarioPorHora: number;
-}
+import { Position } from "../models/PositionModel";
 
 export interface GetPositionsSuccessResponseDTO {
   success: boolean;
   data: {
     total: number;
-    puestos: PositionDataDTO[];
+    puestos: Position[];
   };
 }
 
