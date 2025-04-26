@@ -10,6 +10,8 @@ export interface MovementsDataDTO {
   Monto: number;
   NuevoSaldo: number;
   IdPostByUser: number;
+  IPAddress: string;
+  IdPostByUserName: string;
   UsernamePostByUser: string;
   PostInIp: string;
   PostTime: Date;
