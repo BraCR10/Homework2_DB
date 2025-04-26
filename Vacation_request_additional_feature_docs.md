@@ -11,6 +11,8 @@ A table with the following structure is required:
 - `DNIEmpleado` - VARCHAR(64) UNIQUE
 - `CantidadDias` - INT
 - `FechaSolicitud` - DATETIME DEFAULT GETDATE()
+- `FechaInicio` - DATETIME
+- `FechaFin` - DATETIME
 
 ## Stored Procedures
 
@@ -19,6 +21,8 @@ A table with the following structure is required:
 **Input parameters:**
 - `@inValorDocumentoIdentidad VARCHAR(64)` - Employee's ID document
 - `@inCantDias INT` - Number of days requested
+- `@inFechaInicio`
+- `@inFechaFin`
 - `@outResultCode INT OUTPUT` - Operation result code
 
 **Result codes:**
@@ -48,6 +52,9 @@ A table with the following structure is required:
       EmpleadoNombre: "Jose",
       EmpleadoDNI: "1254452",
       CantDias: 5
+      FechaInicio: 
+      FechaFin:
+      FechaSolicitud: 
     },
     ...
   ]
@@ -106,6 +113,8 @@ POST /api/v2/vacation_request
 {
   "ValorDocumentoIdentidad": "string",
   "CantidadDias": "number"
+  "FechaInicio": date
+  "FechaFin": date
 }
 ```
 
@@ -149,14 +158,20 @@ GET /api/v2/vacation_request
         "Estado": "Pendiente",
         "EmpleadoNombre": "Jose",
         "EmpleadoDNI": "1254452",
-        "CantDias": 5
+        "CantDias": 5,
+        "FechaInicio": ,
+        "FechaFin": ,
+        "FechaSoicitud": ,
       },
       {
         "IdSolicitud": 2,
         "Estado": "Pendiente",
         "EmpleadoNombre": "Maria",
         "EmpleadoDNI": "3265897",
-        "CantDias": 3
+        "CantDias": 3,
+        "FechaInicio": ,
+        "FechaFin": ,
+        "FechaSoicitud" ,
       }
     ]
   }
