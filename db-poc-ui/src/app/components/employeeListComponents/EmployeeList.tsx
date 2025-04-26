@@ -17,6 +17,7 @@ interface Empleado {
   id: number;
   nombre: string;
   documento: string;
+  idPuesto: number,
   nombrePuesto: string;
   saldoVacaciones: number;
 }
@@ -206,18 +207,33 @@ const EmployeeList = () => {
     setEditEmployeeModalVisible(true);
   };
   
-  const handleEditSubmit = async (updatedEmployee: {
-    id: number;
-    nombre: string;
-    documento: string;
-    nombrePuesto: string;
-  }, DNIanterior: string) => {
+  const handleEditSubmit = async (
+    updatedEmployee: {
+      id: number;
+      nombre: string;
+      documento: string;
+      nombrePuesto: string;
+    },
+    DNIanterior: string
+  ) => {
+    // Buscar el idPuesto correspondiente al nombrePuesto
+    const empleado = empleados.find((emp) => emp.nombrePuesto === updatedEmployee.nombrePuesto);
+  
+    if (!empleado) {
+      console.error("No se encontró el puesto correspondiente al nombrePuesto.");
+      alert("No se encontró el puesto correspondiente al nombrePuesto.");
+      return;
+    }
+  
+    const idPuesto = empleado.idPuesto; // Obtener el idPuesto
+  
     console.log("Datos enviados al backend:", {
-      IdPuestoNuevo: updatedEmployee.id,
+      IdPuesto: idPuesto,
       ValorDocumentoIdentidadNuevo: updatedEmployee.documento,
       NombreEmpleadoNuevo: updatedEmployee.nombre,
     });
     console.log("DNI", DNIanterior);
+  
     try {
       const response = await fetch(`${url}/api/v2/employee/${DNIanterior}`, {
         method: "PATCH",
@@ -225,27 +241,25 @@ const EmployeeList = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          IdPuestoNuevo: updatedEmployee.id,
+          IdPuesto: idPuesto, // Enviar el idPuesto
           ValorDocumentoIdentidadNuevo: updatedEmployee.documento,
           NombreEmpleadoNuevo: updatedEmployee.nombre,
         }),
       });
+  
       if (response.ok) {
         const data = await response.json();
         console.log(data.data.message); // Mensaje de éxito del backend
         fetchEmpleados(); // Actualizar la lista de empleados
         setEditEmployeeModalVisible(false);
         alert("Empleado actualizado correctamente.");
-      } 
-      else if (response.status === 404) {
+      } else if (response.status === 404) {
         const errorData = await response.json();
         alert(`Error: ${errorData.error.detail}`); // Mostrar mensaje de error del backend
-      } 
-      else {
+      } else {
         alert("Ocurrió un error inesperado al actualizar el empleado.");
       }
-    } 
-    catch (error) {
+    } catch (error) {
       console.error("Error al actualizar el empleado:", error);
       alert("Ocurrió un error al intentar actualizar el empleado.");
     }
@@ -274,35 +288,43 @@ const EmployeeList = () => {
     setModalConfirmationVisible(true);
   };
 
-  const confirmDelete = async() => {
+  const confirmDelete = async () => {
     if (empleadoAEliminar !== null) {
+      // Buscar el empleado correspondiente al id
+      const empleado = empleados.find((emp) => emp.id === empleadoAEliminar);
+  
+      if (!empleado) {
+        console.error("No se encontró el empleado con el ID proporcionado.");
+        alert("No se encontró el empleado a eliminar.");
+        return;
+      }
+  
+      console.log("Documento del empleado a eliminar:", empleado.documento);
+  
       try {
-        // Realizar la petición DELETE al backend
-        const response = await fetch(`${url}/api/v2/employee/${empleadoAEliminar}`, {
-          method: 'DELETE',
+        // Realizar la petición DELETE al backend con el documento
+        const response = await fetch(`${url}/api/v2/employee/${empleado.documento}`, {
+          method: "DELETE",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
         });
-
+  
         if (response.ok) {
           const data = await response.json();
-          console.log(data.data.detail); // Mensaje de éxito del backend (borrar)
-
+          console.log(data.data.detail); // Mensaje de éxito del backend
+  
           // Actualizar la lista de empleados en el frontend
-          setEmpleados(empleados.filter((empleado) => empleado.id !== empleadoAEliminar)); //se elimina el empleado de la lista
-          alert('Empleado eliminado correctamente.');
-        } 
-        else {
-          console.error('Error al eliminar empleado:', response.status); //borrar
-          alert('No se pudo eliminar el empleado. Inténtalo de nuevo.');
+          fetchEmpleados(); // Actualizar la lista de empleados
+          alert("Empleado eliminado correctamente.");
+        } else {
+          console.error("Error al eliminar empleado:", response.status);
+          alert("No se pudo eliminar el empleado. Inténtalo de nuevo.");
         }
-      } 
-      catch (error) {
-        console.error('Error al realizar la solicitud:', error); //borrar
-        alert('Ocurrió un error al intentar eliminar el empleado.');
-      } 
-      finally {
+      } catch (error) {
+        console.error("Error al realizar la solicitud:", error);
+        alert("Ocurrió un error al intentar eliminar el empleado.");
+      } finally {
         // Restablecer el valor del estado
         setEmpleadoAEliminar(null);
         setModalConfirmationVisible(false);
