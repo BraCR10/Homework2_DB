@@ -1,21 +1,7 @@
 import ErrorResponseDTO from "./ErrorResponseDTO";
-import { EmployeesDataDTO } from "./EmployeeDTO";
-
-export interface MovementsDataDTO {
-  Id: number;
-  IdEmpleado: number;
-  IdTipoMovimiento: number;
-  NombreTipoMovimiento: string;
-  Fecha: Date;
-  Monto: number;
-  NuevoSaldo: number;
-  IdPostByUser: number;
-  IPAddress: string;
-  IdPostByUserName: string;
-  UsernamePostByUser: string;
-  PostInIp: string;
-  PostTime: Date;
-}
+import { Employee } from "../models/EmployeeModel";
+import { MovementType } from "../models/MovementTypeModel";
+import { Movement } from "../models/MovementsModel";
 
 export interface GetEmployeeMovementsDTO {
   DNI: string;
@@ -24,9 +10,9 @@ export interface GetEmployeeMovementsDTO {
 export interface GetEmployeeMovementsSuccessResponseDTO {
   success: boolean;
   data: {
-    empleado: EmployeesDataDTO;
+    empleado: Employee;
     total: number;
-    movimientos: MovementsDataDTO[];
+    movimientos: Movement[];
   };
 }
 
@@ -46,17 +32,12 @@ export interface CreateMovementsSuccessResponseDTO {
   };
 }
 
-export interface MovementsTypesDataDTO {
-  Id: number;
-  Nombre: string;
-  TipoAccion: string;
-}
 
 export interface getMovementsTypesSuccessResponseDTO {
   success: boolean;
   data: {
     total: number;
-    tiposMovimientos: MovementsTypesDataDTO[];
+    tiposMovimientos: MovementType[];
   };
 }
 
