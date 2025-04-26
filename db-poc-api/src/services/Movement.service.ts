@@ -58,11 +58,7 @@ class MovementService {
           },
         };
       else {
-        const response = await execute(
-          "sp_listar_movimientos",
-          params,
-          {},
-        );
+        const response = await execute("sp_listar_movimientos", params, {});
         if (response.output.outResultCode == 0) {
           let data = response.recordset;
           if (data.length == 0) {

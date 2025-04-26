@@ -1,7 +1,5 @@
-
-
 export type Movement = {
-    Id: number;
+  Id: number;
   IdEmpleado: number;
   IdTipoMovimiento: number;
   NombreTipoMovimiento: string;
@@ -14,4 +12,4 @@ export type Movement = {
   UsernamePostByUser: string;
   PostInIp: string;
   PostTime: Date;
-}
+};

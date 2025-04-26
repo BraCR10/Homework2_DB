@@ -32,7 +32,6 @@ export interface CreateMovementsSuccessResponseDTO {
   };
 }
 
-
 export interface getMovementsTypesSuccessResponseDTO {
   success: boolean;
   data: {

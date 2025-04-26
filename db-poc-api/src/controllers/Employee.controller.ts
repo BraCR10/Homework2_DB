@@ -34,7 +34,6 @@ export const createEmployee = async (
       return;
     }
 
-    
     if (!data.IdPuesto || typeof data.IdPuesto !== "number") {
       const errorResponse: EmployeesErrorResponseDTO = {
         success: false,
@@ -72,7 +71,6 @@ export const createEmployee = async (
     });
   }
 };
-
 
 export const getEmployees = async (
   _req: Request,
@@ -146,9 +144,14 @@ export const updateEmployee = async (
       return;
     }
 
-    const { IdPuestoNuevo, ValorDocumentoIdentidadNuevo, NombreEmpleadoNuevo } = req.body;
+    const { IdPuestoNuevo, ValorDocumentoIdentidadNuevo, NombreEmpleadoNuevo } =
+      req.body;
     // Warning : This function requires all the parameters to be passed, even if they are not updated.
-    if (!IdPuestoNuevo || !ValorDocumentoIdentidadNuevo || !NombreEmpleadoNuevo) {
+    if (
+      !IdPuestoNuevo ||
+      !ValorDocumentoIdentidadNuevo ||
+      !NombreEmpleadoNuevo
+    ) {
       console.error("Request body is required.");
       const errorResponse: EmployeesErrorResponseDTO = {
         success: false,
@@ -210,7 +213,7 @@ export const deleteEmployee = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  const DNI =req.params.DNI;
+  const DNI = req.params.DNI;
 
   const DNIRegex = /^[0-9]+$/;
   if (!DNI || typeof DNI !== "string" || DNI.trim() === "") {
@@ -342,7 +345,6 @@ export const getEmployeeByName = async (
     return;
   }
 
-  
   const data: GetEmployeeByNameDTO = { employeeName };
   const nameRegex = /^[a-zA-Z\s]+$/;
   if (!nameRegex.test(employeeName)) {
@@ -429,7 +431,7 @@ export const getEmployeeByDNI = async (
     res.status(400).json({ success: false, error: errorResponse });
     return;
   }
-  
+
   const data: GetEmployeeByDNIDTO = { employeeDNI };
 
   if (!data.employeeDNI) {

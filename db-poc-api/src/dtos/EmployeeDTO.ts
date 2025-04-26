@@ -1,7 +1,6 @@
 import ErrorResponseDTO from "./ErrorResponseDTO";
 import { Employee } from "../models/EmployeeModel";
 
-
 export interface GetEmployeesSuccessResponseDTO {
   success: boolean;
   data: {
@@ -42,7 +41,7 @@ export interface UpdateEmployeesSuccessResponseDTO {
 export interface TryDeleteEmployeeDTO {
   IdEmpleado: number;
   IdUser: number;
-  IPAddress : string;
+  IPAddress: string;
 }
 export interface TryDeleteEmployeeSuccessResponseDTO {
   success: boolean;
