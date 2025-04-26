@@ -72,11 +72,13 @@ const EmployeeList = () => {
       const response = await fetch(`${url}/api/v2/employee`);
       if (response.ok) {
         const data = await response.json();
+        console.log(data.data.empleados)
         //se recorren todos los empleados del json y se guardan en empleados con los datos necesarios
         const empleadosBackend = data.data.empleados.map((empleado: any) => ({
           id: empleado.Id,
           nombre: empleado.Nombre,
           documento: empleado.ValorDocumentoIdentidad,
+          idPuesto: empleado.IdPuesto,
           nombrePuesto: empleado.NombrePuesto,
           saldoVacaciones: empleado.SaldoVacaciones
         }));
@@ -121,10 +123,14 @@ const EmployeeList = () => {
       // Procesar la respuesta del backend
       if (response.ok) {
         const data = await response.json();
+        console.log(data.data.empleados);
         const empleadosBackend = data.data.empleados.map((empleado: any) => ({
           id: empleado.Id,
           nombre: empleado.Nombre,
           documento: empleado.ValorDocumentoIdentidad,
+          idPuesto: empleado.IdPuesto,
+          nombrePuesto: empleado.NombrePuesto,
+          saldoVacaciones: empleado.SaldoVacaciones
         }));
         setEmpleados(empleadosBackend);
       } 
@@ -144,7 +150,8 @@ const EmployeeList = () => {
 
   //**************************************************
   //***************ACCION DE INSERTAR*****************
-  const handleInsert = async (empleado: { documento: string; nombre: string; NombrePuesto: string }) => {
+  const handleInsert = async (empleado: { documento: string; nombre: string; idPuesto: number }) => {
+    console.log(empleado.idPuesto);
     try {
       // Realizar la petición POST al backend
       const response = await fetch(`${url}/api/v2/employee`, {
@@ -153,7 +160,7 @@ const EmployeeList = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          NombrePuesto: empleado.NombrePuesto,
+          IdPuesto: empleado.idPuesto,
           ValorDocumentoIdentidad: empleado.documento,
           NombreEmpleado: empleado.nombre,
         }),
@@ -271,12 +278,11 @@ const EmployeeList = () => {
     if (empleadoAEliminar !== null) {
       try {
         // Realizar la petición DELETE al backend
-        const response = await fetch(`${url}/api/v2/employee`, {
+        const response = await fetch(`${url}/api/v2/employee/${empleadoAEliminar}`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ IdEmpleado: empleadoAEliminar }),
         });
 
         if (response.ok) {
@@ -309,19 +315,33 @@ const EmployeeList = () => {
     setModalConfirmationVisible(false);
 
     //enviar peticion al backend (intento de borrado)
+
+    // Obtener el usuario logueado desde el localStorage
+    const usuarioGuardado = JSON.parse(localStorage.getItem("usuario") || "{}");
+
+    // Verificar si el Id existe en el objeto recuperado
+    if (!usuarioGuardado.Id) {
+      console.error("No se encontró un usuario logueado.");
+      alert("No se encontró un usuario logueado.");
+      return;
+    }
+
+    console.log(empleadoAEliminar)
+    console.log("Id del usuario logueado:", usuarioGuardado.Id);
+
     if (empleadoAEliminar !== null) {
       try {
-        const response = await fetch(`${url}/api/v2/employee/deleteTry`, {
+        const response = await fetch(`${url}/api/v2/employee/deleteTry/${empleadoAEliminar}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ IdEmpleado: empleadoAEliminar }),
+          body: JSON.stringify({ IdUser: usuarioGuardado.Id }),
         });
   
         if (response.ok) {
           //no pasa nada
-          alert('Alerta de intento de borrado con éxito');//borrar
+          //alert('Alerta de intento de borrado con éxito');//borrar
         } 
         else {
           console.error('Error al verificar eliminación:', response.status);
@@ -347,7 +367,6 @@ const EmployeeList = () => {
   }) => {
     
     try {
-      console.log("DNI:", empleado.documento);
       // Realizar la petición GET al backend
       const response = await fetch(`${url}/api/v2/movement/${empleado.documento}`, {
         method: "GET",

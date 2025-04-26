@@ -6,13 +6,14 @@ const url: string = "http://localhost:3050";
 
 interface InsertEmployeeModalProps {
   onClose: () => void;
-  onSubmit: (empleado: { documento: string; nombre: string; NombrePuesto: string }) => void;
+  onSubmit: (empleado: { documento: string; nombre: string; idPuesto: number }) => void;
 }
 
 const InsertEmployeeModal: React.FC<InsertEmployeeModalProps> = ({ onClose, onSubmit}) => {
   const [documento, setDocumento] = useState('');
   const [nombre, setNombre] = useState('');
   const [NombrePuesto, setNombrePuesto] = useState<string | ''>('');
+  const [idPuesto, setIdPuesto] = useState<number | null>(null);
   const [mensaje, setMensaje] = useState('');
   const [puestos, setPuestos] = useState<{ Id: number; Nombre: string }[]>([]);
 
@@ -41,23 +42,27 @@ const InsertEmployeeModal: React.FC<InsertEmployeeModalProps> = ({ onClose, onSu
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    //el documento no solo contiene numeros
-    if (!(/^\d+$/.test(documento))) {
-      setMensaje('❌ El documento de identidad debe de contener sólo números.');
+  
+    // Validar que el documento solo contiene números
+    if (!/^\d+$/.test(documento)) {
+      setMensaje("❌ El documento de identidad debe de contener sólo números.");
       return;
     }
-    //el nombre no solo contiene caracteres y espacios
-    else if (!(/^[a-zA-Z\s]+$/.test(nombre))) {
-      setMensaje('❌ El nombre del empleado debe de contener sólo carácteres y espacios.');
+  
+    // Validar que el nombre solo contiene caracteres y espacios
+    if (!/^[a-zA-Z\s]+$/.test(nombre)) {
+      setMensaje("❌ El nombre del empleado debe de contener sólo carácteres y espacios.");
       return;
-    } 
-    if (!NombrePuesto) {
+    }
+  
+    // Validar que se haya seleccionado un puesto
+    if (!idPuesto) {
       setMensaje("❌ Debes seleccionar un puesto.");
       return;
     }
-    //todo está correcto (se envian los datos al componente padre)
-    onSubmit({ documento, nombre, NombrePuesto });
-    //no hay onClose, esta modal se cierra desde employeeList
+  
+    // Enviar los datos al componente padre con idPuesto
+    onSubmit({ documento, nombre, idPuesto }); // Aquí se pasa idPuesto correctamente
   };
 
   return (
@@ -92,16 +97,18 @@ const InsertEmployeeModal: React.FC<InsertEmployeeModalProps> = ({ onClose, onSu
           <div className="form-group-Lista">
             <label>Puesto:</label>
             <select
-              value={NombrePuesto}
+              value={idPuesto || ""} // Usar idPuesto como valor del select
               onChange={(e) => {
-                setNombrePuesto((e.target.value))
+                setIdPuesto(Number(e.target.value)); // Guardar el Id del puesto como número
+                setNombrePuesto(puestos.find((puesto) => puesto.Id === Number(e.target.value))?.Nombre || ""); // Opcional: actualizar NombrePuesto
+                setMensaje("");
               }}
               required
             >
-              <option value="">Selecciona un puesto</option> 
-              {/*Se mapean los puestos en la lista*/}
+              <option value="">Selecciona un puesto</option>
+              {/* Mapear los puestos en la lista */}
               {puestos.map((puesto) => (
-                <option key={puesto.Id} value={puesto.Nombre}>
+                <option key={puesto.Id} value={puesto.Id}> {/* Usar puesto.Id como value */}
                   {puesto.Nombre}
                 </option>
               ))}
