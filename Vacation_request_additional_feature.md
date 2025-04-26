@@ -1,10 +1,10 @@
-# Funcionalidad: Solicitudes de Vacaciones
+# Functionality: Vacation Requests
 
-## Modelo de Datos
+## Data Model
 
-### Tabla SolicitudVacaciones
+### Table SolicitudVacaciones
 
-Se requiere crear una tabla con la siguiente estructura:
+A table with the following structure is required:
 
 - `Id` - INT IDENTITY(1,1) PRIMARY KEY
 - `Estado` - VARCHAR(32) DEFAULT 'Pendiente' CHECK (Estado IN ('Pendiente', 'Aprobado', 'Rechazado'))
@@ -12,34 +12,34 @@ Se requiere crear una tabla con la siguiente estructura:
 - `CantidadDias` - INT
 - `FechaSolicitud` - DATETIME DEFAULT GETDATE()
 
-## Procedimientos Almacenados
+## Stored Procedures
 
 ### sp_crear_solicitudes_vacaciones
 
-**Parámetros de entrada:**
-- `@inValorDocumentoIdentidad VARCHAR(64)` - DNI del empleado
-- `@inCantDias INT` - Cantidad de días solicitados
-- `@outResultCode INT OUTPUT` - Código de resultado de la operación
+**Input parameters:**
+- `@inValorDocumentoIdentidad VARCHAR(64)` - Employee's ID document
+- `@inCantDias INT` - Number of days requested
+- `@outResultCode INT OUTPUT` - Operation result code
 
-**Códigos de resultado:**
-- `0` - Operación exitosa
-- `50004` - Valor de documento de identidad no válido
-- `50008` - Empleado no existe en el sistema o error de base de datos
-### *Devolver como detail  desde la tabla Error la descripcion de los errores en el recordset*
+**Result codes:**
+- `0` - Successful operation
+- `50004` - Invalid ID document value
+- `50008` - Employee doesn't exist in the system or database error
+### *Return as detail the description of errors from the Error table in the recordset*
 
-**Comportamiento:**
-- Validar que el documento de identidad sea válido
-- Verificar que el empleado exista en el sistema
-- Crear una nueva solicitud de vacaciones en estado 'Pendiente'
-- No devuelve recordset, solo el código de resultado
+**Behavior:**
+- Validate that the ID document is valid
+- Verify that the employee exists in the system
+- Create a new vacation request with 'Pendiente' status
+- Does not return a recordset, only the result code
 
 ### sp_listar_solicitudes_vacaciones
 
-**Parámetros de entrada:**
-- `@outResultCode INT OUTPUT` - Código de resultado de la operación
+**Input parameters:**
+- `@outResultCode INT OUTPUT` - Operation result code
 
-**Resultado:**
-- Devuelve un recordset con todas las solicitudes pendientes con la estructura:
+**Result:**
+- Returns a recordset with all pending requests with the following structure:
   ```
   [
     {
@@ -52,120 +52,34 @@ Se requiere crear una tabla con la siguiente estructura:
     ...
   ]
   ```
-- Código de resultado 0 si la operación es exitosa
+- Result code 0 if the operation is successful
 
 ### sp_tramitar_solicitudes_vacaciones
 
-**Parámetros de entrada:**
-- `@inIdUsuario INT` - ID del usuario que tramita la solicitud
-- `@inPostInIP VARCHAR(64)` - Dirección IP desde donde se tramita
-- `@inIdSolicitud INT` - ID de la solicitud a tramitar
-- `@inNuevoEstado VARCHAR(32)` - Nuevo estado ('Aprobado' o 'Rechazado')
-- `@outResultCode INT OUTPUT` - Código de resultado de la operación
+**Input parameters:**
+- `@inIdUsuario INT` - ID of the user processing the request
+- `@inPostInIP VARCHAR(64)` - IP address from where the request is processed
+- `@inIdSolicitud INT` - ID of the request to process
+- `@inNuevoEstado VARCHAR(32)` - New status ('Aprobado' or 'Rechazado')
+- `@outResultCode INT OUTPUT` - Operation result code
 
-**Comportamiento:**
-1. Validar que el usuario sea ID 4 (Franco)
-2. Si el estado es 'Rechazado', simplemente actualizar la solicitud
-3. Si el estado es 'Aprobado':
-   - Extraer la cantidad de días y DNI del empleado de la solicitud
-   - Utilizar tipo de movimiento ID 4 (disfrute de vacaciones)
-   - Llamar a `sp_insertar_movimiento` con los parámetros correspondientes
-   - Manejar el código de resultado de `sp_insertar_movimiento`
-   - Si es exitoso, actualizar la solicitud como 'Aprobada'
-4. No devuelve recordset, solo el código de resultado
-**Códigos de resultado:**
-- `0` - Operación exitosa
-- `50015` - Usuario desde tener los permisos para el tramite
-### *Devolver como detail  desde la tabla Error la descripcion de los errores en el recordset*
-**Referencia del SP llamado:**
-```
-sp_insertar_movimiento
-(
-    @inValorDocumentoIdentidad VARCHAR(16),
-    @inIdTipoMovimiento INT,
-    @inMonto FLOAT,
-    @inPostByUserId INT,
-    @inPostInIP VARCHAR(64),
-    @outResultCode INT OUTPUT
-)
-```
+**Behavior:**
+1. Validate that the user is ID 4 (Franco)
+2. If the status is 'Rechazado', simply update the request
+3. If the status is 'Aprobado':
+   - Extract the number of days and the employee's ID from the request
+   - Use movement type ID 4 (vacation enjoyment)
+   - Call `sp_insertar_movimiento` with the corresponding parameters
+   - Handle the result code from `sp_insertar_movimiento`
+   - If successful, update the request as 'Aprobada'
+4. Does not return a recordset, only the result code
 
-# Funcionalidad: Solicitudes de Vacaciones
+**Result codes:**
+- `0` - Successful operation
+- `50015` - User must have permissions for processing
+### *Return as detail the description of errors from the Error table in the recordset*
 
-## Modelo de Datos
-
-### Tabla SolicitudVacaciones
-
-Se requiere crear una tabla con la siguiente estructura:
-
-- `Id` - INT IDENTITY(1,1) PRIMARY KEY
-- `Estado` - VARCHAR(20) DEFAULT 'Pendiente' CHECK (Estado IN ('Pendiente', 'Aprobado', 'Rechazado'))
-- `DNIEmpleado` - VARCHAR(64) UNIQUE
-- `CantidadDias` - INT
-- `FechaSolicitud` - DATETIME DEFAULT GETDATE()
-
-## Procedimientos Almacenados
-
-### sp_crear_solicitudes_vacaciones
-
-**Parámetros de entrada:**
-- `@inValorDocumentoIdentidad VARCHAR(64)` - DNI del empleado
-- `@inCantDias INT` - Cantidad de días solicitados
-- `@outResultCode INT OUTPUT` - Código de resultado de la operación
-
-**Códigos de resultado:**
-- `0` - Operación exitosa
-- `50008` - Valor de documento de identidad no válido
-- `50010` - Empleado no existe en el sistema
-
-**Comportamiento:**
-- Validar que el documento de identidad sea válido
-- Verificar que el empleado exista en el sistema
-- Crear una nueva solicitud de vacaciones en estado 'Pendiente'
-- No devuelve recordset, solo el código de resultado
-
-### sp_listar_solicitudes_vacaciones
-
-**Parámetros de entrada:**
-- `@outResultCode INT OUTPUT` - Código de resultado de la operación
-
-**Resultado:**
-- Devuelve un recordset con todas las solicitudes pendientes con la estructura:
-  ```
-  [
-    {
-      IdSolicitud: 1,
-      Estado: "Pendiente",
-      EmpleadoNombre: "Jose",
-      EmpleadoDNI: "1254452",
-      CantDias: 5
-    },
-    ...
-  ]
-  ```
-- Código de resultado 0 si la operación es exitosa
-
-### sp_tramitar_solicitudes_vacaciones
-
-**Parámetros de entrada:**
-- `@inIdUsuario INT` - ID del usuario que tramita la solicitud
-- `@inPostInIP VARCHAR(64)` - Dirección IP desde donde se tramita
-- `@inIdSolicitud INT` - ID de la solicitud a tramitar
-- `@inNuevoEstado VARCHAR(20)` - Nuevo estado ('Aprobado' o 'Rechazado')
-- `@outResultCode INT OUTPUT` - Código de resultado de la operación
-
-**Comportamiento:**
-1. Validar que el usuario sea ID 4 (Franco)
-2. Si el estado es 'Rechazado', simplemente actualizar la solicitud
-3. Si el estado es 'Aprobado':
-   - Extraer la cantidad de días y DNI del empleado de la solicitud
-   - Utilizar tipo de movimiento ID 4 (disfrute de vacaciones)
-   - Llamar a `sp_insertar_movimiento` con los parámetros correspondientes
-   - Manejar el código de resultado de `sp_insertar_movimiento`
-   - Si es exitoso, actualizar la solicitud como 'Aprobada'
-4. No devuelve recordset, solo el código de resultado
-
-**Referencia del SP llamado:**
+**Reference of the called SP:**
 ```
 sp_insertar_movimiento
 (
@@ -180,12 +94,12 @@ sp_insertar_movimiento
 
 ## API Routes
 
-### Crear solicitud de vacaciones
+### Create vacation request
 ```
 POST /api/v2/vacation_request
 ```
 
-**Descripción**: Crea una nueva solicitud de vacaciones.
+**Description**: Creates a new vacation request.
 
 **Body**:
 ```json
@@ -195,7 +109,7 @@ POST /api/v2/vacation_request
 }
 ```
 
-**Respuesta exitosa** (201 Created):
+**Successful response** (201 Created):
 ```json
 {
   "success": true,
@@ -205,7 +119,7 @@ POST /api/v2/vacation_request
 }
 ```
 
-**Respuesta fallida** (400 Bad Request):
+**Failed response** (400 Bad Request):
 ```json
 {
   "success": false,
@@ -216,14 +130,14 @@ POST /api/v2/vacation_request
 }
 ```
 
-### Listar solicitudes de vacaciones
+### List vacation requests
 ```
 GET /api/v2/vacation_request
 ```
 
-**Descripción**: Obtiene la lista de solicitudes de vacaciones pendientes.
+**Description**: Gets the list of pending vacation requests.
 
-**Respuesta exitosa** (200 OK):
+**Successful response** (200 OK):
 ```json
 {
   "success": true,
@@ -249,25 +163,25 @@ GET /api/v2/vacation_request
 }
 ```
 
-### Tramitar solicitud de vacaciones
+### Process vacation request
 ```
 PATCH /api/v2/vacation_request/:idSolicitud
 ```
 
-**Descripción**: Procesa una solicitud de vacaciones (aprueba o rechaza).
+**Description**: Processes a vacation request (approves or rejects).
 
-**Parámetros**:
-- `idSolicitud`: ID de la solicitud a tramitar
+**Parameters**:
+- `idSolicitud`: ID of the request to process
 
 **Body**:
 ```json
 {
   "IdUsuario": "number",
-  "NuevoEstado": "string" // "Aprobado" o "Rechazado"
+  "NuevoEstado": "string" // "Aprobado" or "Rechazado"
 }
 ```
 
-**Respuesta exitosa** (200 OK):
+**Successful response** (200 OK):
 ```json
 {
   "success": true,
@@ -277,7 +191,7 @@ PATCH /api/v2/vacation_request/:idSolicitud
 }
 ```
 
-**Respuesta fallida** (403 Forbidden):
+**Failed response** (403 Forbidden):
 ```json
 {
   "success": false,
@@ -288,7 +202,7 @@ PATCH /api/v2/vacation_request/:idSolicitud
 }
 ```
 
-**Respuesta fallida** (500 Server error):
+**Failed response** (500 Server error):
 ```json
 {
   "success": false,
