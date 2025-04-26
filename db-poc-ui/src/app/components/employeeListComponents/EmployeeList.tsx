@@ -687,6 +687,7 @@ const EmployeeList = () => {
           onClose={() => setInsertMovementModalVisible(false)} // Cierra el modal
           onSubmit={(newMovement) => {
             console.log("Nuevo movimiento registrado:", newMovement);
+            fetchEmpleados();
             setInsertMovementModalVisible(false); // Cierra el modal después de registrar el movimiento
           }}
         />
