@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+const url: string = "http://localhost:3050";
 
 interface EditEmployeeModalProps {
   employee: {
@@ -30,7 +31,7 @@ const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({ employee, onClose
   useEffect(() => {
     const fetchPuestos = async () => {
       try {
-        const response = await fetch("http://localhost:3001/api/v2/position");
+        const response = await fetch(`${url}/api/v2/position`);
         if (response.ok) {
           const data = await response.json();
           setPuestos(data.data.puestos); // Guardar los puestos en el estado

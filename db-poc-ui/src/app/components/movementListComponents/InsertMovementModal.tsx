@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import '../../styles/insertMovementModal.css'
+const url: string = "http://localhost:3050";
 
 interface Movimiento {
     NombreTipoMovimiento: string;
@@ -34,7 +35,7 @@ const InsertMovementModal: React.FC<InsertMovementModalProps> = ({ employee, onC
   useEffect(() => {
     const fetchTiposMovimiento = async () => {
       try {
-        const response = await fetch("http://localhost:3001/api/v2/movementType");
+        const response = await fetch(`${url}/api/v2/movementType`);
         if (response.ok) {
           const data = await response.json();
           setTiposMovimiento(data.data.tiposMovimiento);
@@ -75,7 +76,7 @@ const InsertMovementModal: React.FC<InsertMovementModalProps> = ({ employee, onC
     };
   
     try {
-      const response = await fetch("http://localhost:3001/api/v2/movement/", {
+      const response = await fetch(`${url}/api/v2/movement/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

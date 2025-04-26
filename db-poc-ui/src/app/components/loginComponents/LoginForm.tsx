@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import InputField from './InputField';
 import LoginMessage from './LoginMessage';
 import '../../styles/login.css';
+const url: string = "http://localhost:3050";
 
 const LoginForm = () => {
   const [usuario, setUsuario] = useState('');
@@ -17,7 +18,7 @@ const LoginForm = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:3001/api/v2/login', {
+      const response = await fetch(`${url}/api/v2/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -32,7 +33,7 @@ const LoginForm = () => {
         const data = await response.json();
         console.log('Respuesta del servidor:', data); //borrar
         //guardar información del usuario que inició sesión
-        const usuarioLogueado = { Username: usuario }; // Usa la variable 'usuario' correctamente
+        const usuarioLogueado = { Username: usuario, Id: data.Id }; // Usa la variable 'usuario' correctamente
         localStorage.setItem("usuario", JSON.stringify(usuarioLogueado));
         router.push('/employee'); // Redirige al usuario a la página de empleados
       } 

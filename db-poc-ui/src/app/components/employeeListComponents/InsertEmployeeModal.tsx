@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import LoginMessage from '../loginComponents/LoginMessage';
+const url: string = "http://localhost:3050";
 
 interface InsertEmployeeModalProps {
   onClose: () => void;
@@ -19,7 +20,7 @@ const InsertEmployeeModal: React.FC<InsertEmployeeModalProps> = ({ onClose, onSu
   useEffect(() => {
     const fetchPuestos = async () => {
       try {
-        const response = await fetch("http://localhost:3001/api/v2/position");
+        const response = await fetch(`${url}/api/v2/position`);
         if (response.ok) {
           const data = await response.json();
           setPuestos(data.data.puestos); // Guardar los puestos en el estado

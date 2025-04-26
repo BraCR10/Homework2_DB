@@ -11,6 +11,7 @@ import EmployeeDetailsModal from './EmployeeDetailsModal';
 import EditEmployeeModal from './EditEmployeeModal';
 import { useRouter } from "next/navigation";
 import InsertMovementModal from '../movementListComponents/InsertMovementModal';
+const url: string = "http://localhost:3050";
 
 interface Empleado {
   id: number;
@@ -68,7 +69,7 @@ const EmployeeList = () => {
   // Obtener la lista inicial de empleados desde el backend
   const fetchEmpleados = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/v2/employee');
+      const response = await fetch(`${url}/api/v2/employee`);
       if (response.ok) {
         const data = await response.json();
         //se recorren todos los empleados del json y se guardan en empleados con los datos necesarios
@@ -102,15 +103,15 @@ const EmployeeList = () => {
 
       // Caso 1: No hay filtro
       if (!filtro.trim()) {
-        response = await fetch('http://localhost:3001/api/v2/employee');
+        response = await fetch(`${url}/api/v2/employee`);
       }
       // Caso 2: Filtro por DNI (números)
       else if (/^\d+$/.test(filtro)) {
-        response = await fetch(`http://localhost:3001/api/v2/employee/DNI/${filtro}`);
+        response = await fetch(`${url}/api/v2/employee/DNI/${filtro}`);
       }
       // Caso 3: Filtro por nombre (letras y espacios)
       else if (/^[a-zA-Z\s]+$/.test(filtro)) {
-        response = await fetch(`http://localhost:3001/api/v2/employee/name/${filtro}`);
+        response = await fetch(`${url}/api/v2/employee/name/${filtro}`);
       } 
       else {
         setEmpleados([]);
@@ -146,7 +147,7 @@ const EmployeeList = () => {
   const handleInsert = async (empleado: { documento: string; nombre: string; NombrePuesto: string }) => {
     try {
       // Realizar la petición POST al backend
-      const response = await fetch('http://localhost:3001/api/v2/employee', {
+      const response = await fetch(`${url}/api/v2/employee`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -205,7 +206,7 @@ const EmployeeList = () => {
     nombrePuesto: string;
   }) => {
     try {
-      const response = await fetch("http://localhost:3001/api/v2/employee", {
+      const response = await fetch(`${url}/api/v2/employee`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -264,7 +265,7 @@ const EmployeeList = () => {
     if (empleadoAEliminar !== null) {
       try {
         // Realizar la petición DELETE al backend
-        const response = await fetch('http://localhost:3001/api/v2/employee', {
+        const response = await fetch(`${url}/api/v2/employee`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
@@ -304,7 +305,7 @@ const EmployeeList = () => {
     //enviar peticion al backend (intento de borrado)
     if (empleadoAEliminar !== null) {
       try {
-        const response = await fetch('http://localhost:3001/api/v2/employee/deleteTry', {
+        const response = await fetch(`${url}/api/v2/employee/deleteTry`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -340,7 +341,7 @@ const EmployeeList = () => {
   }) => {
     try {
       // Realizar la petición GET al backend
-      const response = await fetch(`http://localhost:3001/api/v2/movement/${empleado.id}`, {
+      const response = await fetch(`${url}/api/v2/movement/${empleado.id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -551,21 +552,32 @@ const EmployeeList = () => {
   //****************ACCION DE LOGOUT******************
   const handleLogout = async () => {
     try {
+      // Recuperar el usuario desde el localStorage
+      const usuarioGuardado = JSON.parse(localStorage.getItem("usuario") || "{}");
+
+      // Verificar si el Id existe en el objeto recuperado
+      if (!usuarioGuardado.Id) {
+        alert("No se encontró un usuario logueado.");
+        return;
+      }
+
       // Realizar la petición POST al backend para cerrar sesión
-      const response = await fetch("http://localhost:3001/api/v2/logout", {
+      const response = await fetch(`${url}/api/v2/logout`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify({
+          UserId: usuarioGuardado.Id, // Pasar el Id recuperado del localStorage
+        }),
       });
   
       if (response.ok) {
         const data = await response.json();
-        console.log(data.detail); // Mensaje de éxito del backend (puedes eliminarlo después)
-        alert("Sesión finalizada correctamente."); // Mostrar mensaje al usuario
+        console.log(data.detail); // Mensaje de éxito del backend (puede eliminarlo después)
       } else {
         console.error("Error al cerrar sesión:", response.status);
-        alert("Ocurrió un error al intentar cerrar la sesión.");
+        alert("Ocurrió un error al intentar cerrar la sesión.ss");
       }
     } catch (error) {
       console.error("Error al realizar la solicitud de logout:", error);
