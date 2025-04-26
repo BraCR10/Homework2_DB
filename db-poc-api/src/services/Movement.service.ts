@@ -63,7 +63,25 @@ class MovementService {
         );
         if (response.output.outResultCode == 0) {
           let data = response.recordset;
-          console.log("Response data:", data);
+          if (data.length == 0) {
+            return {
+              success: true,
+              data: {
+                empleado: {
+                  Id: 0,
+                  IdPuesto: 0,
+                  NombrePuesto: "",
+                  ValorDocumentoIdentidad: "",
+                  Nombre: "",
+                  FechaContratacion: "",
+                  SaldoVacaciones: 0,
+                  EsActivo: false,
+                },
+                total: 0,
+                movimientos: [],
+              },
+            };
+          }
           const employeeMovementsResponse: GetEmployeeMovementsSuccessResponseDTO =
             {
               success: true,
