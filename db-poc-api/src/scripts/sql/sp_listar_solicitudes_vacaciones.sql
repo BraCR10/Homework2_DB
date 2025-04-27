@@ -41,7 +41,8 @@ BEGIN
 			dbo.Solicitud AS S
 			INNER JOIN dbo.Empleado AS E ON S.DNIEmpleado = E.ValorDocumentoIdentidad
 		WHERE
-			(S.Estado = 'Pendiente');
+			(S.Estado = 'Pendiente' AND
+			 E.EsActivo = 1);
 
 		SET @outResultCode = 0;
 	END TRY
