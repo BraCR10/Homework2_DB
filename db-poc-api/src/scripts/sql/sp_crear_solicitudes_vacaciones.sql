@@ -138,7 +138,7 @@ BEGIN
 		END
 
 		-- Validacion de fechas
-		IF(@inFechaInicio<GETDATE() AND @inFechaFin < GETDATE() AND @inFechaInicio>@inFechaFin)
+		IF(@inFechaInicio<GETDATE() OR @inFechaFin < GETDATE() OR @inFechaInicio>@inFechaFin)
 		BEGIN
 			SET @outResultCode = 50016; --  Error de fechas
       
@@ -170,7 +170,7 @@ BEGIN
 		END
 		BEGIN TRANSACTION 
 
-			INSERT INTO dbo.Solicitudes (
+			INSERT INTO dbo.Solicitud (
 				DNIEmpleado
 				, CantidadDias
 				, FechaInicio
