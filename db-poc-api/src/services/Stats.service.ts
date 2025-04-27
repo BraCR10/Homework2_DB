@@ -53,18 +53,20 @@ class StatsService {
   }
 
   private processData(data: IRecordSet<any>): any {
+    const MONTH_DAYS_CANT = 30;
+
     const totalPuestos = data.length;
 
     const totalEmpleados = data.reduce(
       (acc: number, puesto: any) => acc + puesto.CantEmpleados,
       0,
-    );
+    ) ;
 
     const totalGasto = data.reduce(
       (acc: number, puesto: any) =>
         acc + puesto.CantEmpleados * puesto.SalarioXHora,
       0,
-    );
+    ) * MONTH_DAYS_CANT;
 
     const fecha = new Date();
 
@@ -72,7 +74,7 @@ class StatsService {
       Nombre: puesto.Nombre,
       SalarioXHora: puesto.SalarioXHora,
       CantEmpleados: puesto.CantEmpleados,
-      GastoTotal: puesto.CantEmpleados * puesto.SalarioXHora,
+      GastoTotal: puesto.CantEmpleados * puesto.SalarioXHora * MONTH_DAYS_CANT,
     }));
     return {
       totalPuestos,
