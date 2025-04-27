@@ -228,11 +228,12 @@ const EmployeeList = () => {
     const idPuesto = empleado.idPuesto; // Obtener el idPuesto
   
     console.log("Datos enviados al backend:", {
-      IdPuesto: idPuesto,
+      IdPuestoNuevo: idPuesto,
       ValorDocumentoIdentidadNuevo: updatedEmployee.documento,
       NombreEmpleadoNuevo: updatedEmployee.nombre,
     });
     console.log("DNI", DNIanterior);
+  
     try {
       const response = await fetch(`${url}/api/v2/employee/${DNIanterior}`, {
         method: "PATCH",
@@ -240,11 +241,12 @@ const EmployeeList = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          IdPuesto: idPuesto, // Enviar el idPuesto
+          IdPuestoNuevo: idPuesto, // Enviar el idPuesto
           ValorDocumentoIdentidadNuevo: updatedEmployee.documento,
           NombreEmpleadoNuevo: updatedEmployee.nombre,
         }),
       });
+  
       if (response.ok) {
         const data = await response.json();
         console.log(data.data.message); // Mensaje de éxito del backend
@@ -387,7 +389,6 @@ const EmployeeList = () => {
   }) => {
     
     try {
-      console.log("DNI:", empleado.documento);
       // Realizar la petición GET al backend
       const response = await fetch(`${url}/api/v2/movement/${empleado.documento}`, {
         method: "GET",
@@ -686,6 +687,7 @@ const EmployeeList = () => {
           onClose={() => setInsertMovementModalVisible(false)} // Cierra el modal
           onSubmit={(newMovement) => {
             console.log("Nuevo movimiento registrado:", newMovement);
+            fetchEmpleados();
             setInsertMovementModalVisible(false); // Cierra el modal después de registrar el movimiento
           }}
         />
