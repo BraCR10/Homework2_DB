@@ -16,7 +16,11 @@ import {
 } from "./controllers/Movement.controller";
 import { getStats } from "./controllers/Stats.controller";
 import { getPositions } from "./controllers/Positions.controller";
-import { createApplication,getApplications,issueApplication } from "./controllers/Applications.controller";
+import {
+  createApplication,
+  getApplications,
+  issueApplication,
+} from "./controllers/Applications.controller";
 const router = Router();
 
 router.get("/health", (_req, res) => {
@@ -51,6 +55,5 @@ router.get("/stats_salaries", getStats);
 router.get("/vacation_request", getApplications);
 router.post("/vacation_request", createApplication);
 router.post("/vacation_request/:idSolicitud", issueApplication);
-
 
 export default router;
