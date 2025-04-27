@@ -4,6 +4,7 @@ import {
   ApplicationErrorResponseDTO,
   CreateApplicationDTO,
   issueApplicationDTO,
+  ApplicationStatus
 } from "../dtos/ApplicationsDTO";
 
 export async function getApplications(
@@ -117,6 +118,25 @@ export async function issueApplication(
     });
     return;
   }
+
+  if (Object.values(ApplicationStatus).indexOf(NuevoEstado) === -1) {
+    const errorMessage: ApplicationErrorResponseDTO = {
+      success: false,
+      error: {
+        code: 400,
+        detail: "El nuevo estado no es valido",
+      },
+    };
+    res.status(400).json({
+      success: errorMessage.success,
+      error: {
+        code: errorMessage.error.code,
+        details: errorMessage.error.detail,
+      },
+    });
+    return;
+  }
+  
   const data: issueApplicationDTO = {
     IdSolicitud: Number(idSolicitud),
     IdUsuario: Number(IdUsuario),
