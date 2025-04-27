@@ -38,6 +38,20 @@ class StatsService {
         }
 
         const data = result.recordset;
+
+        if (data.length === 0) {
+          return {
+            success: true,
+            data: {
+              totalPuestos: 0,
+              totalEmpleados: 0,
+              totalGasto: 0,
+              fecha: new Date(),
+              puestos: [],
+            },
+          };
+        }
+        
         const processDataResult = this.processData(data);
         return {
           success: true,

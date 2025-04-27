@@ -39,6 +39,16 @@ class ApplicationsService {
         }
 
         const data = result.recordset;
+        if (data.length === 0) {
+          return {
+            success: true,
+            data: {
+              total: 0,
+              solicitudes: [],
+            },
+          };
+        }
+
         return {
           success: true,
           data: {

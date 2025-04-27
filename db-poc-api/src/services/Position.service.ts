@@ -32,6 +32,17 @@ class PositionService {
         const response = await execute("sp_listar_puestos", params, {});
         if (response.output.outResultCode === 0) {
           const data = response.recordset;
+
+          if (data.length === 0) {
+            return {
+              success: true,
+              data: {
+                total: 0,
+                puestos: [],
+              },
+            };
+          }
+          
           return {
             success: true,
             data: {

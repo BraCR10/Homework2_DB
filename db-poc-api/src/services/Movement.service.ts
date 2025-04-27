@@ -60,6 +60,7 @@ class MovementService {
       else {
         const response = await execute("sp_listar_movimientos", params, {});
         if (response.output.outResultCode == 0) {
+          
           let data = response.recordset;
           if (data.length == 0) {
             return {
@@ -80,6 +81,7 @@ class MovementService {
               },
             };
           }
+          
           const employeeMovementsResponse: GetEmployeeMovementsSuccessResponseDTO =
             {
               success: true,
@@ -194,6 +196,16 @@ class MovementService {
         const response = await execute("sp_listar_tipos_movimientos", {}, {});
         if (response.output.outResultCode == 0) {
           let data = response.recordset;
+
+          if (data.length == 0) {
+            return {
+              success: true,
+              data: {
+                total: 0,
+                tiposMovimientos: [],
+              },
+            };
+          }
           const getMovementsTypesResponse: getMovementsTypesSuccessResponseDTO =
             {
               success: true,
