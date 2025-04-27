@@ -1,21 +1,11 @@
 import ErrorResponseDTO from "./ErrorResponseDTO";
-
-export interface EmployeesDataDTO {
-  Id: number;
-  IdPuesto: number;
-  NombrePuesto: string;
-  ValorDocumentoIdentidad: string;
-  Nombre: string;
-  FechaContratacion: string;
-  SaldoVacaciones: number;
-  EsActivo: boolean;
-}
+import { Employee } from "../models/EmployeeModel";
 
 export interface GetEmployeesSuccessResponseDTO {
   success: boolean;
   data: {
     total: number;
-    empleados: EmployeesDataDTO[];
+    empleados: Employee[];
   };
 }
 
@@ -51,7 +41,7 @@ export interface UpdateEmployeesSuccessResponseDTO {
 export interface TryDeleteEmployeeDTO {
   IdEmpleado: number;
   IdUser: number;
-  IPAddress : string;
+  IPAddress: string;
 }
 export interface TryDeleteEmployeeSuccessResponseDTO {
   success: boolean;
@@ -78,7 +68,7 @@ export interface GetEmployeeByNameSuccessResponseDTO {
   success: boolean;
   data: {
     total: number;
-    empleados: EmployeesDataDTO[];
+    empleados: Employee[];
   };
 }
 
@@ -89,7 +79,7 @@ export interface GetEmployeeByDNISuccessResponseDTO {
   success: boolean;
   data: {
     total: number;
-    empleados: EmployeesDataDTO[];
+    empleados: Employee[];
   };
 }
 

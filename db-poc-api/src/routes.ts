@@ -14,8 +14,13 @@ import {
   createMovement,
   getMovementsTypes,
 } from "./controllers/Movement.controller";
+import { getStats } from "./controllers/Stats.controller";
 import { getPositions } from "./controllers/Positions.controller";
-
+import {
+  createApplication,
+  getApplications,
+  issueApplication,
+} from "./controllers/Applications.controller";
 const router = Router();
 
 router.get("/health", (_req, res) => {
@@ -42,5 +47,13 @@ router.get("/position", getPositions);
 // Login routes
 router.post("/logout", logoutUser);
 router.post("/login", loginUser);
+
+// Stats routes
+router.get("/stats_salaries", getStats);
+
+// Application routes
+router.get("/vacation_request", getApplications);
+router.post("/vacation_request", createApplication);
+router.post("/vacation_request/:idSolicitud", issueApplication);
 
 export default router;

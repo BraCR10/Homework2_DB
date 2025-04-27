@@ -44,7 +44,6 @@ class EmployeeService {
         } else {
           return ErrorHandler(response) as EmployeesErrorResponseDTO;
         }
-        
       }
     } catch (error) {
       console.error("Error details:", error);
@@ -120,9 +119,15 @@ class EmployeeService {
     data: UpdateEmployeesDTO,
   ): Promise<UpdateEmployeesSuccessResponseDTO | EmployeesErrorResponseDTO> {
     const params: inSqlParameters = {
-      inValorDocIdentidad_Actual: [data.ValorDocumentoIdentidadActual, TYPES.VarChar],
+      inValorDocIdentidad_Actual: [
+        data.ValorDocumentoIdentidadActual,
+        TYPES.VarChar,
+      ],
       inNuevoIdPuesto: [String(data.IdPuestoNuevo), TYPES.Int],
-      inNuevoValorDocIdentidad: [data.ValorDocumentoIdentidadNuevo, TYPES.VarChar],
+      inNuevoValorDocIdentidad: [
+        data.ValorDocumentoIdentidadNuevo,
+        TYPES.VarChar,
+      ],
       inNuevoNombre: [data.NombreEmpleadoNuevo, TYPES.VarChar],
     };
 
@@ -183,7 +188,11 @@ class EmployeeService {
           },
         };
       else {
-        const response = await execute("sp_intento_borrado_no_confirmado", params, {});
+        const response = await execute(
+          "sp_intento_borrado_no_confirmado",
+          params,
+          {},
+        );
         if (response.output.outResultCode == 0) {
           return {
             success: true,
@@ -206,14 +215,21 @@ class EmployeeService {
     data: DeleteEmployeeDTO,
   ): Promise<DeleteEmployeeSuccessResponseDTO | EmployeesErrorResponseDTO> {
     const params: inSqlParameters = {
-      inValorDocumentoIdentidad: [String(data.ValorDocumentoIdentidad), TYPES.VarChar],
+      inValorDocumentoIdentidad: [
+        String(data.ValorDocumentoIdentidad),
+        TYPES.VarChar,
+      ],
     };
 
     try {
       if (useMock)
         return { success: true, data: { detail: "Employ was deleted" } };
       else {
-        const response = await execute("sp_borrado_logico_empleado", params, {});
+        const response = await execute(
+          "sp_borrado_logico_empleado",
+          params,
+          {},
+        );
         if (response.output.outResultCode == 0) {
           const data = response.recordset[0];
           return { success: true, data: { detail: "Empledo borrado" } };

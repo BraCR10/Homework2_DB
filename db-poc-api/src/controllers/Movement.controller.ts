@@ -70,7 +70,7 @@ export const createMovement = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  const {IdTipoMovimiento,Monto,DNIEmpleado,IdUser} = req.body;
+  const { IdTipoMovimiento, Monto, DNIEmpleado, IdUser } = req.body;
 
   if (!IdTipoMovimiento || !Monto || !DNIEmpleado || !IdUser) {
     const errorResponse: MovementsErrorResponseDTO = {
@@ -86,7 +86,7 @@ export const createMovement = async (
 
   const regex = /^[0-9]+$/;
 
-  if (!regex.test(DNIEmpleado) ) {
+  if (!regex.test(DNIEmpleado)) {
     const errorResponse: MovementsErrorResponseDTO = {
       success: false,
       error: {
@@ -97,13 +97,12 @@ export const createMovement = async (
     res.status(400).json({ success: false, error: errorResponse });
     return;
   }
-  
-  if ( 
-      typeof Monto !== "number" || 
-      typeof IdTipoMovimiento !== "number" ||
-      typeof IdUser !== "number"
-  )
-  {
+
+  if (
+    typeof Monto !== "number" ||
+    typeof IdTipoMovimiento !== "number" ||
+    typeof IdUser !== "number"
+  ) {
     const errorResponse: MovementsErrorResponseDTO = {
       success: false,
       error: {
@@ -114,7 +113,7 @@ export const createMovement = async (
     res.status(400).json({ success: false, error: errorResponse });
     return;
   }
-  
+
   if (Number.isInteger(Monto) === false) {
     const errorResponse: MovementsErrorResponseDTO = {
       success: false,
@@ -133,8 +132,6 @@ export const createMovement = async (
     IdUser: IdUser,
     IpAddress: req.ip ? req.ip : "",
   };
-
-  
 
   try {
     const response = await MovementService.createMovement(data);

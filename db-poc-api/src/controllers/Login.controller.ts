@@ -90,7 +90,10 @@ export async function logoutUser(req: Request, res: Response): Promise<void> {
     console.error("Error during logout:", error);
     res.status(500).json({
       success: false,
-      error: { code: 50008, detail: "Un error a ocurrido mientras el cierre de sesion " },
+      error: {
+        code: 50008,
+        detail: "Un error a ocurrido mientras el cierre de sesion ",
+      },
     });
   }
 }
