@@ -233,7 +233,6 @@ const EmployeeList = () => {
       NombreEmpleadoNuevo: updatedEmployee.nombre,
     });
     console.log("DNI", DNIanterior);
-  
     try {
       const response = await fetch(`${url}/api/v2/employee/${DNIanterior}`, {
         method: "PATCH",
@@ -246,7 +245,6 @@ const EmployeeList = () => {
           NombreEmpleadoNuevo: updatedEmployee.nombre,
         }),
       });
-  
       if (response.ok) {
         const data = await response.json();
         console.log(data.data.message); // Mensaje de éxito del backend
@@ -389,6 +387,7 @@ const EmployeeList = () => {
   }) => {
     
     try {
+      console.log("DNI:", empleado.documento);
       // Realizar la petición GET al backend
       const response = await fetch(`${url}/api/v2/movement/${empleado.documento}`, {
         method: "GET",
