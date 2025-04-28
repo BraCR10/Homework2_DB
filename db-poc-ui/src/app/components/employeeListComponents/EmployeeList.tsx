@@ -216,16 +216,34 @@ const EmployeeList = () => {
     },
     DNIanterior: string
   ) => {
+    
     // Buscar el idPuesto correspondiente al nombrePuesto
-    const empleado = empleados.find((emp) => emp.nombrePuesto === updatedEmployee.nombrePuesto);
+    let puestospr: { Id: number; Nombre: string }[] = [];
+    try {
+      const response = await fetch(`${url}/api/v2/position`);
+      if (response.ok) {
+        const data = await response.json();
+        puestospr = (data.data.puestos); // Guardar los puestos en el estado
+      } 
+      else {
+        console.error("Error al obtener los puestos:", response.status);
+        alert("No se pudieron cargar los puestos. Inténtalo de nuevo.");
+      }
+    } 
+    catch (error) {
+      console.error("Error al realizar la solicitud:", error);
+      alert("Ocurrió un error al intentar cargar los puestos.");
+    }
+    console.log("PUESTOS:", puestospr)
+    const puestoSeleccionado = puestospr.find((puesto) => puesto.Nombre === updatedEmployee.nombrePuesto);
   
-    if (!empleado) {
+    if (!puestoSeleccionado) {
       console.error("No se encontró el puesto correspondiente al nombrePuesto.");
       alert("No se encontró el puesto correspondiente al nombrePuesto.");
       return;
     }
   
-    const idPuesto = empleado.idPuesto; // Obtener el idPuesto
+    const idPuesto = puestoSeleccionado.Id; // Obtener el idPuesto
   
     console.log("Datos enviados al backend:", {
       IdPuestoNuevo: idPuesto,
