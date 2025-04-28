@@ -711,6 +711,9 @@ const EmployeeList = () => {
         <button onClick={handleLogout} className="insertar-boton">
           Logout
         </button>
+        <button onClick={() => router.push('/stats')} className="insertar-boton">
+          Ver estadísticas
+        </button>
       </div>
       <EmployeeTable empleados={empleados} handleDelete={handleDelete} handleQuery={handleQuery} handleEdit={handleEdit} handleMovementList={handleMovementList} handleInsertMovement={handleInsertMovement} handleRequestVacation={handleRequestVacation}/>
       {empleados.length === 0 && (
