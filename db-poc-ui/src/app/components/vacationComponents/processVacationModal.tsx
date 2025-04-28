@@ -56,25 +56,23 @@ const ProcessVacationModal: React.FC<ProcessVacationModalProps> = ({
       // Extraer el cuerpo de la respuesta como JSON (independientemente del código de estado)
       const data = await response.json().catch(() => null);
       
-      // Si la respuesta no es OK, buscamos el error en los datos
+      
       if (!response.ok) {
-        // Si tenemos datos de error en formato JSON
+        
         if (data && data.error) {
-          // Error de usuario no autorizado (según el ejemplo que compartiste)
+          
           if (data.error.detail && data.error.detail.includes('no autorizado')) {
             setUnauthorized(true);
             throw new Error(data.error.detail);
           }
-          // Otros errores con detalle
-          throw new Error(data.error.detail || `Error ${response.status}`);
+         
         }
-        // Fallback para errores sin cuerpo JSON útil
+
         throw new Error(`Error ${response.status}: ${response.statusText}`);
       }
       
       // Procesar datos exitosos
       if (data && data.success) {
-        // Solo mostrar solicitudes pendientes
         const pendingRequests = data.data.solicitudes.filter(
           (req: VacationRequest) => req.Estado.toUpperCase() === 'PENDIENTE'
         );
@@ -87,11 +85,9 @@ const ProcessVacationModal: React.FC<ProcessVacationModalProps> = ({
       
       // Clasificar el error
       if (err instanceof Error) {
-        // Error de autorización
         if (err.message.includes('no autorizado')) {
           setUnauthorized(true);
         }
-        // Error de conexión o red
         else if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError')) {
           setError('Error de conexión. Verifique su red e intente nuevamente.');
         }
@@ -132,7 +128,6 @@ const ProcessVacationModal: React.FC<ProcessVacationModalProps> = ({
         throw new Error("No se encontró un usuario logueado");
       }
       
-      // Construir el objeto con el formato EXACTO que espera el backend (según el ejemplo compartido)
       const requestData = {
         IdUsuario: Number(usuarioGuardado.Id),
         NuevoEstado: newStatus
@@ -151,21 +146,16 @@ const ProcessVacationModal: React.FC<ProcessVacationModalProps> = ({
         body: JSON.stringify(requestData),
       });
 
-      // Extraer el cuerpo de la respuesta como JSON (independientemente del código de estado)
       const data = await response.json().catch(() => null);
       
-      // Manejar errores basados en el cuerpo de la respuesta y el código de estado
       if (!response.ok || (data && !data.success)) {
         if (data && data.error) {
-          // Error de usuario no autorizado
           if (data.error.detail && data.error.detail.includes('no autorizado')) {
             setUnauthorized(true);
             throw new Error(data.error.detail);
           }
-          // Otros errores con detalle
           throw new Error(data.error.detail || `Error ${response.status}`);
         }
-        // Fallback para errores sin cuerpo JSON útil
         throw new Error(`Error ${response.status}: ${response.statusText}`);
       }
 
@@ -174,10 +164,8 @@ const ProcessVacationModal: React.FC<ProcessVacationModalProps> = ({
       setSelectedRequestId(null);
       setNewStatus('');
       
-      // Refrescar la lista de solicitudes pendientes
       fetchPendingVacationRequests();
       
-      // Esperar 1.5 segundos antes de cerrar el modal si no quedan solicitudes pendientes
       setTimeout(() => {
         if (vacationRequests.length <= 1) {
           onSubmit();
@@ -187,17 +175,13 @@ const ProcessVacationModal: React.FC<ProcessVacationModalProps> = ({
     } catch (err) {
       console.error('Error al tramitar solicitud de vacaciones:', err);
       
-      // Clasificar el error
       if (err instanceof Error) {
-        // Error de autorización
         if (err.message.includes('no autorizado')) {
           setUnauthorized(true);
         }
-        // Error de conexión o red
         else if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError')) {
           setError('Error de conexión. Verifique su red e intente nuevamente.');
         }
-        // Otros errores
         else {
           setError(err.message);
         }
@@ -214,7 +198,6 @@ const ProcessVacationModal: React.FC<ProcessVacationModalProps> = ({
     return date.toLocaleDateString();
   };
 
-  // Si el usuario no está autorizado, mostrar un mensaje específico
   if (unauthorized) {
     return (
       <div className="vacation-modal-overlay">

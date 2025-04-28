@@ -28,19 +28,15 @@ const RequestVacationModal: React.FC<RequestVacationModalProps> = ({
   const [success, setSuccess] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Calcular fecha mínima (hoy) para el input de fecha
   const today = new Date();
   const formattedToday = today.toISOString().split('T')[0];
 
-  // Actualizar cantidad de días cuando cambia fecha inicio o fecha fin
   useEffect(() => {
     if (manualDateSelection && fechaInicio && fechaFin) {
       const startDate = new Date(fechaInicio);
       const endDate = new Date(fechaFin);
       
-      // Si las fechas son válidas, calcular la diferencia en días
       if (startDate <= endDate) {
-        // +1 porque incluimos el día de inicio y el día de fin
         const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
         setCantidadDias(String(diffDays));
@@ -48,7 +44,6 @@ const RequestVacationModal: React.FC<RequestVacationModalProps> = ({
     }
   }, [fechaInicio, fechaFin, manualDateSelection]);
 
-  // Calcular fecha fin cuando cambia fecha inicio o cantidad de días
   const updateEndDate = () => {
     if (!manualDateSelection && fechaInicio && cantidadDias && !isNaN(Number(cantidadDias)) && Number(cantidadDias) > 0) {
       const startDate = new Date(fechaInicio);
@@ -58,7 +53,6 @@ const RequestVacationModal: React.FC<RequestVacationModalProps> = ({
     }
   };
 
-  // Actualizar fecha fin cuando cambia fecha inicio o cantidad de días
   useEffect(() => {
     if (!manualDateSelection) {
       updateEndDate();
@@ -68,7 +62,6 @@ const RequestVacationModal: React.FC<RequestVacationModalProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validaciones
     if (!cantidadDias || isNaN(Number(cantidadDias)) || Number(cantidadDias) <= 0) {
       setError('La cantidad de días debe ser un número mayor a 0');
       return;
@@ -98,9 +91,9 @@ const RequestVacationModal: React.FC<RequestVacationModalProps> = ({
     }
 
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Reset to start of day for fair comparison
+    today.setHours(0, 0, 0, 0);
     
-    startDate.setHours(0, 0, 0, 0); // Reset to start of day for fair comparison
+    startDate.setHours(0, 0, 0, 0); 
     if (startDate < today) {
       setError('La fecha de inicio debe ser igual o posterior al día de hoy');
       return;
