@@ -11,6 +11,8 @@ import EmployeeDetailsModal from './EmployeeDetailsModal';
 import EditEmployeeModal from './EditEmployeeModal';
 import { useRouter } from "next/navigation";
 import InsertMovementModal from '../movementListComponents/InsertMovementModal';
+import RequestVacationModal from '../vacationComponents/requestvacationModal';
+import ProcessVacationModal from '../vacationComponents/processVacationModal';
 const url: string = "http://localhost:3050";
 
 interface Empleado {
@@ -60,6 +62,16 @@ const EmployeeList = () => {
     documento: string;
     saldoVacaciones: number;
   } | null>(null);
+
+  const [requestVacationModalVisible, setRequestVacationModalVisible] = useState(false);
+  const [employeeForVacation, setEmployeeForVacation] = useState<{
+    id: number;
+    nombre: string;
+    documento: string;
+    saldoVacaciones: number;
+  } | null>(null);
+  const [processVacationModalVisible, setProcessVacationModalVisible] = useState(false);
+
   //Esta funcion se debe de des-comentar para que la web pida los empleados a la api apenas esta inicie
   useEffect(() => { //useEffect es un hook que se efectúa apenas se abra la web
     fetchEmpleados();
@@ -613,7 +625,32 @@ const EmployeeList = () => {
   };
   //**************************************************
   //****************ACCION DE I. MOV.*****************
+  //**************************************************
+  //****************ACCION DE VACACIONES**************
+  // Función para manejar solicitudes de vacaciones
+  const handleRequestVacation = (empleado: {
+    id: number;
+    nombre: string;
+    documento: string;
+    saldoVacaciones: number;
+  }) => {
+    setEmployeeForVacation(empleado);
+    setRequestVacationModalVisible(true);
+  };
 
+  // Función para ir a la página de listar solicitudes de vacaciones
+  const handleListVacations = () => {
+    router.push('/vacation');
+  };
+
+  // Función para mostrar el modal de tramitar solicitudes
+  const handleProcessVacations = () => {
+    setProcessVacationModalVisible(true);
+  };
+  //**************************************************
+  //************FIN DE ACCION DE VACACIONES***********
+
+  //**************************************************
   //**************************************************
   //****************ACCION DE LOGOUT******************
   const handleLogout = async () => {
@@ -665,11 +702,17 @@ const EmployeeList = () => {
         <button onClick={() => setInsertEmployeeModalVisible(true)} className="insertar-boton">
           Insertar empleado
         </button>
+        <button onClick={handleListVacations} className="list-vacations-button">
+          Listar Solicitudes
+        </button>
+        <button onClick={handleProcessVacations} className="process-vacation-button">
+          Tramitar Solicitudes
+        </button>
         <button onClick={handleLogout} className="insertar-boton">
           Logout
         </button>
       </div>
-      <EmployeeTable empleados={empleados} handleDelete={handleDelete} handleQuery={handleQuery} handleEdit={handleEdit} handleMovementList={handleMovementList} handleInsertMovement={handleInsertMovement}/>
+      <EmployeeTable empleados={empleados} handleDelete={handleDelete} handleQuery={handleQuery} handleEdit={handleEdit} handleMovementList={handleMovementList} handleInsertMovement={handleInsertMovement} handleRequestVacation={handleRequestVacation}/>
       {empleados.length === 0 && (
         <p>No se encontraron empleados con el filtro aplicado.</p>
       )}
@@ -707,6 +750,25 @@ const EmployeeList = () => {
             console.log("Nuevo movimiento registrado:", newMovement);
             fetchEmpleados();
             setInsertMovementModalVisible(false); // Cierra el modal después de registrar el movimiento
+          }}
+        />
+      )}
+      {requestVacationModalVisible && employeeForVacation && (
+        <RequestVacationModal
+          employee={employeeForVacation}
+          onClose={() => setRequestVacationModalVisible(false)}
+          onSubmit={() => {
+            fetchEmpleados();
+            setRequestVacationModalVisible(false);
+          }}
+        />
+      )}
+      {processVacationModalVisible && (
+        <ProcessVacationModal
+          onClose={() => setProcessVacationModalVisible(false)}
+          onSubmit={() => {
+            fetchEmpleados();
+            setProcessVacationModalVisible(false);
           }}
         />
       )}

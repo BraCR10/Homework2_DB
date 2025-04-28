@@ -37,9 +37,15 @@ interface EmployeeTableProps {
     nombrePuesto: string;
     saldoVacaciones: number;
   }) => void;
+  handleRequestVacation: (empleado: {
+    id: number;
+    nombre: string;
+    documento: string;
+    saldoVacaciones: number;
+  }) => void;
 }
 
-const EmployeeTable: React.FC<EmployeeTableProps> = ({ empleados, handleDelete, handleQuery, handleEdit, handleMovementList, handleInsertMovement }) => {
+const EmployeeTable: React.FC<EmployeeTableProps> = ({ empleados, handleDelete, handleQuery, handleEdit, handleMovementList, handleInsertMovement,handleRequestVacation }) => {
   return (
     <table className="empleados-tabla">
       <thead>
@@ -51,7 +57,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ empleados, handleDelete, 
       </thead>
       <tbody>
         {empleados.map((empleado) => (
-          <EmployeeRow key={empleado.id} empleado={empleado} handleDelete={handleDelete} handleQuery={handleQuery} handleEdit={handleEdit} handleMovementList={handleMovementList} handleInsertMovement={handleInsertMovement}/>
+          <EmployeeRow key={empleado.id} empleado={empleado} handleDelete={handleDelete} handleQuery={handleQuery} handleEdit={handleEdit} handleMovementList={handleMovementList} handleInsertMovement={handleInsertMovement} handleRequestVacation={handleRequestVacation}/>
         ))}
       </tbody>
     </table>

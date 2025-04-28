@@ -36,15 +36,21 @@ interface EmployeeRowProps {
     nombrePuesto: string;
     saldoVacaciones: number;
   }) => void;
+  handleRequestVacation: (empleado: {
+    id: number;
+    nombre: string;
+    documento: string;
+    saldoVacaciones: number;
+  }) => void;
 }
 
-const EmployeeRow: React.FC<EmployeeRowProps> = ({ empleado, handleDelete, handleQuery, handleEdit, handleMovementList, handleInsertMovement}) => {
+const EmployeeRow: React.FC<EmployeeRowProps> = ({ empleado, handleDelete, handleQuery, handleEdit, handleMovementList, handleInsertMovement , handleRequestVacation}) => {
   return (
     <tr>
       <td>{empleado.nombre}</td>
       <td>{empleado.documento}</td>
       <td>
-        <Actions empleado={empleado} handleDelete={handleDelete} handleQuery={handleQuery} handleEdit={handleEdit} handleMovementList={handleMovementList} handleInsertMovement={handleInsertMovement}/>
+        <Actions empleado={empleado} handleDelete={handleDelete} handleQuery={handleQuery} handleEdit={handleEdit} handleMovementList={handleMovementList} handleInsertMovement={handleInsertMovement} handleRequestVacation={handleRequestVacation}/>
       </td>
     </tr>
   );

@@ -39,22 +39,35 @@ interface ActionsProps {
     nombrePuesto: string;
     saldoVacaciones: number;
   }) => void;
+  handleRequestVacation: (empleado: {
+    id: number;
+    nombre: string;
+    documento: string;
+    saldoVacaciones: number;
+  }) => void;
 }
 
-const Actions: React.FC<ActionsProps> = ({ empleado, handleDelete, handleQuery, handleEdit, handleMovementList, handleInsertMovement }) => {
+const Actions: React.FC<ActionsProps> = ({ empleado, handleDelete, handleQuery, handleEdit, handleMovementList, handleInsertMovement,handleRequestVacation }) => {
   return (
     <>
-      <button onClick={() => handleQuery(empleado)}>
+      <button className="button_actions" onClick={() => handleQuery(empleado)}>
         Consultar
       </button>
-      <button onClick={() => handleEdit(empleado)}>
+      <button className="button_actions" onClick={() => handleEdit(empleado)}>
         Modificar
       </button>
-      <button onClick={() => handleMovementList(empleado)}>
+      <button className="button_actions" onClick={() => handleMovementList(empleado)}>
         Listar Movimientos
       </button>
-      <button onClick={() => handleInsertMovement(empleado)}>
+      <button className="button_actions" onClick={() => handleInsertMovement(empleado)}>
         Insertar Movimientos
+      </button>
+      <button className="button_actions" onClick={() => handleDelete(empleado.id)}>Eliminar</button>
+      <button 
+        className="button_actions"
+        onClick={() => handleRequestVacation(empleado)}
+      >
+        Solicitar Vacaciones
       </button>
       <button onClick={() => handleDelete(empleado.id)}>Eliminar</button>
     </>
